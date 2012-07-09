@@ -44,7 +44,7 @@ EXEC_OUT="0"
 echo " Testing the NAS Parallel Benchmarks ..."
 echo "<TYPE> <NPROCS> <CLASS> <COMPILATION> <EXECUTION>" 
 
-for type in ep; do
+for type in ep cg; do
 #  for class in S W A B C D; do
   for class in S W; do
     for NP  in  1 2 4; do
@@ -86,5 +86,5 @@ done
 echo "______________________________STATISTICS__________________________________" >>$LOG_DIR/$logfile
 echo "TOTAL PASSED = $PASSED_COMPILE_COUNT TOTAL FAILED = $FAILED_COMPILE_COUNT" >>$LOG_DIR/$logfile
 echo "Log file : $LOG_DIR/$logfile"
-mv -r   $OUTPUT_DIR/latest_compile $OUTPUT_DIR/history/compile_$DATE
-mv -r  $OUTPUT_DIR/latest_execute $OUTPUT_DIR/history/execute_$DATE
+mv  $OUTPUT_DIR/latest_compile $OUTPUT_DIR/history/compile_$DATE
+mv  $OUTPUT_DIR/latest_execute $OUTPUT_DIR/history/execute_$DATE
