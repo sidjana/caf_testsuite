@@ -1,0 +1,123 @@
+# This Makefile can be used to test the Intel CAF compiler in distributed
+# mode. To test its SMP version, set:
+#     IFORT_FLAGS = -coarray -coarray-num-images=<num-images>
+#
+
+SHELL = /bin/sh
+
+include user.def
+
+GCC=gcc
+
+#IFORT_FLAGS = -coarray -coarray-num-images=2 
+
+#RUNOPT2 = -envall -rr
+NITER ?= 100
+
+FC   = ifort
+IFORT_CAF_CONFIGS ?= $(PWD)/ifort_configs
+IFORT_FLAGS = -coarray=distributed
+FFLAGS = -O3 -fpp -DNITER=$(NITER) $(IFORT_FLAGS)
+
+LD = $(FC)
+
+BIN = $(BENCH_BINDIR)/ifort_put_latency $(BENCH_BINDIR)/ifort_get_latency $(BENCH_BINDIR)/ifort_put_bandwidth $(BENCH_BINDIR)/ifort_get_bandwidth $(BENCH_BINDIR)/ifort_ping_pong $(BENCH_BINDIR)/ifort_broadcast $(BENCH_BINDIR)/ifort_bidirectional $(BENCH_BINDIR)/ifort_noncontiguous
+
+all: ifort_put_latency ifort_get_latency ifort_put_bandwidth ifort_get_bandwidth ifort_ping_pong ifort_bidirectional ifort_broadcast ifort_noncontiguous
+
+run: put-latency-run get-latency-run put-bandwidth-run get-bandwidth-run pingpong-run bidirectional-run broadcast-run noncontiguous-run
+
+put-latency-run:
+	@echo ""; echo "*** [CAF-IFORT] Submitting Jobs for PUT LATENCY ***"; echo ""
+	$(JOBCMD) $(NCOREOPT) $(NCORELAT) $(JOBOPT) $(BENCH_BINDIR)/ifort_put_latency $(INTELCAF_PATH) $(FC) $(CLUSTER) $(NCORELAT) $(NPROCLAT)
+	@sleep 2s
+
+get-latency-run:
+	@echo ""; echo "*** [CAF-IFORT] Submitting Jobs for GET LATENCY***"; echo ""
+	$(JOBCMD) $(NCOREOPT) $(NCORELAT) $(JOBOPT) $(BENCH_BINDIR)/ifort_get_latency $(INTELCAF_PATH) $(FC) $(CLUSTER) $(NCORELAT) $(NPROCLAT)
+	@sleep 2s
+
+put-bandwidth-run:
+	@echo ""; echo "*** [CAF-IFORT] Submitting Jobs for PUT BANDWIDTH ***"; echo ""
+	$(JOBCMD) $(NCOREOPT) $(NCOREBW) $(JOBOPT) $(BENCH_BINDIR)/ifort_put_bandwidth $(INTELCAF_PATH) $(FC) $(CLUSTER) $(NCOREBW) $(NPROCBW)
+	@sleep 2s
+
+get-bandwidth-run:
+	@echo ""; echo "*** [CAF-IFORT] Submitting Jobs for GET BANDWIDTH ***"; echo ""
+	$(JOBCMD) $(NCOREOPT) $(NCOREBW) $(JOBOPT) $(BENCH_BINDIR)/ifort_get_bandwidth $(INTELCAF_PATH) $(FC) $(CLUSTER) $(NCOREBW) $(NPROCBW)
+	@sleep 2s
+
+pingpong-run:
+	@echo ""; echo "*** [CAF-IFORT] Submitting jobs for PING-PONG ***"; echo ""
+	$(JOBCMD) $(NCOREOPT) $(NCOREPP) $(JOBOPT) $(BENCH_BINDIR)/ifort_ping_pong $(INTELCAF_PATH) $(FC) $(CLUSTER) $(NCOREPP) $(NPROCPP)
+	@sleep 2s
+
+bidirectional-run:
+	@echo ""; echo "*** [CAF-IFORT] Submitting jobs for BIDIRECTIONAL ***"; echo ""
+	$(JOBCMD) $(NCOREOPT) $(NCOREBD) $(JOBOPT) $(BENCH_BINDIR)/ifort_bidirectional $(INTELCAF_PATH) $(FC) $(CLUSTER) $(NCOREBD) $(NPROCBD)
+	@sleep 2s
+
+broadcast-run:
+	@echo ""; echo "*** [CAF-IFORT] Submitting Jobs for BROADCAST ***"; echo ""
+	$(JOBCMD) $(NCOREOPT) $(NCOREBCST) $(JOBOPT) $(BENCH_BINDIR)/ifort_broadcast $(INTELCAF_PATH) $(FC) $(CLUSTER) $(NCOREBCST) $(NPROCBCST)
+	@sleep 2s
+
+noncontiguous-run:
+	@echo ""; echo "*** [CAF-IFORT] Submitting jobs for NONCONTIGUOUS DATA ***"; echo ""
+	$(JOBCMD) $(NCOREOPT) $(NCORENC) $(JOBOPT) $(BENCH_BINDIR)/ifort_noncontiguous $(INTELCAF_PATH) $(FC) $(CLUSTER) $(NCORENC) $(NPROCNC)
+	@sleep 2s
+
+ifort_%: %.o rtc.o
+	$(LD) $(FFLAGS) -o $(BENCH_BINDIR)/$@ $^
+
+.PHONY: create_config_dir
+create_config_dir:
+	if [ ! -d "$(IFORT_CAF_CONFIGS)" ]; then \
+		mkdir $(IFORT_CAF_CONFIGS); \
+	fi
+
+# %.o: %.f90 create_config_dir 
+# 	echo "$(RUNOPT) ifort_$(basename $<)" > $(IFORT_CAF_CONFIGS)/$(basename $<)_config
+# 	$(FC) -O3 -c $(FFLAGS) -caf-config-file=$(IFORT_CAF_CONFIGS)/$(basename $<)_config  $<
+
+put_latency.o: put_latency.f90 create_config_dir
+	echo "$(RUNOPT2) $(NPROCOPT) $(NPROCLAT) ifort_$(basename $<)" > $(IFORT_CAF_CONFIGS)/$(basename $<)_config
+	$(FC) -O3 -c $(FFLAGS) -caf-config-file=$(IFORT_CAF_CONFIGS)/$(basename $<)_config  $<
+
+get_latency.o: get_latency.f90 create_config_dir
+	echo "$(RUNOPT2) $(NPROCOPT) $(NPROCLAT) ifort_$(basename $<)" > $(IFORT_CAF_CONFIGS)/$(basename $<)_config
+	$(FC) -O3 -c $(FFLAGS) -caf-config-file=$(IFORT_CAF_CONFIGS)/$(basename $<)_config  $<
+
+put_bandwidth.o: put_bandwidth.f90 create_config_dir
+	echo "$(RUNOPT2) $(NPROCOPT) $(NPROCBW) ifort_$(basename $<)" > $(IFORT_CAF_CONFIGS)/$(basename $<)_config
+	$(FC) -O3 -c $(FFLAGS) -caf-config-file=$(IFORT_CAF_CONFIGS)/$(basename $<)_config  $<
+
+get_bandwidth.o: get_bandwidth.f90 create_config_dir
+	echo "$(RUNOPT2) $(NPROCOPT) $(NPROCBW) ifort_$(basename $<)" > $(IFORT_CAF_CONFIGS)/$(basename $<)_config
+	$(FC) -O3 -c $(FFLAGS) -caf-config-file=$(IFORT_CAF_CONFIGS)/$(basename $<)_config  $<
+
+ping_pong.o: ping_pong.f90 create_config_dir
+	echo "$(RUNOPT2) $(NPROCOPT) $(NPROCPP) ifort_$(basename $<)" > $(IFORT_CAF_CONFIGS)/$(basename $<)_config
+	$(FC) -O3 -c $(FFLAGS) -caf-config-file=$(IFORT_CAF_CONFIGS)/$(basename $<)_config  $<
+
+bidirectional.o: bidirectional.f90 create_config_dir
+	echo "$(RUNOPT2) $(NPROCOPT) $(NPROCBD) ifort_$(basename $<)" > $(IFORT_CAF_CONFIGS)/$(basename $<)_config
+	$(FC) -O3 -c $(FFLAGS) -caf-config-file=$(IFORT_CAF_CONFIGS)/$(basename $<)_config  $<
+
+broadcast.o: broadcast.f90 create_config_dir
+	echo "$(RUNOPT2) $(NPROCOPT) $(NPROCBCST) ifort_$(basename $<)" > $(IFORT_CAF_CONFIGS)/$(basename $<)_config
+	$(FC) -O3 -c $(FFLAGS) -caf-config-file=$(IFORT_CAF_CONFIGS)/$(basename $<)_config  $<
+
+noncontiguous.o: noncontiguous.f90 create_config_dir
+	echo "$(RUNOPT2) $(NPROCOPT) $(NPROCNC) ifort_$(basename $<)" > $(IFORT_CAF_CONFIGS)/$(basename $<)_config
+	$(FC) -O3 -c $(FFLAGS) -caf-config-file=$(IFORT_CAF_CONFIGS)/$(basename $<)_config  $<
+
+
+rtc.o: ../rtc.c
+	$(GCC) -c -D$(TIMER_ARCH) $^ -o $@
+
+clean:
+	rm -rf *.I *.i *.B *.o  *.s *.t *.w2f.f *~ core */*~ l0335194.*
+
+clobber: clean
+	rm -rf $(BIN) $(INTELCAF_PATH)/*

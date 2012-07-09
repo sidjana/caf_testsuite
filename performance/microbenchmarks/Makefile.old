@@ -1,0 +1,37 @@
+SHELL = /bin/sh
+
+help: 
+	@echo
+	@echo "Please use one of the following targets:"
+	@echo
+	@echo "    compile, run, graphs, graphs2, clean, clobber, distclean"
+	@echo
+	@echo "    clean: removes object files and leaves result files"
+	@echo "    clobber: removes binary files and object files and leaves result files"
+	@echo "    distclean: removes everything"
+	@echo
+
+compile:
+	cd src/caf; make  
+
+run:
+	cd src/caf; make run
+
+graphs:
+	cd lib; ./make_graphs.sh
+
+graphs2:
+	cd lib; ./make_graphs2.sh $(TESTS) 
+
+clean:
+	source clean.sh
+
+#	cd src/caf; make clean
+#	rm -f *~ */*~ */l0335194.*
+
+clobber: 
+	cd src/caf; make clobber
+	cd doc; make clobber
+
+distclean: clean clobber
+	-rm -f *~ */*~ data/output

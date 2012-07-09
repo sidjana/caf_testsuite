@@ -1,0 +1,68 @@
+# Please set these variables. They are used in execution time.
+#
+# the run command consists
+# > $RUNCMD $RUNOPT $NCOREOPT $NCORE[...] $NPROCOPT $NPROC[...]  executable
+# 
+# where 
+#     [...]    for run
+#     LAT      Latency
+#     BDTH     Bandwidth
+#     PP       PingPong
+#     BCAST    Broadcast
+#     RDC      Reduce
+#     PART     Partial data
+#
+# For example:
+# 1. these setting: (for TOTAL Houston HPC environment)
+#   RUNCMD=autompirunB
+#   RUNOPT=-nopam
+#   NCOREOPT=-nc
+#   NPROCOPT=-np
+### PingPong
+#   NCOREPP=1
+#   NPROCPP=2
+# implies the command
+# > autompirunB -nopam -nc 1 -np 2 .../ping_pong .....
+#
+# 2. these seeting: (for generic mpirun environment)
+#   RUNCMD=mpirun
+#   RUNOPT=-hostfile myhostfile
+#   NCOREOPT=
+#   NPROCOPT=-np
+### PingPong
+#   NCOREPP=
+#   NPROCPP=2
+# implies the command
+# > mpirun -hostfile myhostfile -np 2 .../ping_pong .....
+
+JOBCMD=salloc
+NCOREOPT=-N
+JOBOPT=-p crill --exclusive
+RUNCMD=cafrun
+NPROCOPT=-n
+RUNOPT=--image-heap=250M -v
+RUNOPT2=--loadbalance
+
+# Latency 
+NCORELAT=2
+NPROCLAT=2
+
+# Bandwidth 
+NCOREBW=2
+NPROCBW=2
+
+# PingPong
+NCOREPP=2
+NPROCPP=2
+
+# Bidirectional
+NCOREBD=2
+NPROCBD=2
+
+# Broadcast
+NCOREBCST=8
+NPROCBCST=8
+
+# Noncontiguous
+NCORENC=2
+NPROCNC=2
