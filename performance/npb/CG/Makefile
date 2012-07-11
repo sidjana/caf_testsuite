@@ -4,16 +4,16 @@ BENCHMARKU=CG
 
 include ../config/make.def
 
- OBJS = cg.o ${COMMON}/print_results.o  \
-       ${COMMON}/${RAND}.o ${COMMON}/timers.o
- 
+OBJS = cg.o ${COMMON}/print_results.o ${COMMON}/${RAND}.o ${COMMON}/timers.o
+
 include ../sys/make.common
 
-${PROGRAM}: config ${OBJS} 
-	${FLINK}  ${OBJS}   ${FLINKFLAGS} -o ${PROGRAM}  
+${PROGRAM}: config ${OBJS}
+	${FLINK}  ${FLINKFLAGS} -o ${PROGRAM}  ${OBJS}   ${FMPI_LIB}  
+
 
 cg.o:	cg.f  mpinpb.h npbparams.h
-	${UHCAF} --layer=armci cg.f mpinpb.h npbparams.h -c  ${FFLAGS}
+	${UHCAF} -c  ${FFLAGS} cg.f mpinpb.h npbparams.h 
 
 clean:
 	- rm -f *.o *~ 

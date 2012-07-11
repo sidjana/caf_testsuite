@@ -2,7 +2,7 @@ KERNELS_PATH=./performance/kernels
 MICROBENCH_PATH=./performance/microbenchmarks
 NPB_PATH=./performance/npb
 
-
+test_performance: compile_performance run_performance
 
 compile_performance: compile_kernels  compile_microbenchmarks compile_npb
 
@@ -31,7 +31,7 @@ run_npb:
 
 
 
-clean_all: clean_performance
+clean: clean_performance
 
 
 clean_performance: clean_kernels clean_microbenchmarks clean_npb
@@ -43,4 +43,7 @@ clean_microbenchmarks:
 	cd $(MICROBENCH_PATH) ; source clean.sh 
 
 clean_npb:
-	cd $(NPB_PATH) ;  source clean.sh 
+	cd $(NPB_PATH) ;  source clean.sh
+
+help:
+	cd support; cat README
