@@ -33,7 +33,7 @@ else
   echo "USAGE: compile | execute | complete"
 fi
 
-# organise past regression results
+# organize past regression results
 rm -rf $OUTPUT_DIR/latest_*
 mkdir -p $OUTPUT_DIR/latest_compile > /dev/null
 mkdir -p $OUTPUT_DIR/latest_execute > /dev/null
@@ -41,7 +41,7 @@ mkdir -p $OUTPUT_DIR/latest_execute > /dev/null
 sh setenv.sh
 
 import $NITER
-import  $TIMER_ARCH
+import $TIMER_ARCH
 
 cd $TESTS_DIR
 

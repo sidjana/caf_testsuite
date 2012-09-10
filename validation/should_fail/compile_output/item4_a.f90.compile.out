@@ -1,0 +1,10 @@
+
+	a[1.0] = this_image()
+	  ^                   
+openf95-319 uhf90: ERROR MAIN, File = /home/sidjana/regression/validation/should_fail/item4_a.f90, Line = 7, Column = 4 
+  A subscript must be a scalar integer expression.
+
+openf95: Open64 Fortran Version 5.0 (f14) Fri Sep  7, 2012  17:24:05
+openf95: 9 source lines
+openf95: 1 Error(s), 0 Warning(s), 0 Other message(s), 0 ANSI(s)
+openf95: "explain openf95-message number" gives more information about each message

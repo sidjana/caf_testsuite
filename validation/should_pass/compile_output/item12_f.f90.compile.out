@@ -1,0 +1,15 @@
+
+      sync memory()
+                  ^ 
+openf95-100 uhf90: ERROR ITEM12, File = /home/sidjana/regression/validation/should_pass/item12_f.f90, Line = 9, Column = 19 
+  This statement must begin with a label, a keyword, or an identifier.
+
+      sync memory()
+                  ^ 
+openf95-100 uhf90: ERROR ITEM12, File = /home/sidjana/regression/validation/should_pass/item12_f.f90, Line = 12, Column = 19 
+  This statement must begin with a label, a keyword, or an identifier.
+
+openf95: Open64 Fortran Version 5.0 (f14) Fri Sep  7, 2012  17:23:27
+openf95: 14 source lines
+openf95: 2 Error(s), 0 Warning(s), 0 Other message(s), 0 ANSI(s)
+openf95: "explain openf95-message number" gives more information about each message

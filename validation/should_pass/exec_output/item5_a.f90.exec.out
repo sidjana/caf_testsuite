@@ -1,0 +1,21 @@
+ a :  4.
+ b :  5.
+ c :  6.
+ a :  4.
+ b :  5.
+ c :  6.
+ d :  3 => 20.
+ Hello world!!
+ a :  4.
+ b :  5.
+ c :  6.
+ d :  2 => 10.
+ Hello world!!
+ d :  1 => 40.
+ Hello world!!
+ a :  4.
+ b :  5.
+ c :  6.
+ d :  4 => 30.
+ Hello world!!
+1

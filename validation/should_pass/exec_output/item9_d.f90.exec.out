@@ -1,0 +1,7 @@
+ Error runtime: item9_d
+*** Caught a fatal signal: SIGSEGV(11) on node 0/4
+NOTICE: Before reporting bugs, run with GASNET_BACKTRACE=1 in the environment to generate a backtrace. 
+--------------------------------------------------------------------------
+mpirun noticed that process rank 0 with PID 6848 on node octocore.cs.uh.edu exited on signal 11 (Segmentation fault).
+--------------------------------------------------------------------------
+-1

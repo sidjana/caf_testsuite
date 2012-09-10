@@ -1,0 +1,13 @@
+
+	integer, pointer :: a(2)[*]
+	                    ^       
+openf95-550 uhf90: ERROR MAIN, File = /home/sidjana/regression/validation/should_fail/item3_e.f90, Line = 6, Column = 22 
+  "A" has the POINTER attribute, therefore it must not be declared with the explicit-shape DIMENSION attribute (identifier first appeared at line 6)
+	                    ^       
+openf95-550 uhf90: ERROR MAIN, File = /home/sidjana/regression/validation/should_fail/item3_e.f90, Line = 6, Column = 22 
+  "A" has the POINTER attribute, therefore it must not be declared with the co-array DIMENSION attribute (identifier first appeared at line 6)
+
+openf95: Open64 Fortran Version 5.0 (f14) Fri Sep  7, 2012  17:24:05
+openf95: 7 source lines
+openf95: 2 Error(s), 0 Warning(s), 0 Other message(s), 0 ANSI(s)
+openf95: "explain openf95-message number" gives more information about each message

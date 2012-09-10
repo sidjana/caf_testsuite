@@ -1,0 +1,10 @@
+
+	allocate(x[*])
+	         ^     
+openf95-402 uhf90: ERROR MAIN, File = /home/sidjana/regression/validation/should_fail/item9_a.f90, Line = 8, Column = 11 
+  The number of extents specified for this allocate object does not match the declared rank.
+
+openf95: Open64 Fortran Version 5.0 (f14) Fri Sep  7, 2012  17:24:07
+openf95: 9 source lines
+openf95: 1 Error(s), 0 Warning(s), 0 Other message(s), 0 ANSI(s)
+openf95: "explain openf95-message number" gives more information about each message
