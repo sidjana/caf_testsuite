@@ -1,1 +1,0 @@
-cd should_pass

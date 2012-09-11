@@ -1,17 +1,28 @@
-PROGRAM item13
-IMPLICIT NONE
 
-INTEGER :: a1[*], a2[*]
+    PROGRAM item13
+       IMPLICIT NONE
+       integer :: rank
+       rank = this_image()
+       sync all
+       if (rank == 1) then
+         write *, "calling ERROR STOP"
+         error stop
+       else
+         call sleep(20)
+         write *, "end of sleep"
+         write *, "this line should not execute", rank
+       end if
 
-!a2[2]=0
 
-if (a2[this_image()] .eq. 0) then
-write(*,*) this_image(),' error occured'
-stop
-else
-write(*,*) this_image(),' result = ',a1[this_image()]/a2[this_image()]
-endif
 
-write(*,*) this_image(),'End of program '
-
-END PROGRAM item13
+!
+!       if (a2[this_image()] .eq. 0) then
+!       write(*,*) this_image(),'ERROR'
+!       stop
+!       else
+!       write(*,*) this_image(),' result = ',a1[this_image()]/a2[this_image()]
+!       endif
+!
+!       write(*,*) this_image(),'End of program '
+!
+    END PROGRAM item13

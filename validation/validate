@@ -2,21 +2,21 @@
 
 DATE=`date +"%m-%d-%y-%T"`
 ROOT=`pwd`
-TIMEOUT=120
+TIMEOUT=30
 PASS_OUT=PASS
 FAIL_OUT=FAIL
 
 for iter in 1 2 ; do
   if [ "$iter" == "1" ]; then
-     echo "*******CONFORMANCE TESTS*******" 
-     echo "SPEC_IDX COMPILE_OP EXECUTE_OP"  
+     echo "*******CONFORMANCE TESTS*******"
+     echo "SPEC_IDX COMPILE_OP EXECUTE_OP DESCRIPTION"
      CURRENT_PATH=$ROOT/should_pass
      PASS_OUT="PASS"
      FAIL_OUT="FAIL"
      cd $CURRENT_PATH
   else
-     echo "*******NON-CONFORMANCE TESTS*******"  
-     echo "SPEC_IDX COMPILE_OP EXECUTE_OP"
+     echo "*******NON-CONFORMANCE TESTS*******"
+     echo "SPEC_IDX COMPILE_OP EXECUTE_OP DESCRIPTION"
      CURRENT_PATH=$ROOT/should_fail
      PASS_OUT="FAIL"
      FAIL_OUT="PASS"
@@ -26,15 +26,17 @@ for iter in 1 2 ; do
  #for file in "item10_a.f90" "item10_b.f90" "item10_c.f90" "item3_a.f90"; do
    COMPILE_STATUS="UNKNOWN"
    EXEC_STATUS="N/A"
-   #echo "uhcaf $CURRENT_PATH/$file -o $ROOT/executables/$file.x  2>$CURRENT_PATH/compile_output/$file.compile.out  && echo 2 || echo 3"
+   SPEC_IDX="`echo "$file" |sed 's/.f90//'| sed 's/item//'`"
+   echo -n $SPEC_IDX 
    COMPILE_OUT=`uhcaf $CURRENT_PATH/$file -o $ROOT/executables/$file.x 2>$CURRENT_PATH/compile_output/$file.compile.out && echo 2 || echo 3`
    if [ $COMPILE_OUT -eq 2 ]; then
      COMPILE_STATUS="$PASS_OUT"
+     echo -n "    $COMPILE_STATUS"
      EXEC_OUT=`perl $ROOT/timedexec.pl $TIMEOUT "cafrun -n 4 $ROOT/executables/$file.x"  2>&1 && echo 1 || echo -1`
      if [ "$EXEC_OUT" == "-1" ]; then
          EXEC_STATUS="RUNTIME ERROR"
      else
-          echo "$EXEC_OUT" >>./exec_output/$file.exec.out 
+          echo "$EXEC_OUT" >>./exec_output/$file.exec.out
           VERIFICATION=`echo "$EXEC_OUT" | grep ERROR | awk '{print $5}'`
           if [ "$VERIFICATION" == "" ]; then
              EXEC_STATUS="$PASS_OUT"
@@ -44,8 +46,9 @@ for iter in 1 2 ; do
      fi
    else
      COMPILE_STATUS="$FAIL_OUT"
+     echo -n "$COMPILE_STATUS"
    fi
-   echo "`echo "$file" |sed 's/.f90//'| sed 's/item//'`        $COMPILE_STATUS     $EXEC_STATUS" 
+   echo "     $EXEC_STATUS ` cat description | grep "$file" | sed s/"$file"//`"
   done
   cd $ROOT
 done

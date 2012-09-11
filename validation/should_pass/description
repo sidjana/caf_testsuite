@@ -1,0 +1,26 @@
+item02_a.f90  NUM_IMAGES()
+item02_b.f90  THIS_IMAGE()
+item03_c.f90  CODIMENSION keyword
+item04_c.f90  square brackets
+item04_d.f90  validity of co-subscript
+item04_e.f90  co-subscripts indicates image index
+item04_f.f90  co-indexed objects used with intrinsics
+item05_a.f90  coarray dummy arguments
+item05_c.f90  IF dummy_arg=allocatable, THEN formal_arg=allocatable
+item05_f.f90  simultaneous call of subroutine with non-allocatable coarry
+item09_c.f90  co-bounds in ALLOCATE statement
+item09_d.f90  ALLOCATE stmt = same vals of bound, co-bounds
+item09_e.f90  automatic deallocation of allocatables
+item09_f.f90  DEALLOCATE statement
+item10_a.f90  coarrays of user-defined type
+item10_b.f90  association of local vars by pointer components of user-defined coarrays
+item12_1.f90  SYNC ALL
+item12_c.f90  SYNC_IMAGES(*) not same as SYNC ALL
+item12_e.f90  CRITICAL sections
+item12_f.f90  SYNC MEMORY
+item13_a.f90  ERROR STOP
+item15_a.f90  IMAGE_INDEX()
+item15_b.f90  LCOBOUND()
+item15_c.f90  UCOBOUND()
+item15_f.f90  ATOMIC SUBROUTINES
+

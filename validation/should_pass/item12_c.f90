@@ -1,3 +1,4 @@
+! sync_images(*) not same as sync all
 PROGRAM item12_c
 IMPLICIT NONE
 
@@ -23,7 +24,7 @@ arr(1)=1
          print *,"ERROR"
        end if
   else 
-       call sleep(5)
+       call sleep(10)
        num=num+1
        sync images(arr)
   end if

@@ -1,3 +1,5 @@
+! sync memory
+
 PROGRAM item12
 IMPLICIT NONE
 

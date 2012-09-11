@@ -1,0 +1,13 @@
+item03_a.f90  coarray object should not be declared as constant (PARAMETER)
+item03_b.f90  total number of co-dimensions <=7
+item03_d.f90  coarray should not be declared with DATA keyword
+item03_e.f90  coarray should not be declared as a POINTER
+item04_a.f90  cosubscript should be an INTEGER
+item04_b.f90  Array coarray should always be subscripted.
+item05_b.f90  entity with intent out attribute can not be an allocatable coarray
+item05_d.f90  automatic save coarrays cannot be declares in functions
+item05_e.f90  function return value cannot be declared as coarrays
+item09_a.f90  cobounds must be listed in ALLOCATE statement
+item09_b.f90  the upperbound for the last dimention within a co-subscript must be '*'
+item10_c.f90  local pointers cannot be associated with remote coarrays
+

@@ -1,3 +1,4 @@
+! CRITICAL sections
 PROGRAM item12
 IMPLICIT NONE
 INTEGER :: i
