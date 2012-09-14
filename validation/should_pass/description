@@ -7,7 +7,7 @@ item04_e.f90  co-subscripts indicates image index
 item04_f.f90  co-indexed objects used with intrinsics
 item05_a.f90  coarray dummy arguments
 item05_c.f90  IF dummy_arg=allocatable, THEN formal_arg=allocatable
-item05_f.f90  simultaneous call of subroutine with non-allocatable coarry
+item05_f.f90  simultaneous call of subroutine with non-allocatable coarray
 item09_c.f90  co-bounds in ALLOCATE statement
 item09_d.f90  ALLOCATE stmt = same vals of bound, co-bounds
 item09_e.f90  automatic deallocation of allocatables
@@ -23,4 +23,16 @@ item15_a.f90  IMAGE_INDEX()
 item15_b.f90  LCOBOUND()
 item15_c.f90  UCOBOUND()
 item15_f.f90  ATOMIC SUBROUTINES
+item03_1.f90  coarray declared with the codimension keyword or the []
+item03_3.f90  allow declaration of array or scalar coarrays
+item03_4.f90  allow coarrays of both basic and derived types
+item04_1.f90  a subobject of a coarray on another image may be read using cosubscripts
+item04_2.f90  No square brackets implies object on the executing image
+item04_3.f90  coindexed objects are permitted in intrinsic operations
+item04_5.f90  A coindexed object as an actual object corresponding to a non-coarray dummy argument
+item05_1.f90  Explicit-shape, assumed-size, assumed-shape and allocatable dummy args
+item09_3.f90  deallocate() acts as a barrier
+item10_1.f90  derived type coarrays with allocatable or pointer components
+item12_5.f90  SYNC IMAGES(stat=) SYNC IMAGES(errmsg=)
+item12_7.f90  LOCK and UNLOCK statements
 

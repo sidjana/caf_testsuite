@@ -46,7 +46,7 @@ for iter in 1 2 ; do
      fi
    else
      COMPILE_STATUS="$FAIL_OUT"
-     echo -n "$COMPILE_STATUS"
+     echo -n "    $COMPILE_STATUS"
    fi
    echo "     $EXEC_STATUS ` cat description | grep "$file" | sed s/"$file"//`"
   done
