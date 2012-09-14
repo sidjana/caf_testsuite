@@ -2,7 +2,6 @@ item02_a.f90  NUM_IMAGES()
 item02_b.f90  THIS_IMAGE()
 item03_c.f90  CODIMENSION keyword
 item04_c.f90  square brackets
-item04_d.f90  validity of co-subscript
 item04_e.f90  co-subscripts indicates image index
 item04_f.f90  co-indexed objects used with intrinsics
 item05_a.f90  coarray dummy arguments
