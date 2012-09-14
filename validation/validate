@@ -1,10 +1,13 @@
 #!/bin/bash
 
+
 DATE=`date +"%m-%d-%y-%T"`
 ROOT=`pwd`
 TIMEOUT=30
 PASS_OUT=PASS
 FAIL_OUT=FAIL
+
+source $ROOT/../config_params
 
 for iter in 1 2 ; do
   if [ "$iter" == "1" ]; then
@@ -27,8 +30,12 @@ for iter in 1 2 ; do
    COMPILE_STATUS="UNKNOWN"
    EXEC_STATUS="N/A"
    SPEC_IDX="`echo "$file" |sed 's/.f90//'| sed 's/item//'`"
+   if [ "$V" == "1" ]; then
+      echo "$FC $FFLAGS $CURRENT_PATH/$file -o $ROOT/executables/$file.x 2>$CURRENT_PATH/compile_output/$file.compile.out && echo 2 || echo 3"
+      echo "perl $ROOT/timedexec.pl $TIMEOUT \"cafrun -n 4 $ROOT/executables/$file.x\"  2>&1 && echo 1 || echo -1"
+   fi 
    echo -n $SPEC_IDX 
-   COMPILE_OUT=`uhcaf $CURRENT_PATH/$file -o $ROOT/executables/$file.x 2>$CURRENT_PATH/compile_output/$file.compile.out && echo 2 || echo 3`
+   COMPILE_OUT=`$FC $FFLAGS $CURRENT_PATH/$file -o $ROOT/executables/$file.x 2>$CURRENT_PATH/compile_output/$file.compile.out && echo 2 || echo 3`
    if [ $COMPILE_OUT -eq 2 ]; then
      COMPILE_STATUS="$PASS_OUT"
      echo -n "    $COMPILE_STATUS"

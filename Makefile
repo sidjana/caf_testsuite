@@ -44,7 +44,8 @@ validate_tests:
 
 
 ################# CLEAN-UP ###################
-clean_all: clean_performance clean_validation
+.PHONY: clean
+clean: clean_performance clean_validation
 
 
 ### CLEAN PERFORMANCE TESTS
