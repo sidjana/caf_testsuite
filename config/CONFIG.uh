@@ -1,0 +1,5 @@
+# UH CAF Compiler
+FC=uhcaf
+NPROCS=4
+FFLAGS="-ftpp -DNPROCS=$NPROCS"
+LAUNCHER="cafrun -n $NPROCS"

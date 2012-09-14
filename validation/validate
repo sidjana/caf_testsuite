@@ -7,7 +7,12 @@ TIMEOUT=30
 PASS_OUT=PASS
 FAIL_OUT=FAIL
 
-source $ROOT/../config_params
+if [ ! -f $ROOT/../config/CONFIG ]; then
+  echo "CONFIG file doesn't exist."
+  exit 1
+fi
+
+source $ROOT/../config/CONFIG
 
 for iter in 1 2 ; do
   if [ "$iter" == "1" ]; then
