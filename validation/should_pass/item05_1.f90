@@ -3,7 +3,7 @@
       program dummy
 
         integer :: num
-        real, save :: a(3)[*], b(3,3)[*]
+        real, save :: a(3)[3,*], b(3,3)[*]
         real, allocatable :: c(:,:)[:], d(:)[:,:]
 
         allocate (c(3,3)[*])

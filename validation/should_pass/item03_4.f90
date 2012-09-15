@@ -21,7 +21,7 @@ program main
   if(total_size .gt. 1) then
   	if(rank .eq. 2) then
       if(temp /=  1) then
-  		write *,  "ERROR"
+  		print *,  "ERROR"
       end if
   	end if
   end if

@@ -20,7 +20,7 @@
       deallocate(arr)
       if (size .gt. 1) then
          if (rank .eq. 1) then
-           if(temp[2] .eq. 1)
+           if(temp[2] .eq. 1) then
               print *, "ERROR"
            end if
          end if

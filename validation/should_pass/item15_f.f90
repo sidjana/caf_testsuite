@@ -16,7 +16,7 @@ program main
 	else if(rank .eq. 4) then
         sync all
 		call atomic_ref(y,x)
-		write(*,*)"y:",y
+		print *,"y:",y
 	end if
 
 end program main

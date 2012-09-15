@@ -4,16 +4,21 @@
 program main
 implicit none
 	real, allocatable :: a(:)[:]
+    integer :: i , rank
+    rank = this_image()
+    allocate(a(2)[*])
 	call subr(a)
 
 	sync all
-	write(*,*) "Rank -",this_image()," =>",a(1)
-contains 
-subroutine subr(x)
-	real, allocatable :: x(:,:)[:]
-	
-	allocate(x(2,2)[*])
-	x(1,1)[this_image()] = this_image()
-	
-end subroutine subr	
+    do i = 1,2
+      if (a(i) /= rank ) then
+          print *, "ERROR"
+      end if
+    end do
+
+	contains
+    subroutine subr(x)
+    	real, allocatable :: x(:)[:]
+    	x(:) = this_image()
+    end subroutine subr
 end program main

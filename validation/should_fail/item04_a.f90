@@ -4,6 +4,6 @@ program main
 	implicit none
 	integer :: a[*]
 	
-	a[1.0] = this_image()
+	a[1.1] = this_image()
 	
 end program main

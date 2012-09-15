@@ -10,7 +10,7 @@ implicit none
 	
 	if(this_image() .eq. 1) then
 		if(x(num_images()) .eq. 100) then
-			write(unit=0,*)"Error runtime: item9_d"
+            print * , "ERROR"
 		end if
 	end if
 end program main

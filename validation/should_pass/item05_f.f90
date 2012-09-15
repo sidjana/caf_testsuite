@@ -17,7 +17,7 @@ implicit none
 		!	write(*,*)"x[",i,"]:",x[i]
 		!end do
 		if(x[3] .ne. 12) then
-			write(unit=0,*)"Error runtime: item5_f"
+		print *, "ERROR"	
 		end if
 	end if
 

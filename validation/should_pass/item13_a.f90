@@ -5,12 +5,12 @@
        rank = this_image()
        sync all
        if (rank == 1) then
-         write *, "calling ERROR STOP"
+         print *, "calling ERROR STOP"
          error stop
        else
          call sleep(20)
-         write *, "end of sleep"
-         write *, "this line should not execute", rank
+         print *, "end of sleep"
+         print *, "ERROR - this line should not be executed", rank
        end if
 
 
