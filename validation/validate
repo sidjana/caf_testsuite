@@ -6,6 +6,11 @@ ROOT=`pwd`
 TIMEOUT=30
 PASS_OUT=PASS
 FAIL_OUT=FAIL
+RESULTS_DIR="$ROOT/results"
+
+cd $RESULTS_DIR
+rm -rf compile_failed.log  compile_passed.log  exec_failed.log exec_passed.log
+cd $ROOT
 
 if [ ! -f $ROOT/../config/CONFIG ]; then
   echo "CONFIG file doesn't exist."
@@ -38,26 +43,31 @@ for iter in 1 2 ; do
    if [ "$V" == "1" ]; then
       echo "$FC $FFLAGS $CURRENT_PATH/$file -o $ROOT/executables/$file.x 2>$CURRENT_PATH/compile_output/$file.compile.out && echo 2 || echo 3"
       echo "perl $ROOT/timedexec.pl $TIMEOUT \"cafrun -n 4 $ROOT/executables/$file.x\"  2>&1 && echo 1 || echo -1"
-   fi 
-   echo -n $SPEC_IDX 
+   fi
+   echo -n $SPEC_IDX
    COMPILE_OUT=`$FC $FFLAGS $CURRENT_PATH/$file -o $ROOT/executables/$file.x 2>$CURRENT_PATH/compile_output/$file.compile.out && echo 2 || echo 3`
    if [ $COMPILE_OUT -eq 2 ]; then
      COMPILE_STATUS="$PASS_OUT"
      echo -n "    $COMPILE_STATUS"
+     echo "$file"  >> $RESULTS_DIR/compile_passed.log
      EXEC_OUT=`perl $ROOT/timedexec.pl $TIMEOUT "cafrun -n 4 $ROOT/executables/$file.x"  2>&1 && echo 1 || echo -1`
      if [ "$EXEC_OUT" == "-1" ]; then
          EXEC_STATUS="RUNTIME ERROR"
+         echo "$file" >>$RESULTS_DIR/exec_failed.log
      else
           echo "$EXEC_OUT" >>./exec_output/$file.exec.out
           VERIFICATION=`echo "$EXEC_OUT" | grep ERROR | awk '{print $5}'`
           if [ "$VERIFICATION" == "" ]; then
              EXEC_STATUS="$PASS_OUT"
+             echo "$file" >>$RESULTS_DIR/exec_passed.log
           else
              EXEC_STATUS="$FAIL_OUT"
+             echo "$file" >>$RESULTS_DIR/exec_failed.log
           fi
      fi
    else
      COMPILE_STATUS="$FAIL_OUT"
+     echo "$file" >>$RESULTS_DIR/compile_failed.log
      echo -n "    $COMPILE_STATUS"
    fi
    echo "     $EXEC_STATUS ` cat description | grep "$file" | sed s/"$file"//`"

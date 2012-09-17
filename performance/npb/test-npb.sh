@@ -1,11 +1,11 @@
 #!/bin/sh
 
-DATE=`date +"%m-%d-%y-%T"` 
+DATE=`date +"%m-%d-%y-%T"`
 ROOT=`pwd`
 
 LOG_DIR=$ROOT/log/                # directory for the output of the regression
 TESTS_DIR=$ROOT/                  # directory for the test codes
-OUTPUT_DIR=$ROOT/regression_op/   # directory for the output of the compiler/execution 
+OUTPUT_DIR=$ROOT/regression_op/   # directory for the output of the compiler/execution
 BIN_DIR=$ROOT/bin/
 
 COMPILE_TESTS=0
@@ -43,7 +43,7 @@ EXEC_OUT="0"
 COMPILE_OUT="0"
 
 echo " Testing the NAS Parallel Benchmarks ..."
-echo "<TYPE> <NPROCS> <CLASS> <COMPILATION> <EXECUTION>" 
+echo "<TYPE> <NPROCS> <CLASS> <COMPILATION> <EXECUTION>"
 
 for type in ep cg; do
 #  for class in S W A B C D; do
@@ -72,7 +72,7 @@ for type in ep cg; do
                     VERIFICATION=` cat $OUTPUT_DIR/latest_execute/$opfile.exec | grep SUCCESS | awk '{print $3}'`
                     echo $EXEC_OUT>>$OUTPUT_DIR/latest_execute/$opfile.exec
                     if [ "$VERIFICATION" == "SUCCESSFUL" ]; then          #output correct
-                       EXEC_STATUS="SUCCESSFUL" 
+                       EXEC_STATUS="SUCCESSFUL"
                     else #output incorrect
                        EXEC_STATUS="UNSUCCESSFUL"
                     fi
@@ -81,7 +81,7 @@ for type in ep cg; do
                 EXEC_STATUS="NO BINARY"                                   #compilation passed
             fi
        fi
-       echo "$type         $NP       $class     $COMPILE_STATUS          $EXEC_STATUS" >> $LOG_DIR/$logfile 
+       echo "$type         $NP       $class     $COMPILE_STATUS          $EXEC_STATUS" >> $LOG_DIR/$logfile
        echo "$type         $NP       $class     $COMPILE_STATUS          $EXEC_STATUS"
     done
   done

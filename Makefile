@@ -37,7 +37,7 @@ run_npb:
 
 
 ################# VALIDATION TESTS ###################
-validate_tests:
+validate_tests: config/CONFIG
 	cd $(VALID_PATH) ; ./validate
 
 
@@ -62,10 +62,7 @@ clean_npb:
 
 ### CLEAN VALIDATION TESTS
 clean_validation:
-	cd $(VALID_PATH) ; sh clean.sh
-
-
-
+	cd $(VALID_PATH) ; sh clean.sh tests_output; sh ./clean.sh logs
 
 
 ################# HELP ME !!! ###################
