@@ -1,3 +1,5 @@
+! user defined type
+
 program main
   implicit none
   type mytype

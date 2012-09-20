@@ -1,12 +1,15 @@
 #!/bin/bash
 
-
 DATE=`date +"%m-%d-%y-%T"`
 ROOT=`pwd`
-TIMEOUT=30
+TIMEOUT="20"
 PASS_OUT=PASS
 FAIL_OUT=FAIL
 RESULTS_DIR="$ROOT/results"
+
+SUBJ="UHCAF-Testsuite validation results"
+EMAIL="siddharthajana24@gmail.com,dreachem@gmail.com"
+ATTACH="$ROOT/uhcaf_results_$DATE.tar"
 
 cd $RESULTS_DIR
 rm -rf compile_failed.log  compile_passed.log  exec_failed.log exec_passed.log
@@ -27,6 +30,10 @@ for iter in 1 2 ; do
      PASS_OUT="PASS"
      FAIL_OUT="FAIL"
      cd $CURRENT_PATH
+     COMPILE_PASS_LOG="$RESULTS_DIR/compile_pass_$DATE.log"
+     EXEC_PASS_LOG="$RESULTS_DIR/exec_pass_$DATE.log"
+     COMPILE_FAIL_LOG="$RESULTS_DIR/compile_fail_$DATE.log"
+     EXEC_FAIL_LOG="$RESULTS_DIR/exec_fail_$DATE.log"
   else
      echo "*******NON-CONFORMANCE TESTS*******"
      echo "SPEC_IDX COMPILE_OP EXECUTE_OP DESCRIPTION"
@@ -34,43 +41,62 @@ for iter in 1 2 ; do
      PASS_OUT="FAIL"
      FAIL_OUT="PASS"
      cd $CURRENT_PATH
+     COMPILE_PASS_LOG="$RESULTS_DIR/compile_fail_$DATE.log"
+     EXEC_PASS_LOG="$RESULTS_DIR/exec_fail_$DATE.log"
+     COMPILE_FAIL_LOG="$RESULTS_DIR/compile_pass_$DATE.log"
+     EXEC_FAIL_LOG="$RESULTS_DIR/exec_pass_$DATE.log"
   fi
- for file in `ls *.f90`; do
- #for file in "item10_a.f90" "item10_b.f90" "item10_c.f90" "item3_a.f90"; do
+# for file in `ls *.f90`; do
+ for file in "item_008.005.004.f90"; do
    COMPILE_STATUS="UNKNOWN"
    EXEC_STATUS="N/A"
-   SPEC_IDX="`echo "$file" |sed 's/.f90//'| sed 's/item//'`"
+   SPEC_IDX="`echo "$file" |sed 's/.f90//'| sed 's/item_//'`"
    if [ "$V" == "1" ]; then
       echo "$FC $FFLAGS $CURRENT_PATH/$file -o $ROOT/executables/$file.x 2>$CURRENT_PATH/compile_output/$file.compile.out && echo 2 || echo 3"
       echo "perl $ROOT/timedexec.pl $TIMEOUT \"cafrun -n 4 $ROOT/executables/$file.x\"  2>&1 && echo 1 || echo -1"
    fi
    echo -n $SPEC_IDX
    COMPILE_OUT=`$FC $FFLAGS $CURRENT_PATH/$file -o $ROOT/executables/$file.x 2>$CURRENT_PATH/compile_output/$file.compile.out && echo 2 || echo 3`
+
    if [ $COMPILE_OUT -eq 2 ]; then
      COMPILE_STATUS="$PASS_OUT"
-     echo -n "    $COMPILE_STATUS"
-     echo "$file"  >> $RESULTS_DIR/compile_passed.log
+     echo -n -e "\t\t$COMPILE_STATUS"
+     echo "$SPEC_IDX"  >> $COMPILE_PASS_LOG
+     # EXEC_OUT=`perl $ROOT/timedexec.pl $TIMEOUT "cafrun -n 4 $ROOT/executables/$file.x"  2>&1 && echo 1 || echo -1`
+     echo "perl $ROOT/timedexec.pl $TIMEOUT \"cafrun -n 4 $ROOT/executables/$file.x\"  2>&1 && echo 1 || echo -1"
      EXEC_OUT=`perl $ROOT/timedexec.pl $TIMEOUT "cafrun -n 4 $ROOT/executables/$file.x"  2>&1 && echo 1 || echo -1`
      if [ "$EXEC_OUT" == "-1" ]; then
          EXEC_STATUS="RUNTIME ERROR"
-         echo "$file" >>$RESULTS_DIR/exec_failed.log
+         echo "$file" >> $EXEC_FAIL_LOG
      else
           echo "$EXEC_OUT" >>./exec_output/$file.exec.out
           VERIFICATION=`echo "$EXEC_OUT" | grep ERROR | awk '{print $5}'`
           if [ "$VERIFICATION" == "" ]; then
              EXEC_STATUS="$PASS_OUT"
-             echo "$file" >>$RESULTS_DIR/exec_passed.log
+             echo "$file" >> $EXEC_PASS_LOG
           else
              EXEC_STATUS="$FAIL_OUT"
-             echo "$file" >>$RESULTS_DIR/exec_failed.log
+             echo "$file" >> $EXEC_FAIL_LOG
           fi
      fi
    else
      COMPILE_STATUS="$FAIL_OUT"
-     echo "$file" >>$RESULTS_DIR/compile_failed.log
-     echo -n "    $COMPILE_STATUS"
+     echo "$file" >>$COMPILE_FAIL_LOG
+     echo -n -e "\t\t$COMPILE_STATUS"
    fi
-   echo "     $EXEC_STATUS ` cat description | grep "$file" | sed s/"$file"//`"
+   echo -e "\t $EXEC_STATUS ` cat description | grep "$file" | sed s/"$file"//`"
   done
   cd $ROOT
 done
+
+
+# Sending an email notification
+if [ (-f $COMPILE_FAIL_LOG) && (-f $EXEC_FAIL_LOG) ]; then
+tar -rf $ATTACH  $COMPILE_FAIL_LOG $EXEC_FAIL_LOG
+mutt -s "$SUBJ" -a $ATTACH $EMAIL < "Failed logs attached"
+fi
+
+echo "Test completed"
+
+
+

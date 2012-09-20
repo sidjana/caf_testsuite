@@ -62,7 +62,7 @@ clean_npb:
 
 ### CLEAN VALIDATION TESTS
 clean_validation:
-	cd $(VALID_PATH) ; sh clean.sh tests_output; sh ./clean.sh logs
+	cd $(VALID_PATH) ; sh clean.sh tests_output
 
 
 ################# HELP ME !!! ###################

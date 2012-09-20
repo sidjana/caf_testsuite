@@ -11,3 +11,4 @@ item09_a.f90  cobounds must be listed in ALLOCATE statement
 item09_b.f90  the upperbound for the last dimention within a co-subscript must be '*'
 item10_c.f90  local pointers cannot be associated with remote coarrays
 item04_d.f90  validity of co-subscript
+item09_e.f90  automatic deallocation of allocatables
