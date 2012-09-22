@@ -42,7 +42,7 @@ eval {
             $cmdStatus = $? >> 8;
         }
 
-    }        
+    }
     alarm 0;
 };
 die if $@ && $@ ne "alarm";

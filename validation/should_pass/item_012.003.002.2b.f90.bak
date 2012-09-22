@@ -1,0 +1,36 @@
+
+
+      program dummy
+
+        integer :: num
+        real, save :: a(3)[*], b(3,3)[*]
+        real, allocatable :: c(:,:)[:], d(:)[:,:]
+
+        allocate (c(3,3)[*])
+        allocate (d(3)[3,*])
+        a(:)=this_image()
+        b(:,:)=this_image() * 2
+        c(::2,:)=this_image() * 3
+        d(::2)=this_image() * 4
+              sync all
+
+        call subr(5,a,b,c,d)
+
+        contains
+        subroutine subr(n,w,x,y,z)
+            integer :: n
+            real :: w(n)[n,*] ! Explicit shape
+            real :: x(n,*)[*] ! Assumed size
+            real :: y(:,:)[*] ! Assumed shape
+            real, allocatable :: z(:)[:,:] ! Allocatable
+
+            if ( this_image() == 1)  then
+                do i = 1 , num_images()
+                    if (d(i)==) then
+                     
+                     print * , d(i) , " "
+                   end if 
+                end do
+            end if
+        end subroutine
+      end program

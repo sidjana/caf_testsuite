@@ -27,7 +27,7 @@ program main
   		print *, "ERROR 10_a"
   	end if
   	if(temp2(1) .ne. 4 .OR. temp2(2) .ne. 8 .OR. temp2(3) .ne. 12) then
-  		print *, "ERROR 10_a"
+  		print *,  "ERROR 10_a"
   	end if
   end if
 

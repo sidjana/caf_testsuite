@@ -3,8 +3,10 @@
         implicit none
         integer :: a[*]
         integer :: rank,i
+
         rank = this_image()
         a[rank] = rank
+
         sync all
 
         if (rank == 1) then
