@@ -1,6 +1,8 @@
 ! SYNC IMAGES(*) .NEQ. SYNC ALL - other images must not wait for each other
 
 PROGRAM item12_c
+      use cross_test
+
       IMPLICIT NONE
 
       INTEGER :: total_images, rank, i
@@ -9,35 +11,38 @@ PROGRAM item12_c
 
       rank=this_image()
       total_images=num_images()
-      arr(1)=1
-      num = 0
+      arr(1)=2
+
+      cross_err = 0
 
       if (total_images .le. 3) then
-               print *, "run program with num_images > 3"
-                STOP
-          end if
+            print *, "run program with num_images > 3"
+            call EXIT(3)
+      end if
 
       do i = 1 , 4
           num = 0
           sync all
-          if(rank == 1)  then
+          if(rank == 2)  then
+#ifndef CROSS_
                sync images(*)
-
-          else if(rank == 2) then
+#endif
+          else if(rank == 1) then
                call sleep(5)
                num = rank
+#ifndef CROSS_
                sync images(arr)
-
+#endif
           else
+#ifndef CROSS_
                sync images(arr)
-               if (num[2] /= 0) then
-                 print *, "ERROR"
+#endif
+               if (num[1] /= 0) then
+                    cross_err = cross_err + 1
                end if
-
           end if
           sync all
-
       end do
-          print *, rank, " reached"
+      call calc(cross_err)
 
 END PROGRAM

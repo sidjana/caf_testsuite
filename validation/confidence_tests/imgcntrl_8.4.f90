@@ -1,22 +1,30 @@
 ! ERROR STOP statement should stop other images as soon as it is practicable
 
-    PROGRAM item13
+    PROGRAM errorstop_test
+    use cross_test
+
        IMPLICIT NONE
-       integer :: rank, i, temp
+
+       integer :: rank, size,i, temp
 
        rank = this_image()
+
        sync all
+
        if (rank == 1) then
          print *, "calling ERROR STOP"
+#ifndef CROSS_
          error stop
+#endif
        else
 
+         ! the following loop is added jsut to get some computational overhead
+         ! and to make is possible for ERROR termination
          do i = 1 , 10
             call sleep(1)
             temp = temp + 100
          end do
-         print *, "end of sleep"
-         print *, "ERROR - this line should not be executed", rank
+         call EXIT(7)
        end if
 
     END PROGRAM item13

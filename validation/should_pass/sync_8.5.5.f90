@@ -11,6 +11,7 @@
         rank = this_image()
         size = num_images()
         stat_var = 0
+        cross_err = 0
 
         sync all
 

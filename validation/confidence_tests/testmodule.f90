@@ -2,6 +2,7 @@
 
       module cross_test
       IMPLICIT NONE
+      integer :: cross_err[*]
        contains
 
        subroutine calc (cross_err)
@@ -11,7 +12,7 @@
           rank = this_image()
 
             if (rank == 1) then
-              do i = 2 , size
+              do i = 1 , size
                 cross_err = max(cross_err,cross_err[i])
                 print *, cross_err
               end do

@@ -1,6 +1,7 @@
 ! test to verify the correctness of the sync all statement
 
       program item12_1
+      use cross_test
 
         implicit none
 
@@ -9,22 +10,32 @@
 
         rank=this_image()
         num=rank
-
+#ifndef CROSS_
         sync all
-
+#endif
         do i = 1,5
-              num = i*rank
-              if (rank .eq. 2) then
-                call sleep(2) ! delaying img2 to give img1 a head start
-              end if
+              num = 0
+#ifndef CROSS_
               sync all
-              if (rank .eq.1 ) then
-                 if(num[2] /=  i*2 ) then
-                   print *, "ERROR"
-                 end if
+#endif
+              if (rank == 1) then
+                call sleep(4)
+                num = rank
+#ifndef CROSS_
+                sync all
+#endif
+              else
+#ifndef CROSS_
+                sync all
+#endif
+                if (num[1] /= 1) then
+                  cross_err = cross_err + 1
+                end if
               end if
-              sync all
+#ifndef CROSS_
+             sync all
+#endif
         end do
-
+        call calc(cross_err)
       end program
 
