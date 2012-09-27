@@ -3,15 +3,14 @@
 !execution is also successful
 program main
 implicit none
-	real, allocatable :: a(:)[:]
+	real, allocatable :: a(:)
     integer :: i , rank
     rank = this_image()
-    allocate(a(2)[*])
 	call subr(a)
 
 	sync all
-    do i = 1,2
-      if (a(i) /= rank ) then
+    do i = 1,num_images()
+      if (a(1)[i] /= rank ) then
           print *, "ERROR"
       end if
     end do
@@ -19,6 +18,7 @@ implicit none
 	contains
     subroutine subr(x)
     	real, allocatable :: x(:)[:]
+        allocate(x(2)[*])
     	x(:) = this_image()
     end subroutine subr
 end program main

@@ -1,5 +1,0 @@
-# Intel CAF Compiler
-FC=ifort
-NPROCS=4
-FFLAGS="-coarray -coarray-num-images=$NPROCS -fpp -DNPROCS=$NPROCS"
-LAUNCHER=""
