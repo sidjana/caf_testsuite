@@ -43,6 +43,12 @@ PROGRAM item12_c
           end if
           sync all
       end do
-      call calc(cross_err)
+
+#ifndef CROSS_
+           call calc_ori(cross_err)
+#else
+           call calc(cross_err)
+#endif
+
 
 END PROGRAM

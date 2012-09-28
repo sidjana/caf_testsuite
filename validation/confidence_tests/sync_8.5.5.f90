@@ -24,7 +24,7 @@
             call sleep(8)
             sync images(other_images, STAT=stat_var)
             if ( stat_var /= stat_stopped_image) then
-                print *, "ERROR"
+                call EXIT(5)
             end if
         end if
 

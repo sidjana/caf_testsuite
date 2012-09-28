@@ -3,19 +3,21 @@
 PROGRAM item12_c
     use cross_test
 
-    IMPLICIT NONE
+        IMPLICIT NONE
 
-    INTEGER :: total_images, rank, i
-    INTEGER :: arr(1)
-    INTEGER :: num[*]
+        INTEGER :: total_images, rank, i
+        INTEGER :: arr(1)
+        INTEGER :: num[*]
 
-    rank=this_image()
-    total_images=num_images()
+        rank=this_image()
+        total_images=num_images()
 
-    arr(1)=1
+        arr(1)=1
+
 #ifndef CROSS_
         sync all
 #endif
+
         do i = 1,5
               num = 0
               sync all
@@ -35,6 +37,12 @@ PROGRAM item12_c
               end if
              sync all
         end do
+
+#ifndef CROSS_
+        call calc_ori(cross_err)
+#else
         call calc(cross_err)
+#endif
+
       end program
 

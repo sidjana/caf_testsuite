@@ -36,6 +36,11 @@
              sync all
 #endif
         end do
-        call calc(cross_err)
+#ifndef CROSS_
+           call calc_ori(cross_err)
+#else
+           call calc(cross_err)
+#endif
+
       end program
 
