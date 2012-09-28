@@ -18,7 +18,7 @@
 #endif
        else
 
-         ! the following loop is added jsut to get some computational overhead
+         ! The following loop is added just to get some computational overhead
          ! and to make is possible for ERROR termination
          do i = 1 , 10
             call sleep(1)
@@ -27,4 +27,4 @@
          call EXIT(7)
        end if
 
-    END PROGRAM item13
+    END PROGRAM

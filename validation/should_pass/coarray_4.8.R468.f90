@@ -7,13 +7,11 @@
         rank = this_image()
         a[rank] = rank
 
-        sync all
-
         if (rank == 1) then
           do i = 1 , num_images()
-            if (a[i] /= i) then
+            if (i == rank .AND. a /= i) then
                 print * , "ERROR"
-            end if 
+            end if
           end do
         end if
 end program main

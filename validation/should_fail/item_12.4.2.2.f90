@@ -3,7 +3,7 @@
 !execution is also successful
 program main
 implicit none
-	real, allocatable :: a(:)
+	real, save:: a(:)[*]
     integer :: i , rank
     rank = this_image()
 	call subr(a)

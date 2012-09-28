@@ -1,4 +1,4 @@
-!iverification of image_index()
+!verification of image_index()
 
 
 program main

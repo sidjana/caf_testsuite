@@ -1,5 +1,6 @@
-! this program checks whether the DEALLOCATE & ALLOCATE statements acts as a barriers
-! or not. They should !
+! This program verifies whether the DEALLOCATE & ALLOCATE statements
+! act as a barriers.
+
 
       program deallocate_test
 

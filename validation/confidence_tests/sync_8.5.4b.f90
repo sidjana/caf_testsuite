@@ -15,8 +15,8 @@ PROGRAM item12_c
 
       cross_err = 0
 
-      if (total_images .le. 3) then
-            print *, "run program with num_images > 3"
+      if (total_images .lt. 3) then
+            print *, "run program with num_images >= 3"
             call EXIT(3)
       end if
 

@@ -1,0 +1,226 @@
+
+This document describes the purpose and the rationale behind
+each of the tests in the testsuite.
+
+
+################### CONFIDENCE - TESTS ###################
+
+-- All tests in this category verify CAF constructs that avoid
+race conditions. The tests include calls to the sleep()
+intrinsic for introducing delays in some images so enforce a
+certain level of determinism. This is essential for testing the
+different features as listed below,
+
+-- Design of the tests:
+- Every test had a cross test. The cross test verifies whether
+  the introduction of sleep() calls introduces the races. The
+tests DO NOT include the CAF contruct / statement being tested.
+(The macro CROSS_ is used to exclude these contructs)
+
+- Every test includes a module called 'crosstest'.
+
+- The module 'crosstest' (defined in file testmofule.f90)
+  includes the declaration of an integer coscalar called
+'cross_err' which is modified by every image that detects an
+error(the usage differs for different tests as explained below).
+It also contains two subroutines - calc_ori and calc.The former
+returns the test result of the feature being tested. The latter
+returns the result based on the confidence of the cross-test.
+confidence of the actual tests.
+
+- The original tests (with the CAF constructs) are compiled as:
+  $(FC) $(PREPROCESSOR_FLAG) testmodule.f90 <file_name.f90>
+
+- The cross tests (without the CAF constructs) are compiled as:
+  $(FC) $(PREPROCESSOR_FLAG) -DCROAA_ testmodule.f90
+<file_name.f90>
+
+- Image-1 is chosen as the one whose coarray is accessesed by
+  different images for testing the feature under consideration.
+
+- Almost every test is performed 5 times for calculating the
+  confidence.
+
+-- Error codes returned
+________________________________________________________________
+|CODE |                    Meaning                             |
+| 0   | Default val returned to OS on successful execution     |
+| 1   | Default val returned to OS on incorrect execution      |
+| 2   | Successful Compilation                                 |
+| 3   | Unsuccessful Compilation                               |
+| 4   | Value returned when the feature test passes            |
+| 5   | Value returned when the feature test fails             |
+| 6   | Value returned when the cross test passes              |
+| 7   | Value returned when the cross test fails               |
+|_____|________________________________________________________|
+
+
+-- The description of the different feature tests are as
+follows:
+
+
+
+** critical_8.1.5.f90:
+
+This tests the CRITICAL constructs. The aim of the test is to
+determine whether the CRITICAL stmt blocks other images from
+entering the CRITICAL section. For this purpose, image 1 is
+given a head start and is allowed to enter the section. The
+image1 one then sleeps for a few seconds giving the other images
+an opportunity to break into the section in case of incorrect
+implementation of the CRITICAL statement. If other images enter
+the section, they read the unchanged value of 'num' on image1
+and records the error in 'cross_err'.
+
+
+** intrin_8.5.6.f90:
+
+This tests the LOCK - UNLOCK constructs. The aim is to test
+whether the LOCK stmt blocks other imags when already acquired.
+Image-1 is given a head-start and acquires the lock. on
+Acquiring the lock, image1 sleeps for a while. If the LOCK
+constructu is correctly implemented, other images overwrites on
+1's 'num' coarray. On retrn from sleep() image 1 checks whether
+its 'num' is untouched or not. If not, it records the error in
+'cross_err'.
+
+
+** sync_8.5.3.f90:
+
+This tests for SYNC ALL image control stmt. The aim of the test
+is to verify the barrier-like behavior by the SYNC ALL contruct.
+Before writing to its 'num' coarray, image1 sleeps. If the SYNC
+stmt does not act as a barrier, other images bypass it and read
+a zeroed num[1] and records the error in 'cross_err'. If the
+SYNC ALL statement is correctly implemented, all the other
+images wait at the barrier till image1 writes to its 'num'
+before joining others at the snchronization contruct.
+
+
+** The test case for SYNC IMAGES is subdivided into 2 parts:
+
+**a. sync_8.5.4a.f90:
+
+This tests for the correct working of SYNC IMAGES(*) executed by
+image1. The aim is to determine whether other images block till
+the images being waited on call SYNC IMAGES(*). Image-1 sleeps
+for a while before modifying its 'num' coarray. All the other
+images expect to see the modified 'num[1]' after executing SYNC
+IMAGES(ARR). If the modified data object on image1 is still not
+accessible, then the other images record the error in
+'cross_err'.
+
+**b. sync_8.5.4b.f90:
+
+In this case, image-2 executes SYNC IMAGES(*). All other images
+execute SYNC IMAGES(ARR), where ARR in a rank-one array with 1
+element - 2.The aim of the test is to verify whether images
+executing SYNC IMAGES(ARR) incorrectly synchronize with each
+other. The spec mentions that SYNC IMAGES is not the same as
+SYNC ALL. Image-1 makes a change to its 'num' coarray. If SYNC
+IMAGES(ARR) act as a barrier, the other images(besides 1 and 2)
+will be able to see this modified object. This would imply an
+inconsistent behavior with the standard and the images will
+record this error in 'cross_err'.
+
+
+
+################### CONFORMANCE - TESTS ###################
+
+
+** atomic_8.5.2.f90:
+
+This test validates the implementation of the atomic subroutine
+- atomic_define. It must be noted that atomic operations are
+  defined on an ATOM element - only a scalar of ATOMIC kind. In
+the test, all images atomically write a number which is a power
+of 2 to the coscalar - 'obj' on image1. To verify whether the
+writes occur atomically or not, every image writes a number
+whose binary equivalent includes only one of the bits as set(1)
+and the rest, reset(0).  E.g. if two competing images perform a
+non-atomic write on the same location - say ,0010 and 0100 the
+number might read 0110.  As a test, we check whether the 'obj'
+maintains it property of being a perfect power of '2'. If not,
+the write was not atomic.
+
+
+** character_test.f90:
+
+This test tests for the support of character coarrays. The
+following subtle differnce must be noted between strings in
+FORTRAN and C: In FORTRAN: character   :: a(4) ! array of 4
+strings of size 1 each character*2 :: a(4) ! array of 4 strings
+of size 2 each character   :: a    ! string of size 1
+character*2 :: a    ! string of size 2 In C: char* a;     /* a
+pointer to a character which can potentially expand to a large
+buffer of consecutive characters */ char a[4];   /* 1 string /
+array of 4 characters The manner in which remote data transfers
+are handled within the compiler will be slightly different when
+the coarrays are of CHARACTER data type.
+
+
+** coarray_2.4.7.6.f90:
+
+This test checks the use of cosubscripts within square brackets
+translate to data transfer from the correct image or not. The
+cosubscripts notation follows the rules for the
+array-subscripts. It tests for the correctness of the
+implementation of the possibility of the  lower bound not always
+being equal to 1
+
+
+** coarray_4.8.R468.f90:
+
+reference of coarray without [] implies local object
+
+
+** coarray_5.3.6.1.f90:
+
+use of attribute CODIMENSION to declare coarrays
+
+
+**dummyargs_12.3.2.2c.f90:
+
+explicit shape, assumed size, assumed shape, allocatable dummy
+arguments
+
+
+** intrin_13.007.126.f90:
+
+NUM_IMAGES() returns the number of images launched
+
+
+** intrin_13.7.165.f90:
+
+THIS_IMAGE(), THIS_IMAGE(coarray), THIS_IMAGE(coarray, dim)
+
+
+** intrin_13.7.172.f90:
+
+LCOBOUND(coarray) and LCOBOUND(coarray,dim)
+
+
+** intrin_13.7.79.f90
+
+IMAGE_INDEX(coarray, subs)
+
+
+** intrin_13.7.91.f90
+
+UCOBOUND(COARRAY[, DIM, KIND])
+
+
+** intrin_6.7.3.2.11.f90
+
+ALLOCATE and DEALLOCATE act as barriers
+
+
+** item_4.8.a.f90
+
+subobjects if a coarray is also a coarray
+
+
+** pointer_4.5.4.6b.f90:
+
+association of pointer components of coarrays with local objects
+

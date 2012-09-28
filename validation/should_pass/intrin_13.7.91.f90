@@ -1,4 +1,4 @@
-!LCOBOUND(COARRAY[, DIM, KIND])
+!UCOBOUND(COARRAY[, DIM, KIND])
 
     program main
         implicit none

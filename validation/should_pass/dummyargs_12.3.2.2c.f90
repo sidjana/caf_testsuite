@@ -1,8 +1,5 @@
 !A dummy argument of a procedure is permitted to be a coarray. It may be of explicit shape,
 !assumed size, assumed shape, or allocatable
-!TODO: verify the claims below
-!in openuh, assumed shape always return 0 , fail deallocate
-!in g95, reference to a coobject gives gives coarray read failure
 
 program main
         implicit none

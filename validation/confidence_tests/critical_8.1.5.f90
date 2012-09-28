@@ -29,6 +29,10 @@
 #endif
              sync all
            end do
+#ifndef CROSS_
+           call calc_ori(cross_err)
+#else
            call calc(cross_err)
+#endif 
            end program item12
 
