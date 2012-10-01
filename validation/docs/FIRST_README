@@ -44,8 +44,8 @@ confidence of the actual tests.
 -- Error codes returned
 ________________________________________________________________
 |CODE |                    Meaning                             |
-| 0   | Default val returned to OS on successful execution     |
-| 1   | Default val returned to OS on incorrect execution      |
+| 0   | Default val returned to shell on successful execution  |
+| 1   | Default val returned to shell on incorrect execution   |
 | 2   | Successful Compilation                                 |
 | 3   | Unsuccessful Compilation                               |
 | 4   | Value returned when the feature test passes            |

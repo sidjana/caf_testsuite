@@ -37,11 +37,15 @@ all:    clean $(EXES)
 			 fi   \
 	     fi
 
-clean:
-	@rm  -rf  $(BIN_PATH)/*.x   ./*.x ./*.mod
 
 clean-log:
-	@rm -rf compile_output/*.log exec_output/*.log
+	    @rm -rf compile_output/*.log exec_output/*.log
 
-clean_all: clean clean_logs
+clean-exec:
+	    @rm  -rf  $(BIN_PATH)/*.x   ./*.x  ./*.mod
+
+clean-history:
+	    @rm -rf ./HISTORY/*.log
+
+clean clean-all:  clean-log clean-exec clean-history
 

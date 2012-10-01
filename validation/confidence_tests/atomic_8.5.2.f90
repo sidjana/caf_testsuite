@@ -21,7 +21,8 @@
         do j = 1,100000
             obj = 0
             sync all
-            atomic_define(obj[1],num)
+            !call atomic_define(obj[1],num)
+            obj[1]=num
             sync all
             if (rank == 1) then
               if ( obj /=2 .AND. obj /= 4 &
