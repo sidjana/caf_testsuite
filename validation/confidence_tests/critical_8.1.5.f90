@@ -7,17 +7,17 @@
             rank = this_image()
             size = num_images()
 
-           do i = 1,5
+           do i = 1,NITER
                   num = 0
                   sync all
                   if (rank /= 1) then
-                    call sleep(3) ! giving img1 a head start
+                    call sleep(SLEEP) ! giving img1 a head start
                   end if
 #ifndef CROSS_
             critical
 #endif
                    if (rank == 1) then
-                     call sleep(4)
+                     call sleep(SLEEP)
                      num = rank
                    else
                      if (num[1] == 0) then

@@ -14,14 +14,14 @@
        if (rank == 1) then
          print *, "calling ERROR STOP"
 #ifndef CROSS_
-         error stop
+         error stop 10
 #endif
        else
 
          ! The following loop is added just to get some computational overhead
          ! and to make is possible for ERROR termination
-         do i = 1 , 10
-            call sleep(1)
+         do i = 1 , NITER
+            call sleep(SLEEP)
             temp = temp + 100
          end do
          call EXIT(7)

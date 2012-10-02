@@ -13,11 +13,11 @@
          size = num_images()
 
         if(size .gt. 1) then
-          do i = 1,5
+          do i = 1,NITER
               num = 0
               sync all
               if (rank /= 1) then
-                 call sleep(5) ! giving img 1 a head-start
+                 call sleep(SLEEP) ! giving img 1 a head-start
               end if
 #ifndef CROSS_
               LOCK (lock_var[1])
@@ -28,7 +28,7 @@
               if (rank == 1) then
                 ! if lock does not work , other images will modify 'num[1]' . sleep() gives time to do so.
 
-                 call sleep(10)
+                 call sleep(SLEEP)
                  if (num /= 0) then
                    cross_err = cross_err + 1
                  end if

@@ -13,13 +13,13 @@
 #ifndef CROSS_
         sync all
 #endif
-        do i = 1,5
+        do i = 1,NITER
               num = 0
 #ifndef CROSS_
               sync all
 #endif
               if (rank == 1) then
-                call sleep(4)
+                call sleep(SLEEP)
                 num = rank
 #ifndef CROSS_
                 sync all

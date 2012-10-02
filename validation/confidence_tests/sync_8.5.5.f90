@@ -21,7 +21,7 @@
             sync images(other_images)
         else if (rank .eq. 1) then
             other_images(1) = 2
-            call sleep(8)
+            call sleep(SLEEP)
             sync images(other_images, STAT=stat_var)
             if ( stat_var /= stat_stopped_image) then
                 call EXIT(5)

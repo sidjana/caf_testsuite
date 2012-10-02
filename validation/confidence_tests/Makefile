@@ -1,6 +1,6 @@
 include ../../config/make.def
 
-BIN_PATH:="../bin"
+FLAGS = $(FFLAGS)
 
 F_TESTS = $(wildcard *.f90)
 
@@ -8,7 +8,7 @@ F_EXES  = $(F_TESTS:.f90=.x)
 
 EXES    = $(F_EXES)
 
-all:    clean $(EXES)
+all:    clean  testmodule.o   $(EXES)
 
 .SUFFIXES: .x
 
@@ -19,8 +19,13 @@ all:    clean $(EXES)
 	   @ source confidence_test.sh "$@" "$^"
 
 
+testmodule.o:
+	@$(shell $(FC) $(FLAGS) -c  ../testmodule.f90)
+	@echo "$(FC) $(FLAGS) -c  ../testmodule.f90"
+
+
 clean-log:
-	@rm -rf compile_output/*.log exec_output/*.log
+	@rm -rf compile_output/*.log exec_output/*.log 
 
 clean-exec:
 	@rm  -rf  $(BIN_PATH)/*.x   ./*.x  ./*.mod
@@ -29,4 +34,5 @@ clean-history:
 	@rm -rf ./HISTORY/*.log
 
 clean clean-all:  clean-log clean-exec clean-history
+	@rm -rf *.o
 

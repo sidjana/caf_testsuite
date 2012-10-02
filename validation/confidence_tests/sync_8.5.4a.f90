@@ -18,11 +18,11 @@ PROGRAM item12_c
         sync all
 #endif
 
-        do i = 1,5
+        do i = 1,NITER
               num = 0
               sync all
               if(rank == 1)  then
-                  call sleep(5)  ! giving other images a head start
+                  call sleep(SLEEP)  ! giving other images a head start
                   num = rank
 #ifndef CROSS_
                   sync images(*)

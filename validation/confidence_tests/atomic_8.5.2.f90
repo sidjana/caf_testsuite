@@ -18,7 +18,7 @@
           STOP
         end if
 
-        do j = 1,100000
+        do j = 1,NITER
             obj = 0
             sync all
             !call atomic_define(obj[1],num)
@@ -27,7 +27,7 @@
             if (rank == 1) then
               if ( obj /=2 .AND. obj /= 4 &
               .AND. obj /= 8 .AND. obj/=16) then
-                print *, "ERROR : " ,  rank
+               call EXIT(4) 
               end if
             end if
             sync all

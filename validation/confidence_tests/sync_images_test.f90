@@ -10,7 +10,7 @@
           sync all
 
           if (this_image() == 1) then
-            call sleep(1)
+            call sleep(SLEEP)
             num = 1
             sync images(*)
           else
@@ -37,7 +37,7 @@
           sync all
 
           if (this_image() == 1) then
-            call sleep(1)
+            call sleep(SLEEP)
             num = 1
           else
             if (num[1] == 1) then

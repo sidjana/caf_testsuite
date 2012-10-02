@@ -9,6 +9,7 @@
        subroutine calc_ori(cross_err)
           integer:: cross_err[*]
           if (cross_err .gt. 0) then
+            print *, "err=", cross_err
             call EXIT(5)
           else
             call EXIT(4)
@@ -25,10 +26,11 @@
               do i = 1 , size
                 cross_err = max(cross_err,cross_err[i])
               end do
-              if ((cross_err*1.0)/5 .ge. 0.5) then
-                print *, "high confidence"
+              if ((cross_err*1.0)/NITER .ge. 0.5) then
+                print *, "err=", cross_err
                 call EXIT(6)
               else
+                print *, "err=", cross_err
                 call EXIT(7)
               end if
             end if

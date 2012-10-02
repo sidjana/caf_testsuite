@@ -20,7 +20,7 @@ PROGRAM item12_c
             call EXIT(3)
       end if
 
-      do i = 1 , 4
+      do i = 1 , NITER
           num = 0
           sync all
           if(rank == 2)  then
@@ -28,7 +28,7 @@ PROGRAM item12_c
                sync images(*)
 #endif
           else if(rank == 1) then
-               call sleep(5)
+               call sleep(SLEEP)
                num = rank
 #ifndef CROSS_
                sync images(arr)
