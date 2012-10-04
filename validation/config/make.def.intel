@@ -1,0 +1,7 @@
+# Intel CAF Compiler
+COMPILER := "Intel"
+FC := ifort
+NPROCS := 4
+FFLAGS := -coarray -coarray-num-images=$NPROCS -fpp -DNPROCS=$NPROCS
+LAUNCHER :=
+TIMEOUT := 20

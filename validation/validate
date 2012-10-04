@@ -22,7 +22,7 @@ if [ ! -f $ROOT/../config/CONFIG ]; then
   exit 1
 fi
 
-source $ROOT/../config/CONFIG
+source $ROOT/config/CONFIG
 
 for iter in 1 ; do
   if [ "$iter" == "1" ]; then
@@ -46,16 +46,15 @@ for iter in 1 ; do
      PASS_OUT="FAIL"
      FAIL_OUT="PASS"
      cd $CURRENT_PATH
-     COMPILE_PASS_LOG="$RESULTS_DIR/$FC\_compile_fail_$DATE.log"
-     EXEC_PASS_LOG="$RESULTS_DIR/$FC\_exec_fail_$DATE.log"
-     COMPILE_FAIL_LOG="$RESULTS_DIR/$FC\_compile_pass_$DATE.log"
+     COMPILE_PASS_LOG="$RESULTS_DIR/${FC}_compile_fail_$DATE.log"
+     EXEC_PASS_LOG="$RESULTS_DIR/${FC}_exec_fail_$DATE.log"
+     COMPILE_FAIL_LOG="$RESULTS_DIR/${FC}_compile_pass_$DATE.log"
      EXEC_FAIL_LOG="$RESULTS_DIR/${FC}_exec_pass_$DATE.log"
      for temp in $COMPILE_PASS_LOG $EXEC_PASS_LOG $COMPILE_FAIL_LOG $EXEC_FAIL_LOG; do
         echo "*******NON-CONFORMANCE TESTS*******" >> $temp
      done
   fi
  for file in `ls *.f90`; do
- #for file in "item_008.005.004.f90"; do
    COMPILE_STATUS="UNKNOWN"
    EXEC_STATUS="N/A"
    SPEC_IDX="`echo "$file" |sed 's/.f90//'| sed 's/item_//'`"

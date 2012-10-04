@@ -19,18 +19,21 @@
        subroutine calc (cross_err)
           integer :: cross_err[*]
           integer :: size, rank, i
+          real :: percent=0.0
+
           size =  num_images()
           rank = this_image()
+500       FORMAT(F3.2)
 
             if (rank == 1) then
               do i = 1 , size
                 cross_err = max(cross_err,cross_err[i])
               end do
-              if ((cross_err*1.0)/NITER .ge. 0.5) then
-                print *, "err=", cross_err
+              percent=(cross_err*1.0)/NITER
+              !write (*,500,advance="no"), "(",percent*100,"%)"
+              if (percent .ge. 0.5) then
                 call EXIT(6)
               else
-                print *, "err=", cross_err
                 call EXIT(7)
               end if
             end if

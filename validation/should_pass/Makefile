@@ -1,9 +1,9 @@
+include ../config/make.def
 
-include ../../config/make.def
+EXEC_OUTPUT:=$(FEATURE_EXEC_PATH)
+COMPILE_OUTPUT:=$(FEATURE_COMPILE_PATH)
 
-BIN_PATH:="../bin"
-FLAGS="$(FFLAGS)"
-INPUT=
+LOGFILE:=$(FEATURE_LOG_FILE)
 
 F_TESTS = $(wildcard *.f90)
 
@@ -11,35 +11,48 @@ F_EXES  = $(F_TESTS:.f90=.x)
 
 EXES    = $(F_EXES)
 
-all:    clean $(EXES)
+all:   clean header $(EXES) tail
+	   @ cp $(LOGFILE) ./HISTORY/
+	   @ mv $(LOGFILE) ./latest_results.log
 
 .SUFFIXES: .x
+
+header:
+	   @ printf '\n%s\n%s\n' "---------------HPC Tools CAF FEATURES testsuite---------------"  \
+	   				"Evaluating $(COMPILER) @ $(DATE)" | tee -a $(LOGFILE)
+	   @ printf '%-20s\t%-80s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  | tee -a $(LOGFILE)
+	   $(eval total_cnt:=0)
+
+tail:
+	@ printf '\n%s%d\n\n' "TOTAL TESTS=" "`echo $(total_cnt)`" | tee -a $(LOGFILE)
+#	@ if [ "$(EMAIL)" == "yes" ]; then \
+#		 mutt -s "$(SUBJ)" -a $(LOGFILE) $(EMAIL_LIST) < $(EMAIL_BODY);\
+#	  fi
+
+
 
 %.x:    %.f90
 	   $(eval COMPILE_STATUS:="UNKNOWN")
 	   $(eval EXEC_STATUS:="N/A")
 	   $(eval SPEC_IDX:=$(shell echo "`echo "$^"|sed 's/.f90//'| sed 's/*_//'`"))
 	   $(eval DESCRIPTION:=$(shell echo "`cat description | grep "$^" | sed s/"$^"//`"))
-	   @ printf '%-20s\t%-80s\t' "$(SPEC_IDX)" "$(DESCRIPTION)"
-	   $(eval COMPILE_OUT:=$(shell echo "`$(FC) $(FLAGS) -DNPROCS=4  -o $@ $^ 2>log && echo 2 || echo 3`"))
-	   @ if [ $(COMPILE_OUT) -eq 2 ]; then \
-		     printf '%-10s\t' "PASS"; \
-		 else \
-		 	 printf '%-10s\t%s\n' "FAIL" "N/A" ;\
-		 fi
-	   $(eval EXEC_OUT:=$(shell echo "`perl ../timedexec.pl $(TIMEOUT) cafrun -n 4  $@  2>&1 && echo 1 || echo -1`"))
-	   @ if [ $(COMPILE_OUT) -eq 2 ]; then \
-	   		 if [ "`echo "$(EXEC_OUT)" | grep "\-1"  `" == "" ]; then \
-		         printf '%s\n' "PASS" ;\
-				 mv $@ $(BIN_PATH)/  ; \
+	   @ printf '%-20s\t%-80s\t' "$(SPEC_IDX)" "$(DESCRIPTION)" | tee -a $(LOGFILE)
+	   @ $(FC) $(FFLAGS)  -o $(BIN_PATH)/$@ $^ 2>$(COMPILE_OUTPUT)/$^.log
+	   @ if [ "$$?" == "0" ]; then \
+		     printf '%s\t\t' "PASS" | tee -a $(LOGFILE)  ; \
+			 perl ../timedexec.pl $(TIMEOUT) $(LAUNCHER)  $(BIN_PATH)/$@  2>$(EXEC_OUTPUT)/$@.log ; \
+			 if [ "$$?" == "0" ]; then \
+			 	printf '%s\n' "PASS" | tee -a $(LOGFILE) ;\
 			 else \
-		 		 printf '%s\n' "FAIL" ;\
-			 fi   \
-	     fi
-
+			 	printf '%s\n' "FAIL" | tee -a $(LOGFILE) ;\
+			 fi \
+		 else \
+		 	 	printf '%s\t\t%s\n' "FAIL" "N/A" | tee -a $(LOGFILE) ;\
+		 fi
+	    $(eval total_cnt=$(shell echo $(total_cnt)\+1 | bc))
 
 clean-log:
-	    @rm -rf compile_output/*.log exec_output/*.log
+	    @rm -rf compile_output/*.out exec_output/*.out ./*.log
 
 clean-exec:
 	    @rm  -rf  $(BIN_PATH)/*.x   ./*.x  ./*.mod
@@ -48,4 +61,6 @@ clean-history:
 	    @rm -rf ./HISTORY/*.log
 
 clean clean-all:  clean-log clean-exec clean-history
+	    @rm -rf uhcaf.keep
+
 
