@@ -12,7 +12,6 @@ $FC $FFLAGS -o $BIN_PATH/$1 testmodule.o $2 2>$COMPILE_OUTPUT/$2.out
 if [ "$?" == "0" ]; then
    # feature test passed compilation
    printf '%-15s\t' "PASS"  | tee -a $3
-   echo "printf  "PASS"  | tee -a $3"
 
    #run the feature test
    perl ../timedexec.pl $TIMEOUT "$LAUNCHER $BIN_PATH/$1" 2>$EXEC_OUTPUT/$1.out
@@ -47,7 +46,7 @@ if [ "$?" == "0" ]; then
 
 else
    # feature test failed compilation
-   printf '%-15s\t%15-s\t%-10s\n' "FAIL" "N/A" "--"  | tee -a $3
+   printf '%-15s\t%-15s\t%-10s\n' "FAIL" "N/A" "--"  | tee -a $3
 
 fi
 

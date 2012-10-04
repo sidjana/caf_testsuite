@@ -1,29 +1,42 @@
-
 include ../config/make.def
 
-FLAGS=$(FFLAGS)
-INPUT=
-DATE:="$(shell echo "`date +"%m-%d-%y-%T"`")"
-ROOT:="$(shell echo "`pwd`")"
-LOGFILE:="$(ROOT)/$(shell echo $(DATE) ).log"
+LOGFILE:=$(CONF_LOG_PATH)/$(LOG_NAME)
+
+
+all: test_file  testmodule.o header
+	   @ source ./test_list.sh  "$(LOGFILE)"
+	   @ cp $(LOGFILE) ./HISTORY/
+	   @ mv $(LOGFILE) ./latest_results.log
+
 
 header:
-	   @ printf '\n%s\n%s\n' "---------------HPC Tools CAF validation testsuite---------------" \
-	   				"Evaluating $(COMPILER) @ $(DATE)" | tee -a $(LOGFILE)
-	   @ printf '%-20s\t%-80s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  | tee -a $(LOGFILE)
-
-all: test_file
-	   @ source ./test_few.sh
+	   @ printf '\n%s\n%s\n' "---------------HPC Tools CAF SPECIFIC testsuite---------------" \
+			                      "Evaluating $(COMPILER) @ $(DATE)" | tee -a $(LOGFILE)
+	   @ printf '%-15s\t%-50s\t%s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  "CONFIDENCE"| tee -a $(LOGFILE)
 
 
-clean-log:
-	    @rm -rf compile_output/*.log exec_output/*.log
+testmodule.o: $(ROOT)/testmodule.f90
+	   @$(FC) $(FFLAGS) -c  ../testmodule.f90
+
+
+clean-output:
+	   @rm -rf compile_output/*.out exec_output/*.out
+
 
 clean-exec:
-	    @rm  -rf  $(BIN_PATH)/*.x   ./*.x  ./*.mod
+	   @rm  -rf  $(BIN_PATH)/*.x   ./*.x  ./*.mod
+
 
 clean-history:
-	    @rm -rf ./HISTORY/*.log
+	   @rm -rf ./HISTORY/*.log
 
-clean clean-all:  clean-log clean-exec clean-history
+
+clean-all:  clean-output clean-exec clean-history
+	    @rm -rf uhcaf.keep ./*.log
+
+
+clean:
+	 @ printf '%s\n%s\n' "Usage:" "$ $(MAKE) clean-<output | exec | history | all>"
+
+
 

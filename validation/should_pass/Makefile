@@ -8,6 +8,7 @@ LOGFILE:=$(FEATURE_LOG_PATH)/$(LOG_NAME)
 F_TESTS = $(wildcard *.f90)
 F_EXES  = $(F_TESTS:.f90=.x)
 EXES    = $(F_EXES)
+total_cnt:=0
 
 
 all:   clean header $(EXES) tail
@@ -20,7 +21,6 @@ header:
 	   @ printf '\n%s\n%s\n' "---------------HPC Tools CAF FEATURES testsuite---------------"  \
 	   				"Evaluating $(COMPILER) @ $(DATE)" | tee -a $(LOGFILE)
 	   @ printf '%-20s\t%-80s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  | tee -a $(LOGFILE)
-	   $(eval total_cnt:=0)
 
 tail:
 	@ printf '\n%s%d\n\n' "TOTAL TESTS=" "`echo $(total_cnt)`" | tee -a $(LOGFILE)
@@ -30,7 +30,7 @@ tail:
 
 
 
-%.x:    %.f90
+%.x: %.f90
 	   $(eval COMPILE_STATUS:="UNKNOWN")
 	   $(eval EXEC_STATUS:="N/A")
 	   $(eval SPEC_IDX:=$(shell echo "`echo "$^"|sed 's/.f90//'| sed 's/*_//'`"))
@@ -50,17 +50,18 @@ tail:
 		 fi
 	    $(eval total_cnt=$(shell echo $(total_cnt)\+1 | bc))
 
+
 clean-output:
-	    @rm -rf compile_output/*.out exec_output/*.out 
+	    @rm -rf compile_output/*.out exec_output/*.out
 
 clean-exec:
 	    @rm  -rf  $(BIN_PATH)/*.x   ./*.mod
 
 clean-history:
-	    @rm -rf ./HISTORY/*.log
+	    @rm -rf ./HISTORY/*.log 
 
 clean-all:  clean-output clean-exec clean-history
-	    @rm -rf uhcaf.keep ./latest_results.log
+	    @rm -rf uhcaf.keep ./*.log
 
 clean:
 	@ printf '%s\n%s\n' "Usage:" "$ $(MAKE) clean-<output | exec | history | all>"

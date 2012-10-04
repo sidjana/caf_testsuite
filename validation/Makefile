@@ -1,6 +1,6 @@
 include ./config/make.def
 
-default: help
+default: all
 
 
 .PHONY: all conformance non-conformance confidence few

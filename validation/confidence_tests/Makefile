@@ -47,7 +47,7 @@ clean-history:
 
 
 clean-all:  clean-output clean-exec clean-history
-	@rm -rf uhcaf.keep ./latest_results.log  testmodule.o
+	@rm -rf uhcaf.keep ./*.log  testmodule.o
 
 clean:
 	@ printf '%s\n%s\n' "Usage:" "$ $(MAKE) clean-<output | exec | history | all>"
