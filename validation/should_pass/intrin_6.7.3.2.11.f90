@@ -13,6 +13,7 @@
             deallocate(arr)
             if (temp[2] /= i) then
               print * ,"ERROR"
+              call EXIT(1)
             end if
             allocate(arr[*])
           end do

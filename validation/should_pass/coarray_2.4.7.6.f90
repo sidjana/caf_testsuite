@@ -10,7 +10,7 @@
             src = reshape((/1, 2, 3, 4/),shape(src))
 
             rank = this_image()
-            size = num_images()
+            size = NPROCS
             arr = rank
 
             sync all
@@ -19,7 +19,7 @@
               do j = 1,2
                 src(i,j) = (j-1)*2 + i
                 if ( arr[i,j] /= src(i,j) ) then
-                  print *, "ERROR"
+                  call EXIT(1)
                 end if
               end do
             end do

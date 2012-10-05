@@ -13,14 +13,14 @@ EXES    = $(F_EXES)
 total_cnt:=0
 
 
-all:   clean-out header $(EXES) tail
+all:   clean-output header $(EXES) tail
 	   @ cp $(LOGFILE) ./HISTORY/
 	   @ mv $(LOGFILE) latest_results.log
 
 .SUFFIXES: .x
 
 header:
-	   @ printf '\n%s\n%s\n' "---------------HPC Tools CAF FEATURES testsuite---------------"  \
+	   @ printf '\n%s\n%s\n' "---------------HPC Tools CAF CONFORMANCE testsuite---------------"  \
 	   				"Evaluating $(COMPILER) @ $(DATE)" | tee -a $(LOGFILE)
 	   @ printf '%-20s\t%-80s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  | tee -a $(LOGFILE)
 
@@ -33,8 +33,6 @@ tail:
 
 
 %.x: %.f90
-	   $(eval COMPILE_STATUS:="UNKNOWN")
-	   $(eval EXEC_STATUS:="N/A")
 	   $(eval SPEC_IDX:=$(shell echo "`echo "$^"|sed 's/.f90//'| sed 's/*_//'`"))
 	   $(eval DESCRIPTION:=$(shell echo "`cat description | grep "$^" | sed s/"$^"//`"))
 	   @ printf '%-20s\t%-80s\t' "$(SPEC_IDX)" "$(DESCRIPTION)" | tee -a $(LOGFILE)

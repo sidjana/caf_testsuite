@@ -128,35 +128,48 @@ record this error in 'cross_err'.
 ################### CONFORMANCE - TESTS ###################
 
 
-** atomic_8.5.2.f90:
+** atomic_8.5.2.f90: This test validates the implementation of
+the atomic subroutine - atomic_define. It must be noted that
+atomic operations are defined on an ATOM element - only a scalar
+of ATOMIC kind. In this test the following case is created:
+Every image atomically writes to the remote object - obj[1].
+Before they write to it, image1 brings a copy of it to its
+cache(if it has one!). After that, it keeps reading the cached
+version. At this point, all the other images, including those
+outside the node that hosts image 1, atomically writes to that
+object. The correct implementation of this atomic define should
+ensure that image1 invalidates the cache copy of 'obj' and pulls
+in the updated version of the same from the main memory. If it
+fails to get the old copy, the error is reported via cross_err.
 
-This test validates the implementation of the atomic subroutine
-- atomic_define. It must be noted that atomic operations are
-  defined on an ATOM element - only a scalar of ATOMIC kind. In
-the test, all images atomically write a number which is a power
-of 2 to the coscalar - 'obj' on image1. To verify whether the
-writes occur atomically or not, every image writes a number
-whose binary equivalent includes only one of the bits as set(1)
-and the rest, reset(0).  E.g. if two competing images perform a
-non-atomic write on the same location - say ,0010 and 0100 the
-number might read 0110.  As a test, we check whether the 'obj'
-maintains it property of being a perfect power of '2'. If not,
-the write was not atomic.
+.....".bak" version of the code.....  In the test, all images
+atomically write a number which is a power of 2 to the coscalar
+- 'obj' on image1. To verify whether the writes occur atomically
+  or not, every image writes a number whose binary equivalent
+includes only one of the bits as set(1) and the rest, reset(0).
+E.g. if two competing images perform a non-atomic write on the
+same location - say ,0010 and 0100 the number might read 0110.
+As a test, we check whether the 'obj' maintains it property of
+being a perfect power of '2'. If not, the write was not atomic.
 
 
 ** character_test.f90:
 
 This test tests for the support of character coarrays. The
 following subtle differnce must be noted between strings in
-FORTRAN and C: In FORTRAN: character   :: a(4) ! array of 4
-strings of size 1 each character*2 :: a(4) ! array of 4 strings
-of size 2 each character   :: a    ! string of size 1
-character*2 :: a    ! string of size 2 In C: char* a;     /* a
-pointer to a character which can potentially expand to a large
-buffer of consecutive characters */ char a[4];   /* 1 string /
-array of 4 characters The manner in which remote data transfers
-are handled within the compiler will be slightly different when
-the coarrays are of CHARACTER data type.
+FORTRAN and C:
+In FORTRAN:
+character   :: a(4) ! array of 4 strings of size 1 each
+character*2 :: a(4) ! array of 4 strings of size 2 each
+character   :: a    ! string of size 1
+character*2 :: a    ! string of size 2 In C: char* a;
+/* a pointer to a character which can potentially expand to a
+ * large buffer of consecutive characters*/
+char a[4];
+/* 1 string/array of 4 characters The manner in which remote
+ * data transfers are handled within the compiler will be
+ * slightly different when the coarrays are of CHARACTER data
+ * type. */
 
 
 ** coarray_2.4.7.6.f90:

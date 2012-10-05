@@ -1,6 +1,6 @@
 ! CRITICAL sections
 
-         program item12
+         program critical
          use  cross_test
 
             integer :: num[*], rank, size, i
@@ -33,6 +33,6 @@
            call calc_ori(cross_err)
 #else
            call calc(cross_err)
-#endif 
-           end program item12
+#endif
+           end program
 

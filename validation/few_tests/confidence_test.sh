@@ -1,10 +1,10 @@
+source ../config/CONFIG
 
 EXEC_OUTPUT="${FEW_EXEC_PATH}"
-echo "EXEC_OUTPUT is $EXEC_OUTPUT"
 COMPILE_OUTPUT="${FEW_COMPILE_PATH}"
 
-#$FC $FFLAGS -o $BIN_PATH/$1 testmodule.o $2 2>$COMPILE_OUTPUT/$2.out
-echo "hi"
+echo "$FC $FFLAGS -o $BIN_PATH/$1 testmodule.o $2 2>$COMPILE_OUTPUT/$2.out"
+$FC $FFLAGS -o $BIN_PATH/$1 testmodule.o $2 2>$COMPILE_OUTPUT/$2.out
 if [ "$?" == "0" ]; then
    printf '%-15s\t' "PASS"  | tee -a $3
    perl ../timedexec.pl $TIMEOUT "$LAUNCHER $BIN_PATH/$1" 2>$EXEC_OUTPUT/$1.out

@@ -6,9 +6,9 @@ program main
     pi = this_image()
     sync all
 
-    do i = 1 , num_images()
+    do i = 1 , NPROCS
       if (pi[i] /= i) then
-        print *, "ERROR"
+        call EXIT(1)
       end if
     end do
 end program main

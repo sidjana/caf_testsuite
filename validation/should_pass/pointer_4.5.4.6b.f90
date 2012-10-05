@@ -2,6 +2,7 @@
   ! association of pointer components of coarrays with local objects is allowed
   ! pointer association
   ! local association is allowed
+
   program main
       implicit none
       type mytype
@@ -21,14 +22,13 @@
       mt%ptr => temp(:)
       sync all
 
-      if (num_images() .ge. 2) then
-        if (rank .eq. 1) then
+      if (NPROCS .ge. 2) then
           if(mt[2]%ptr(1) /= 2 .OR. mt[2]%ptr(2) /= 4 &
              .OR. mt[2]%ptr(3) /= 6 ) then
 
               print *, "ERROR"
+              call EXIT(1)
 
-          end if
         end if
       end if
 

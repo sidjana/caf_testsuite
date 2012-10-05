@@ -1,17 +1,33 @@
-
 include ../config/make.def
 
-INPUT=
+DATE:=$(shell echo "`date +"%m-%d-%y-%T"`")
+EXEC_OUTPUT:=$(FEATURE_EXEC_PATH)
+COMPILE_OUTPUT:=$(FEATURE_COMPILE_PATH)
+
+LOG_NAME:=$(DATE).log
+LOGFILE:=$(FEATURE_LOG_PATH)/$(LOG_NAME)
+
 
 F_TESTS = $(wildcard *.f90)
-
 F_EXES  = $(F_TESTS:.f90=.x)
-
 EXES    = $(F_EXES) $(F_TESTS)
 
-all:    $(EXES)
+
+all:   clean-output header $(EXES) tail
+	   @ cp $(LOGFILE) ./HISTORY/
+	   @ mv $(LOGFILE) latest_results.log
 
 .SUFFIXES: .x
+
+header:
+	   @ printf '\n%s\n%s\n' "---------------HPC Tools CAF NON-CONFORMANCE testsuite---------------"  \
+	   				"Evaluating $(COMPILER) @ $(DATE)" | tee -a $(LOGFILE)
+	   @ printf '%-20s\t%-80s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  | tee -a $(LOGFILE)
+
+tail:
+	@ printf '\n%s%d\n\n' "TOTAL TESTS=" "`echo $(total_cnt)`" | tee -a $(LOGFILE)
+#
+
 
 %.x:    %.f90
 	   $(eval COMPILE_STATUS:="UNKNOWN")
@@ -36,13 +52,27 @@ all:    $(EXES)
 	     fi
 
 test:
-	@		if [ "$(INPUT)" -eq "1" ];  then echo "Hi"; \
-		else  echo "Bye";\
-		  fi
+	@;
+
 
 foo:
 	 $(eval (shell echo "hi" 123 "bye")
 
+
+clean-output:
+	    @rm -rf compile_output/*.out exec_output/*.out
+
+clean-exec:
+	    @rm  -rf  $(BIN_PATH)/*.x   ./*.mod
+
+clean-history:
+	    @rm -rf ./HISTORY/*.log
+
+clean-all:  clean-output clean-exec clean-history
+	    @rm -rf uhcaf.keep ./*.log
+
 clean:
-	@rm  -rf *.x
+	@ printf '%s\n%s\n' "Usage:" "$ $(MAKE) clean-<output | exec | history | all>"
+
+
 

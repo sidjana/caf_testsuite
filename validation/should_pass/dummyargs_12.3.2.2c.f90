@@ -16,10 +16,11 @@ program main
 
         sync all
         if (rank == 1) then
-           do i = 1 , num_images()
+           do i = 1 , NPROCS
              tmp = i
              if (d(-5)[i] /= tmp(1)) then
                   print * , "ERROR Allocatable dummy argument"
+                  call EXIT(1)
              end if
            end do
         end if
@@ -48,6 +49,7 @@ contains
                     ubound(x,1)/=5 ) then
 
                    print * , "ERROR assumed size"
+                   call EXIT(1)
 
                 end if
 

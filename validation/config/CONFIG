@@ -29,6 +29,13 @@ FEW_COMPILE_PATH="${ROOT}/few_tests/compile_output"
 FEW_EXEC_PATH="${ROOT}/few_tests/exec_output"
 FEW_LOG_PATH="${ROOT}/few_tests"
 
+
+##for NON-CONFORMANCE TESTS
+#NONCONF_COMPILE_PATH="${ROOT}/should_fail/compile_output"
+#NONCONF_EXEC_PATH="${ROOT}/should_fail/exec_output"
+#NONCONF_LOG_PATH="${ROOT}/should_fail"
+
+
 #E-mail stuff
 SUBJ=
 LOGFILE=

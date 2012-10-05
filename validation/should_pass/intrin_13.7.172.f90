@@ -13,7 +13,7 @@
         data correct_sca/1 , 1 /
         data correct_arr/ -1 , 3 /
 
-        size=num_images()
+        size=NPROCS
         rank = this_image()
 
         ! without DIM and KIND
@@ -22,7 +22,8 @@
 
         if (ans_sca(1) /=  correct_sca(1) .OR. ans_arr(1) /= correct_arr(1) &
         .AND. ans_sca(2) /=  correct_sca(2) .OR. ans_arr(2) /= correct_arr(2)) then
-          print *, "ERROR" 
+          print *, "ERROR in LCOBOUND(co_obj)"
+          call EXIT(1)
         end if
 
         !with DIM
@@ -32,7 +33,8 @@
              lcobound(x_arr, 1) /= correct_arr(1)  .OR. &
              lcobound(x_arr, 2) /= correct_arr(2)) then
 
-           print *, "ERROR"
+           print *, "ERROR in LCOBOUND(co_obj,dim)"
+           call EXIT(1)
 
          end if
 

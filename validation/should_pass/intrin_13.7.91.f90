@@ -13,7 +13,7 @@
           data correct_sca/2 , 2 /
           data correct_arr/0 , 4 /
 
-          size=num_images()
+          size=NPROCS
           rank = this_image()
 
           ! without DIM and KIND
@@ -22,7 +22,8 @@
 
           if (ans_sca(1) /=  correct_sca(1) .OR. ans_arr(1) /= correct_arr(1) &
           .AND. ans_sca(2) /=  correct_sca(2) .OR. ans_arr(2) /= correct_arr(2)) then
-            print *, "ERROR"
+            print *, "ERROR in UCOBOUND(co_obj)"
+            call EXIT(1)
           end if
 
           !with DIM
@@ -32,8 +33,11 @@
                ucobound(x_arr, 1) /= correct_arr(1)  .OR. &
                ucobound(x_arr, 2) /= correct_arr(2)) then
 
-             print *, "ERROR"
-
+             print *, "ERROR in UCOBOUND(co_sca, dim)"
+             call EXIT(1)
           end if
+         else
+           print * , "NPROCS should be equal to 4 for correct testing"
+           call EXIT(1)
          end if
     end program main

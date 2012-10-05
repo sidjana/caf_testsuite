@@ -9,7 +9,7 @@
             np = num_images()
 
             if (np /= N) then
-              print *, "ERROR"
+              call EXIT(1)
             end if
 
         end program main

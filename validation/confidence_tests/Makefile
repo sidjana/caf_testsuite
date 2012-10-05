@@ -11,7 +11,7 @@ EXES    = $(F_EXES)
 
 .PHONY: all header testmodule.o
 
-all:  clean header testmodule.o  $(EXES)
+all:  clean-output header testmodule.o  $(EXES)
 	   @ cp $(LOGFILE) ./HISTORY/
 	   @ mv $(LOGFILE) ./latest_results.log
 
@@ -20,7 +20,7 @@ all:  clean header testmodule.o  $(EXES)
 
 
 header:
-		@ printf '\n%s\n%s\n' "---------------HPC Tools CAF CONFIDENCE testsuite---------------" \
+		@ printf '\n%s\n%s\n\n' "---------------HPC Tools CAF CONFIDENCE testsuite---------------" \
                     "Evaluating $(COMPILER) @ $(DATE)" | tee -a $(LOGFILE)
 	   	@ printf '%-15s\t%-50s\t%s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  "CONFIDENCE"| tee -a $(LOGFILE)
 
@@ -52,6 +52,6 @@ clean-all:  clean-output clean-exec clean-history
 	@rm -rf uhcaf.keep ./*.log  testmodule.o
 
 clean:
-	@ printf '%s\n%s\n' "Usage:" "$ $(MAKE) clean-<output | exec | history | all>"
+	@ printf '%s\n%s\n\n' "Usage:" "$ $(MAKE) clean-<output | exec | history | all>"
 
 
