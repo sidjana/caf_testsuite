@@ -17,12 +17,15 @@ all:   clean-output header $(EXES) tail
 	   @ cp $(LOGFILE) ./HISTORY/
 	   @ mv $(LOGFILE) latest_results.log
 
+
 .SUFFIXES: .x
+
 
 header:
 	   @ printf '\n%s\n%s\n' "---------------HPC Tools CAF CONFORMANCE testsuite---------------"  \
 	   				"Evaluating $(COMPILER) @ $(DATE)" | tee -a $(LOGFILE)
 	   @ printf '%-20s\t%-80s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  | tee -a $(LOGFILE)
+
 
 tail:
 	@ printf '\n%s%d\n\n' "TOTAL TESTS=" "`echo $(total_cnt)`" | tee -a $(LOGFILE)
@@ -54,14 +57,18 @@ tail:
 clean-output:
 	    @rm -rf compile_output/*.out exec_output/*.out
 
+
 clean-exec:
 	    @rm  -rf  $(BIN_PATH)/*.x   ./*.mod
 
+
 clean-history:
-	    @rm -rf ./HISTORY/*.log 
+	    @rm -rf ./HISTORY/*.log
+
 
 clean-all:  clean-output clean-exec clean-history
 	    @rm -rf uhcaf.keep ./*.log
+
 
 clean:
 	@ printf '%s\n%s\n' "Usage:" "$ $(MAKE) clean-<output | exec | history | all>"

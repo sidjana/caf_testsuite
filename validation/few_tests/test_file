@@ -1,8 +1,8 @@
-          CONFIDENCE TESTS
+CONFIDENCE
 critical_8.1.5.f90
 intrin_8.5.6.f90
-          CONFORMANCE TESTS
+CONFORMANCE
 character_test.f90
 coarray_4.8.R468.f90
 intrin_13.7.165.f90
-          END OF TESTS
+END

@@ -1,7 +1,5 @@
 include ../config/make.def
 
-
-
 DATE:=$(shell echo "`date +"%m-%d-%y-%T"`")
 EXEC_OUTPUT:=$(FEATURE_EXEC_PATH)
 COMPILE_OUTPUT:=$(FEATURE_COMPILE_PATH)
@@ -11,30 +9,32 @@ LOGFILE:=$(FEATURE_LOG_PATH)/$(LOG_NAME)
 
 CURRENT:=$(shell pwd)
 
-## @while read -r file; do   \
-##  done < test_file 
 
 all: clean-output test_file  testmodule.o header
-	   @while read -r file; do   \
-	       if [ "$$file" == "CONFORMANCE TESTS" ]; then \
-		   	    printf '%s\n' "-----CONFORMANCE TESTS-----"; \
+	   @for file in `cat test_file` ; do   \
+	      if [ "$$file" == "CONFORMANCE" ]; then \
+		   	    printf '%s\n' "-----CONFORMANCE TESTS-----" | tee -a $(LOGFILE) ;\
+				printf '%-20s\t%-80s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  | tee -a $(LOGFILE) ;\
 			    type="conformance"; \
 				continue; \
-    	  elif [ "$$file" == "CONFIDENCE TESTS" ]; then \
-		        printf '%s\n' "-----CONFIDENCE TESTS-----"; \
+    	  elif [ "$$file" == "CONFIDENCE" ]; then \
+		        printf '%s\n' "-----CONFIDENCE TESTS-----" | tee -a $(LOGFILE) ;\
+				printf '%-15s\t%-50s\t%s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  "CONFIDENCE"| tee -a $(LOGFILE) ;\
 	        	type="confidence"; \
 			    continue;\
-    	  elif [ "$$file" == "NON-CONFORMANCE TESTS" ]; then \
-		        printf '%s\n' "-----NON_CONFORMANCE TESTS-----"; \
+    	  elif [ "$$file" == "NON-CONFORMANCE" ]; then \
+		        printf '%s\n' "-----NON_CONFORMANCE TESTS-----" | tee -a $(LOGFILE) ;\
+				printf '%-20s\t%-80s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  | tee -a $(LOGFILE) ;\
 	        	type="non-conformance"; \
 			    continue;\
-    	  elif [ "$$file" == "END OF TESTS" ]; then \
-		        printf '%s\n' "-----END OF TESTS-----" ; \
-	            continue; \
+    	  elif [ "$$file" == "END" ]; then \
+		        printf '%s\n' "-----END OF TESTS-----" | tee -a $(LOGFILE) ;\
+	            break; \
 		  fi ;  \
 		  if [ "$$type" == "confidence" ]; then  \
-			    file_exec="`echo $$file |sed 's/.f90/.x/' `" ;\
-			    cp $(CONF_LOG_PATH)/$$file .  ;\
+			    file_exec="`echo $$file | sed "s/.f90/.x/g" `"; \
+			    cp $(CONF_LOG_PATH)/$$file  .  ;\
+				printf '%-15s\t'  $$file_exec ; \
 			    sh confidence_test.sh "$$file_exec" "$$file" "$(LOGFILE)"  ;\
 	      elif [ "$$type" == "conformance" ]; then  \
 	      	    cd $(FEATURE_LOG_PATH)   ; \
@@ -42,7 +42,7 @@ all: clean-output test_file  testmodule.o header
 		        cd $(CURRENT)  ; \
 		  fi ; \
 		  rm -rf $$file ;  \
-	 	done < test_file
+	 	done
 	   @cp $(LOGFILE) ./HISTORY/
 	   @mv $(LOGFILE) ./latest_results.log
 

@@ -3,7 +3,7 @@ source ../config/CONFIG
 EXEC_OUTPUT="${FEW_EXEC_PATH}"
 COMPILE_OUTPUT="${FEW_COMPILE_PATH}"
 
-echo "$FC $FFLAGS -o $BIN_PATH/$1 testmodule.o $2 2>$COMPILE_OUTPUT/$2.out"
+#echo "$FC $FFLAGS -o $BIN_PATH/$1 testmodule.o $2 2>$COMPILE_OUTPUT/$2.out"
 $FC $FFLAGS -o $BIN_PATH/$1 testmodule.o $2 2>$COMPILE_OUTPUT/$2.out
 if [ "$?" == "0" ]; then
    printf '%-15s\t' "PASS"  | tee -a $3
