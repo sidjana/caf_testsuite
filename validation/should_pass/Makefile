@@ -14,17 +14,18 @@ total_cnt:=0
 
 
 all:   clean-output header $(EXES) tail
-	   @ cp $(LOGFILE) ./HISTORY/
-	   @ mv $(LOGFILE) latest_results.log
+	   @cp $(LOGFILE) ./HISTORY/
+	   @mv $(LOGFILE) latest_results.log
 
 
 .SUFFIXES: .x
 
 
 header:
-	   @ printf '\n%s\n%s\n' "---------------HPC Tools CAF CONFORMANCE testsuite---------------"  \
+	   @printf '\n%s\n%s\n' "---------------HPC Tools CAF CONFORMANCE testsuite---------------"  \
 	   				"Evaluating $(COMPILER) @ $(DATE)" | tee -a $(LOGFILE)
-	   @ printf '%-20s\t%-80s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  | tee -a $(LOGFILE)
+	   @printf '%-20s\t%-80s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  | tee -a $(LOGFILE)
+
 
 
 tail:
@@ -39,8 +40,8 @@ tail:
 	   $(eval SPEC_IDX:=$(shell echo "`echo "$^"|sed 's/.f90//'| sed 's/*_//'`"))
 	   $(eval DESCRIPTION:=$(shell echo "`cat description | grep "$^" | sed s/"$^"//`"))
 	   @ printf '%-20s\t%-80s\t' "$(SPEC_IDX)" "$(DESCRIPTION)" | tee -a $(LOGFILE)
-	   @ $(FC) $(FFLAGS)  -o $(BIN_PATH)/$@ $^ 2>$(COMPILE_OUTPUT)/$^.out
-	   @ if [ "$$?" == "0" ]; then \
+	   @ $(FC) $(FFLAGS)  -o $(BIN_PATH)/$@ $^ 2>$(COMPILE_OUTPUT)/$^.out ;\
+	     if [ "$$?" == "0" ]; then \
 		     printf '%s\t\t' "PASS" | tee -a $(LOGFILE)  ; \
 			 perl ../timedexec.pl $(TIMEOUT) $(LAUNCHER)  $(BIN_PATH)/$@  2>$(EXEC_OUTPUT)/$@.out ; \
 			 if [ "$$?" == "0" ]; then \

@@ -12,7 +12,7 @@ implicit none
 
     if (NPROCS .le. 3 ) then
       print * , "ERROR: NPROCS should be greater than 3"
-      EXIT(1)
+      call EXIT(1)
     end if
 
     do j = 1 ,(size/2)

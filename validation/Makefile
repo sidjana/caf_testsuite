@@ -1,12 +1,13 @@
 include ./config/make.def
 
-default: all
+default:
+	@echo "Usage: $(MAKE) [all | conformance | non-conformance | confidence | few-tests] "
 
 
 .PHONY: all conformance non-conformance confidence few
 
 
-all: conformance non-conformance
+all: conformance confidence non-conformance few-tests
 
 
 conformance:
@@ -18,10 +19,10 @@ confidence:
 
 
 non-conformance:
-	@cd should_fail; $(MAKE) all
+	@cd $(NONCONF_LOG_PATH); $(MAKE) all
 
 
-few_tests:
+few-tests:
 	@cd $(FEW_LOG_PATH); $(MAKE) all
 
 
@@ -31,9 +32,4 @@ clean-all:
 	@cd should_fail; $(MAKE) clean-all; cd .. ;
 	@cd few_tests; $(MAKE) clean-all; cd .. ;
 	@rm -rf *.mod
-
-
-few:
-	@ cd few; $(MAKE) FILE=$(FILE);
-
 

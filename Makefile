@@ -20,7 +20,7 @@ help default:
 	@printf '\n%10s\n' " Usage: $(MAKE) validation TEST=[OPTIONS] [EMAIL=<yes/no>]"
 	@printf '%10s\n' " OPTIONS include:"
 	@printf '%-20s%-90s\n' " |_ all:" " tests both - conformance and non-conformance tests"
-	@printf '%-20s%-90s\n' " |_ few:" " tests only those listed in the file "test_file" under ./few directory"
+	@printf '%-20s%-90s\n' " |_ few-tests:" " tests only those listed in the file "test_file" under ./few directory"
 	@printf '%-20s%-90s\n' " |_ conformance:" " tests the compiler's feature support (excludes tests that include verification)"
 	@printf '%-20s%-90s\n' " |_ non-conformance:" " tests for compile/runtime verifications in accordance with the standard"
 	@printf '%-20s%-90s\n' " |_ clean:" " [-results|-tests-history|-compiler-logs|-runtime-logs|-all]"
@@ -32,6 +32,18 @@ help default:
 performance:
 	@cd $(PERFORMANCE_PATH); $(MAKE) $(TEST) EMAIL=$(EMAIL)
 
-validation: 
-	@cd $(VALID_PATH); echo "entering dir"; $(MAKE) $(TEST) EMAIL=$(EMAIL)
 
+validation:
+	@cd $(VALID_PATH); $(MAKE) $(TEST) EMAIL=$(EMAIL)
+
+
+clean: performance-clean validation-clean
+
+
+
+performance-clean:
+	@;
+
+
+validation-clean:
+	@ cd $(VALID_PATH); $(MAKE) clean-all
