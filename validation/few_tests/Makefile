@@ -2,12 +2,12 @@ include ../config/make.def
 
 
 DATE:=$(shell echo "`date +"%m-%d-%y-%T"`")
-EXEC_OUTPUT:=$(FEATURE_EXEC_PATH)
-COMPILE_OUTPUT:=$(FEATURE_COMPILE_PATH)
+EXEC_OUTPUT:=$(FEW_EXEC_PATH)
+COMPILE_OUTPUT:=$(FEW_COMPILE_PATH)
 
 
 LOG_NAME:=$(DATE).log
-LOGFILE:=$(FEATURE_LOG_PATH)/$(LOG_NAME)
+LOGFILE:=$(FEW_LOG_PATH)/$(LOG_NAME)
 
 
 CURRENT:=$(shell pwd)
