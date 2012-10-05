@@ -1,9 +1,58 @@
-
+Abstract:
 This document describes the purpose and the rationale behind
 each of the tests in the testsuite.
 
+Contents:
+I. Introduction
+II. Confidence tests
+III. Specific tests
+IV. Conformance tests
+
+
+################### INTRODUCTION ###################
+
+The primary folders:
+
+1. bin -- contains all the binaries of all the tests
+
+2. confidence_tests -- these include CROSS_tests to verify the
+correctness of the tests
+
+3. config -- these contain CONFIGs with for all the compiler/
+delay/iteration-count specific info. Remember to run the
+config2makedef.sh to autogenerate the make.def for each of the
+compilers from the corresponding CONFIGs.
+
+4. docs -- contains this file and other explanations
+
+5. few_tests -- this allows user to compiler specific tests in
+all the other forders and listed in a file called 'test_file'
+(present in this folder)
+
+6. should_fail -- contains tests which contain codes that DO NOT
+adhere to the CAF FORTRAN 2008 standard. The expectation is that
+the errors should be detected by the compiler / CAF-runtime
+
+7. should_pass -- contains tests which verify the implementation
+of the compiler/runtime in accordance with the CAF FORTRAN 2008
+standard.
+
+Support files include:
+
+1. timedexec.pl  : perl script that is used to launching the
+binaries and avoiding deadlocks by timing-out after a certains
+threshold(value configurable via the TIMEOUT param in
+config/CONFIG)
+
+2. testmodule.f90 : this is useful for confidence tests where
+the calculations for HIGH v/s LOW confidence reside. All
+confidence tests are linked with the module in this file before
+loading.
+
 
 ################### CONFIDENCE - TESTS ###################
+-- can be found under validation/confidence_tests
+
 
 -- All tests in this category verify CAF constructs that avoid
 race conditions. The tests include calls to the sleep()
@@ -124,11 +173,35 @@ inconsistent behavior with the standard and the images will
 record this error in 'cross_err'.
 
 
+################### SPECIFIC - TESTS ###################
+-- can be found under validation/few_tests
+
+-- The primary file, 'test_file' contains a list of all the
+programs that the user wants to run. The fils is divided into
+three sections:
+1. CONFIDENCE tests
+2. CONFORMANCE tests
+3. NON_CONFORMANCE tests
+
+-- If one wants to test specific programs that fall under one of
+these categories, one must ensure that those files must exist
+under the respective folders and must be mentioned in the
+correct section in the file './test_file'.
+
+-- The results of the tests listed in latest_results.log are all
+subdivided into the corresponding categories
+
+-- NOTE: DO NOT list any tests below the "END-TESTS" line.
+
 
 ################### CONFORMANCE - TESTS ###################
+-- can be found under validation/should_pass
 
+-- The detailed description of each of the tests are as follows:
 
-** atomic_8.5.2.f90: This test validates the implementation of
+** atomic_8.5.2.f90:
+
+This test validates the implementation of
 the atomic subroutine - atomic_define. It must be noted that
 atomic operations are defined on an ATOM element - only a scalar
 of ATOMIC kind. In this test the following case is created:
@@ -141,11 +214,7 @@ object. The correct implementation of this atomic define should
 ensure that image1 invalidates the cache copy of 'obj' and pulls
 in the updated version of the same from the main memory. If it
 fails to get the old copy, the error is reported via cross_err.
-
-.....".bak" version of the code.....  In the test, all images
-atomically write a number which is a power of 2 to the coscalar
-- 'obj' on image1. To verify whether the writes occur atomically
-  or not, every image writes a number whose binary equivalent
+-- NOTE: every image writes a number whose binary equivalent
 includes only one of the bits as set(1) and the rest, reset(0).
 E.g. if two competing images perform a non-atomic write on the
 same location - say ,0010 and 0100 the number might read 0110.
@@ -158,15 +227,17 @@ being a perfect power of '2'. If not, the write was not atomic.
 This test tests for the support of character coarrays. The
 following subtle differnce must be noted between strings in
 FORTRAN and C:
-In FORTRAN:
+-- In FORTRAN:
 character   :: a(4) ! array of 4 strings of size 1 each
 character*2 :: a(4) ! array of 4 strings of size 2 each
 character   :: a    ! string of size 1
-character*2 :: a    ! string of size 2 In C: char* a;
+character*2 :: a    ! string of size 2
+-- In C:
+char* a;
 /* a pointer to a character which can potentially expand to a
  * large buffer of consecutive characters*/
 char a[4];
-/* 1 string/array of 4 characters The manner in which remote
+/* a string/array of 4 characters The manner in which remote
  * data transfers are handled within the compiler will be
  * slightly different when the coarrays are of CHARACTER data
  * type. */
