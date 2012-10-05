@@ -1,5 +1,5 @@
 
-include ../../config/make.def
+include ../config/make.def
 
 INPUT=
 

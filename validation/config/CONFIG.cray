@@ -1,16 +1,18 @@
+# Cray CAF Compiler
+
 # path vals
 ROOT="/home/sidjana/caf_testsuite/validation"
 BIN_PATH="${ROOT}/bin"
 
 #for ALL TESTS
-COMPILER="OpenUH"
-FC="uhcaf"
+COMPILER="Cray"
+FC="ftn"
 NPROCS="4"
-NITER="5"
+NITER="2"
 SLEEP="1"
-FFLAGS="-ftpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
-LAUNCHER="cafrun -n ${NPROCS}"
-TIMEOUT="60"
+FFLAGS="-h caf -F -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
+LAUNCHER="aprun -n ${NPROCS} -N 1 "
+TIMEOUT="40"
 
 
 #for CONFIDENCE TESTS

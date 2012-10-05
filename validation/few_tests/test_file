@@ -1,4 +1,8 @@
-./should_pass/character_test.f90
-./should_pass/coarray_4.8.R468.f90
-./should_pass/intrin_13.7.165.f90
-
+          CONFIDENCE TESTS
+critical_8.1.5.f90
+intrin_8.5.6.f90
+          CONFORMANCE TESTS
+character_test.f90
+coarray_4.8.R468.f90
+intrin_13.7.165.f90
+          END OF TESTS

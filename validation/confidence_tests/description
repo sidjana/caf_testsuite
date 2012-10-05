@@ -4,5 +4,5 @@ imgcntrl_8.4.f90  ERROR - STOP - if it fails execution, it is correct
 intrin_8.5.6.f90  LOCK -UNLOCK constructs
 sync_8.5.3.f90  SYNC ALL
 sync_8.5.4a.f90 SYNC IMAGES(arr) -- SYNC IMAGES(*)
-sync_8.5.4b.f90 SYNC IMAGES(arr), images should not wait for others who are not listed in arr
+sync_8.5.4b.f90 SYNC IMAGES(arr), should not behave like SYNC ALL
 sync_8.5.5.f90  ERRMSG= STAT= specifiers

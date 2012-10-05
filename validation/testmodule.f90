@@ -9,7 +9,6 @@
        subroutine calc_ori(cross_err)
           integer:: cross_err[*]
           if (cross_err .gt. 0) then
-            print *, "err=", cross_err
             call EXIT(5)
           else
             call EXIT(4)
@@ -31,6 +30,7 @@
               end do
               percent=(cross_err*1.0)/NITER
               !write (*,500,advance="no"), "(",percent*100,"%)"
+
               if (percent .ge. 0.5) then
                 call EXIT(6)
               else

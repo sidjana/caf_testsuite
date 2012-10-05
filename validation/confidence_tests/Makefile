@@ -1,5 +1,7 @@
 include ../config/make.def
 
+DATE:=$(shell echo "`date +"%m-%d-%y-%T"`")
+LOG_NAME:=$(DATE).log
 LOGFILE:=$(CONF_LOG_PATH)/$(LOG_NAME)
 
 

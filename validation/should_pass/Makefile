@@ -1,8 +1,10 @@
 include ../config/make.def
 
+DATE:=$(shell echo "`date +"%m-%d-%y-%T"`")
 EXEC_OUTPUT:=$(FEATURE_EXEC_PATH)
 COMPILE_OUTPUT:=$(FEATURE_COMPILE_PATH)
 
+LOG_NAME:=$(DATE).log
 LOGFILE:=$(FEATURE_LOG_PATH)/$(LOG_NAME)
 
 F_TESTS = $(wildcard *.f90)
@@ -11,7 +13,7 @@ EXES    = $(F_EXES)
 total_cnt:=0
 
 
-all:   clean header $(EXES) tail
+all:   clean-out header $(EXES) tail
 	   @ cp $(LOGFILE) ./HISTORY/
 	   @ mv $(LOGFILE) latest_results.log
 

@@ -1,8 +1,0 @@
-# Cray CAF Compiler
-COMPILER := "Cray"
-FC := ftn
-NPROCS := 4
-FFLAGS := -h caf -F -DNPROCS=$NPROCS
-LAUNCHER := aprun -n $NPROCS -N 1
-TIMEOUT := 20
-

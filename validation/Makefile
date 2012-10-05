@@ -1,5 +1,6 @@
 include ./config/make.def
 
+
 default: all
 
 
@@ -10,19 +11,23 @@ all: conformance non-conformance
 
 
 conformance:
-	@cd should_pass; $(MAKE) all;
+	@cd $(FEATURE_LOG_PATH); $(MAKE) all;
 
 
 confidence:
-	@cd confidence_tests; $(MAKE) all;
+	@cd $(CONF_LOG_PATH); $(MAKE) all;
 
 
 non-conformance:
 	@cd should_fail; $(MAKE) all
 
 
+few_tests:
+	@cd $(FEW_LOG_PATH); $(MAKE) all
+
+
 clean clean-all:
-	@cd should_pass; $(MAKE) clean; cd .. ;
+	@cd $(FEATURE_LOG_PATH); $(MAKE) clean; cd .. ;
 	@cd confidence_tests; $(MAKE) clean; cd .. ;
 	@cd should_fail; $(MAKE) clean; cd .. ;
 	@cd few_tests; $(MAKE) clean; cd .. ;
