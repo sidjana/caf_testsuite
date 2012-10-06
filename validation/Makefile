@@ -11,25 +11,25 @@ all: conformance confidence non-conformance few-tests
 
 
 conformance:
-	@cd $(FEATURE_LOG_PATH); $(MAKE) all;
+	@cd $(FEATURE_LOG_PATH); $(MAKE) -s all;
 
 
 confidence:
-	@cd $(CONF_LOG_PATH); $(MAKE) all;
+	@cd $(CONF_LOG_PATH); $(MAKE) -s all;
 
 
 non-conformance:
-	@cd $(NONCONF_LOG_PATH); $(MAKE) all
+	@cd $(NONCONF_LOG_PATH); $(MAKE) -s all
 
 
 few-tests:
-	@cd $(FEW_LOG_PATH); $(MAKE) all
+	@cd $(FEW_LOG_PATH); $(MAKE) -s all
 
 
 clean-all:
-	@cd $(FEATURE_LOG_PATH); $(MAKE) clean-all; cd .. ;
-	@cd confidence_tests; $(MAKE) clean-all; cd .. ;
-	@cd should_fail; $(MAKE) clean-all; cd .. ;
-	@cd few_tests; $(MAKE) clean-all; cd .. ;
+	@cd $(FEATURE_LOG_PATH); $(MAKE) -s clean-all; cd .. ;
+	@cd confidence_tests; $(MAKE) -s clean-all; cd .. ;
+	@cd should_fail; $(MAKE) -s clean-all; cd .. ;
+	@cd few_tests; $(MAKE) -s clean-all; cd .. ;
 	@rm -rf *.mod
 

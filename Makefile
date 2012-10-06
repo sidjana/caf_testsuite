@@ -30,11 +30,11 @@ help default:
 
 
 performance:
-	@cd $(PERFORMANCE_PATH); $(MAKE) $(TEST) EMAIL=$(EMAIL)
+	@cd $(PERFORMANCE_PATH); $(MAKE) -s $(TEST) EMAIL=$(EMAIL)
 
 
 validation:
-	@cd $(VALID_PATH); $(MAKE) $(TEST) EMAIL=$(EMAIL)
+	@cd $(VALID_PATH); $(MAKE) -s $(TEST) EMAIL=$(EMAIL)
 
 
 clean: performance-clean validation-clean
@@ -42,8 +42,8 @@ clean: performance-clean validation-clean
 
 
 performance-clean:
-	@;
+
 
 
 validation-clean:
-	@ cd $(VALID_PATH); $(MAKE) clean-all
+	@cd $(VALID_PATH); $(MAKE) -s clean-all

@@ -25,14 +25,14 @@ header:
 	   	@ printf '%-15s\t%-50s\t%s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  "CONFIDENCE"| tee -a $(LOGFILE)
 
 
-%.x:    %.f90
+%.x:    %.f90 testmodule.o
 	   $(eval SPEC_IDX:=$(shell echo "`echo "$^"|sed 's/.f90//'| sed 's/*_//'`"))
 	   $(eval DESCRIPTION:=$(shell echo "`cat description | grep "$^" | sed s/"$^"//`"))
 	   @ printf '%-15s\t%-50s\t' "$(SPEC_IDX)" "$(DESCRIPTION)"
 	   @ source confidence_test.sh "$@" "$^" "$(LOGFILE)"
 
 
-testmodule.o: $(ROOT)/testmodule.f90
+testmodule.o: ../testmodule.f90
 	@$(FC) $(FFLAGS) -c  ../testmodule.f90
 
 

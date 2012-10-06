@@ -41,7 +41,7 @@ all: clean-output test_file  testmodule.o confidence_test.sh header
 			    sh confidence_test.sh "$$file_exec" "$$file" "$(LOGFILE)"  ;\
 	      elif [ "$$type" == "conformance" ]; then  \
 	      	    cd $(FEATURE_LOG_PATH)   ; \
-			    $(MAKE) `echo "$$file" |sed 's/.f90/.x/'`  | tee -a $(LOGFILE)  ; \
+			    $(MAKE) -s `echo "$$file" |sed 's/.f90/.x/'`  | tee -a $(LOGFILE)  ; \
 		        cd $(CURRENT)  ; \
 		  fi ; \
 		  rm -rf $$file ;  \

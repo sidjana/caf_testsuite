@@ -1,28 +1,59 @@
 # path vals
 ROOT="/home/sidjana/caf_testsuite/validation"
+# this is the root of the individual test category (e.g.confidence, conformance) &  NOT the testsuite
 BIN_PATH="${ROOT}/bin"
 
+
 #for ALL TESTS
-COMPILER="OpenUH"
-FC="uhcaf"
 NPROCS="4"
 NITER="5"
 SLEEP="1"
-FFLAGS="-ftpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
-LAUNCHER="cafrun -n ${NPROCS}"
 TIMEOUT="60"
 
 
+#OpenUH CAF Compiler
+COMPILER="OpenUH"
+FC="uhcaf"
+FFLAGS="-ftpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
+LAUNCHER="cafrun -n ${NPROCS}"
+FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
+
+
+##Cray CAF Compiler
+#COMPILER="Cray"
+#FC="ftn"
+#FFLAGS="-h caf -F -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
+#LAUNCHER="aprun -n ${NPROCS} -N 1 "
+#FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
+
+
+##Intel CAF Compiler
+#COMPILER="Intel"
+#FC="ifort"
+#FFLAGS="-coarray -coarray-num-images=4 -fpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
+#LAUNCHER=
+#FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
+
+
+##GNU CAF Compiler
+#COMPILER="GNU"
+#FC="mpif90"
+#FFLAGS="-fcoarray=lib  -lcaf_mpi  -fpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
+#LAUNCHER="mpiexec -n ${NPROCS}"
+#FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
+
+
 #for CONFIDENCE TESTS
-FFLAGS_CROSS="-ftpp -DNPROCS=${NPROCS} -DCROSS_ -DNITER=${NITER} -DSLEEP=${SLEEP}"
 CONF_COMPILE_PATH="${ROOT}/confidence_tests/compile_output"
 CONF_EXEC_PATH="${ROOT}/confidence_tests/exec_output"
 CONF_LOG_PATH="${ROOT}/confidence_tests"
+
 
 #for CONFORMANCE TESTS
 FEATURE_COMPILE_PATH="${ROOT}/should_pass/compile_output"
 FEATURE_EXEC_PATH="${ROOT}/should_pass/exec_output"
 FEATURE_LOG_PATH="${ROOT}/should_pass"
+
 
 #for SPECIFIC TESTS
 FEW_COMPILE_PATH="${ROOT}/few_tests/compile_output"
@@ -37,7 +68,9 @@ NONCONF_LOG_PATH="${ROOT}/should_fail"
 
 
 #E-mail stuff
-SUBJ=
+SUBJ="Results of the CAF test suite with $COMPILER"
 LOGFILE=
 EMAIL_LIST=
-EMAIL_BODY=
+EMAIL_BODY="Results of the test suite with $COMPILER are attached -- OpenUH CAF Testsuite --"
+
+

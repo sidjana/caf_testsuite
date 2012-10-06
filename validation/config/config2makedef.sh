@@ -6,6 +6,8 @@ for cfg in `ls CONFIG*` ; do
   sed "s/\"//g" $cfg > tmp1
   sed 's/=/:=/' tmp1 > tmp2
   sed 's/{/(/g' tmp2 > tmp1
-  sed 's/}/)/g' tmp1 > make.def$postfix 
+  sed 's/}/)/g' tmp1 > tmp2
+  sed 's/pwd/$(shell pwd)/g' tmp2 > tmp1
+  sed 's/`//g' tmp1 > make.def$postfix
   rm tmp1 tmp2
 done
