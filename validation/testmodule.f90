@@ -29,14 +29,11 @@
                 cross_err = max(cross_err,cross_err[i])
               end do
               percent=(cross_err*100.0)/NITER
-              !write (*,500,advance="no"), "(",percent*100,"%)"
-              call EXIT(percent)
-
-!               if (percent .ge. 0.5) then
-!                 call EXIT(6)
-!               else
-!                 call EXIT(7)
-!               end if
+              if (percent .ge. 50) then
+                call EXIT(6)
+              else
+                call EXIT(7)
+              end if
             end if
 
        end subroutine calc

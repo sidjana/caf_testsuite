@@ -14,9 +14,7 @@ PROGRAM item12_c
 
         arr(1)=1
 
-#ifndef CROSS_
         sync all
-#endif
 
         do i = 1,NITER
               num = 0

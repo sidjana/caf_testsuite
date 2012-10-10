@@ -1,4 +1,4 @@
-! test to verify the correctness of the sync all statement
+! SYNC ALL without the STAT= specifier 
 
       program item12_1
       use cross_test

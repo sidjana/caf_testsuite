@@ -1,4 +1,4 @@
-! Testing for LOCK - UNLOCK feature
+! Testing for LOCK & UNLOCK without STAT specifier 
 
       program lock_unlock
       use cross_test
