@@ -12,7 +12,7 @@ do
          "$file" == "END-TESTS" ]; then
 
 	      if [ "$file" == "CONFORMANCE-TESTS" ]; then
-                cd ../; make -s conformance-header 
+                cd ../; make -s conformance-header
 			    type="conformance"
     	  elif [ "$file" == "CONFIDENCE-TESTS" ]; then
                 cd ../; make -s confidence-header
@@ -24,8 +24,8 @@ do
                 cd ../; make -s non-conformance-header
 	        	type="non-conformance"
     	  elif [ "$file" == "END-TESTS" ]; then
-		        printf '%s\n' "-----END OF TESTS-----" | tee -a $LOGFILE
-	            break
+		        printf '%s\n' "-----END OF TESTS-----" | tee -a $1
+                break
 		  fi
 
           cd $CURRENT
@@ -33,17 +33,35 @@ do
 
     else
 
-
-		  if [ "$type" == "confidence" ]; then
-				printf '%-20s\t'  "`echo "$file"|sed 's/.f90//'| sed 's/*_//'`"
-                file_exec="`echo $file | sed "s/.f90/.x/g" `"
-			    sh confidence_test_spec.sh "$file_exec" "$file" "$1"
+          file_exec="`echo $file | sed "s/.f90/.x/g" `"
+		  printf '%-20s\t'  "`echo "$file"|sed 's/.f90//'| sed 's/*_//'`"
+          if [ "$type" == "confidence" ]; then
+            if [ -f $CONF_LOG_PATH/$file ]; then
+                cp $CONF_LOG_PATH/$file .
+			    sh confidence_test.sh "$file_exec" "$file" "$1"
+                rm ./$file
+            else
+                echo "ABSENT"
+            fi
 	      elif [ "$type" == "conformance" ]; then
-	      	    cd $FEATURE_LOG_PATH
-			    make -s `echo "$file" |sed 's/.f90/.x/'`  | tee -a $LOGFILE
+             if [ -f $FEATURE_LOG_PATH/$file ]; then
+                cp $FEATURE_LOG_PATH/$file .
+			    sh conformance_test.sh "$file_exec" "$file" "$1"
+                rm ./$file
+            else
+                echo "ABSENT"
+            fi
+          elif [ "$type" == "fault" ]; then
+             if [ -f $FAULT_LOG_PATH/$file ]; then
+                cp $FAULT_LOG_PATH/$file .
+			    sh fault_test.sh "$file_exec" "$file" "$1"
+                rm ./$file
+            else
+                echo "ABSENT"
+            fi
+          elif [ "$type" == "non-conformance" ]; then
+                echo "Not supported"
 		  fi
-
-          cd $CURRENT
     fi
 
 done

@@ -12,10 +12,10 @@ SCRIPTS = confidence_test.sh conformance_test.sh fault_test.sh
 
 
 all: clean-output test_file  testmodule.o $(SCRIPTS) header
-
-	#   @sh few_tests.sh
-	#   @cp $(LOGFILE) ./HISTORY/
-	#   @mv $(LOGFILE) ./latest_results.log
+	   @sh few_test.sh  "$(LOGFILE)"
+	   @cp $(LOGFILE) ./HISTORY/
+	   @mv $(LOGFILE) ./latest_results.log
+	   @rm $(SCRIPTS)
 
 
 $(SCRIPTS):
@@ -47,7 +47,7 @@ clean-history:
 
 
 clean-all:  clean-output clean-exec clean-history
-	   @rm -rf uhcaf.keep ./*.log ./*.o ./*.f90
+	   @rm -rf uhcaf.keep ./*.log ./*.o ./*.f90  $(SCRIPTS)
 
 
 clean:
