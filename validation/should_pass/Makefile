@@ -22,10 +22,7 @@ all:   clean-output header $(EXES) tail
 
 
 header:
-	   @printf '\n%s\n%s\n' "---------------HPC Tools CAF CONFORMANCE testsuite---------------"  \
-	   				"Evaluating $(COMPILER) @ $(DATE)" | tee -a $(LOGFILE)
-	   @printf '%-20s\t%-80s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  | tee -a $(LOGFILE)
-
+	 @cd .. ; $(MAKE) -s conformance-header | tee -a $(LOGFILE)
 
 
 tail:
@@ -39,20 +36,9 @@ tail:
 %.x: %.f90
 	   $(eval SPEC_IDX:=$(shell echo "`echo "$^"|sed 's/.f90//'| sed 's/*_//'`"))
 	   $(eval DESCRIPTION:=$(shell echo "`cat description | grep "$^" | sed s/"$^"//`"))
-	   @ printf '%-20s\t%-80s\t' "$(SPEC_IDX)" "$(DESCRIPTION)" | tee -a $(LOGFILE)
-	   @ $(FC) $(FFLAGS)  -o $(BIN_PATH)/$@ $^ 2>&1 >$(COMPILE_OUTPUT)/$^.out ;\
-	     if [ "$$?" == "0" ]; then \
-		     printf '%s\t\t' "PASS" | tee -a $(LOGFILE)  ; \
-			 perl ../timedexec.pl $(TIMEOUT) $(LAUNCHER)  $(BIN_PATH)/$@ 2>&1 >$(EXEC_OUTPUT)/$@.out ; \
-			 if [ "$$?" == "0" ]; then \
-			 	printf '%s\n' "PASS" | tee -a $(LOGFILE) ;\
-			 else \
-			 	printf '%s\n' "FAIL" | tee -a $(LOGFILE) ;\
-			 fi \
-		 else \
-		 	 	printf '%s\t\t%s\n' "FAIL" "N/A" | tee -a $(LOGFILE) ;\
-		 fi
-	    $(eval total_cnt=$(shell echo $(total_cnt)\+1 | bc))
+	   @printf '%-20s\t%-80s\t' "$(SPEC_IDX)" "$(DESCRIPTION)" | tee -a $(LOGFILE)
+	   @source conformance_test.sh "$@" "$^" "$(LOGFILE)"
+	   $(eval total_cnt=$(shell echo $(total_cnt)\+1 | bc))
 
 
 clean-output:
@@ -72,7 +58,5 @@ clean-all:  clean-output clean-exec clean-history
 
 
 clean:
-	@ printf '%s\n%s\n' "Usage:" "$ $(MAKE) clean-<output | exec | history | all>"
-
-
+	@printf '%s\n%s\n' "Usage:" "$ $(MAKE) -s clean-<output | exec | history | all>"
 

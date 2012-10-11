@@ -22,10 +22,7 @@ all:   clean-output header $(EXES) tail
 
 
 header:
-	   @printf '\n%s\n%s\n' "---------------HPC Tools CAF NON-CONFORMANCE testsuite---------------"  \
-	   				"Evaluating $(COMPILER) @ $(DATE)" | tee -a $(LOGFILE)
-	   @printf '%-20s\t%-80s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  | tee -a $(LOGFILE)
-
+	@cd ../ ; $(MAKE) -s non-conformance-header | tee -a $(LOGFILE)
 
 
 tail:

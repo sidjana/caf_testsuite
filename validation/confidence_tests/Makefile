@@ -20,15 +20,13 @@ all:  clean-output header testmodule.o  $(EXES)
 
 
 header:
-		@ printf '\n%s\n%s\n\n' "---------------HPC Tools CAF CONFIDENCE testsuite---------------" \
-                    "Evaluating $(COMPILER) @ $(DATE)" | tee -a $(LOGFILE)
-	   	@ printf '%-15s\t%-50s\t%s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  "CONFIDENCE"| tee -a $(LOGFILE)
+	   @cd ../ ; $(MAKE) -s confidence-header | tee -a $(LOGFILE) 
 
 
-%.x:    %.f90 
+%.x:    %.f90
 	   $(eval SPEC_IDX:=$(shell echo "`echo "$^"|sed 's/.f90//'| sed 's/*_//'`"))
 	   $(eval DESCRIPTION:=$(shell echo "`cat description | grep "$^" | sed s/"$^"//`"))
-	   @ printf '%-15s\t%-50s\t' "$(SPEC_IDX)" "$(DESCRIPTION)"
+	   @ printf '%-15s\t%-70s\t' "$(SPEC_IDX)" "$(DESCRIPTION)"
 	   @ source confidence_test.sh "$@" "$^" "$(LOGFILE)"
 
 
@@ -37,7 +35,7 @@ testmodule.o: ../testmodule.f90
 
 
 clean-output:
-	@rm -rf compile_output/*.out exec_output/*.out 
+	@rm -rf compile_output/*.out exec_output/*.out
 
 
 clean-exec:

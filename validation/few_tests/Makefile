@@ -8,59 +8,26 @@ COMPILE_OUTPUT:=$(FEW_COMPILE_PATH)
 
 LOG_NAME:=$(DATE).log
 LOGFILE:=$(FEW_LOG_PATH)/$(LOG_NAME)
+SCRIPTS = confidence_test.sh conformance_test.sh fault_test.sh
 
 
-CURRENT:=$(shell pwd)
+all: clean-output test_file  testmodule.o $(SCRIPTS) header
+
+	#   @sh few_tests.sh
+	#   @cp $(LOGFILE) ./HISTORY/
+	#   @mv $(LOGFILE) ./latest_results.log
 
 
-all: clean-output test_file  testmodule.o confidence_test.sh header
-	   @for file in `cat test_file` ; do   \
-	      if [ "$$file" == "CONFORMANCE" ]; then \
-		   	    printf '%s\n\n' "-----CONFORMANCE TESTS-----" | tee -a $(LOGFILE) ;\
-				printf '%-20s\t%-80s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION"  "COMPILATION" "EXECUTION"  | tee -a $(LOGFILE) ;\
-			    type="conformance"; \
-				continue; \
-    	  elif [ "$$file" == "CONFIDENCE" ]; then \
-		        printf '%s\n\n' "-----CONFIDENCE TESTS-----" | tee -a $(LOGFILE) ;\
-				printf '%-20s\t%s\t%s\t%s\n\n' "SPEC_IDX" "COMPILATION" "EXECUTION"  "CONFIDENCE"| tee -a $(LOGFILE) ;\
-	        	type="confidence"; \
-			    continue;\
-    	  elif [ "$$file" == "NON-CONFORMANCE" ]; then \
-		        printf '%s\n\n' "-----NON_CONFORMANCE TESTS-----" | tee -a $(LOGFILE) ;\
-				printf '%-20s\t%s\t%s\n\n' "SPEC_IDX" "COMPILATION" "EXECUTION"  | tee -a $(LOGFILE) ;\
-	        	type="non-conformance"; \
-			    continue;\
-    	  elif [ "$$file" == "END-TESTS" ]; then \
-		        printf '%s\n' "-----END OF TESTS-----" | tee -a $(LOGFILE) ;\
-	            break; \
-		  fi ;  \
-		  if [ "$$type" == "confidence" ]; then  \
-			    file_exec="`echo $$file | sed "s/.f90/.x/g" `"; \
-			    cp $(CONF_LOG_PATH)/$$file  .  ;\
-				printf '%-20s\t'  "`echo "$$file"|sed 's/.f90//'| sed 's/*_//'`"   ;\
-			    sh confidence_test.sh "$$file_exec" "$$file" "$(LOGFILE)"  ;\
-	      elif [ "$$type" == "conformance" ]; then  \
-	      	    cd $(FEATURE_LOG_PATH)   ; \
-			    $(MAKE) -s `echo "$$file" |sed 's/.f90/.x/'`  | tee -a $(LOGFILE)  ; \
-		        cd $(CURRENT)  ; \
-		  fi ; \
-		  rm -rf $$file ;  \
-	 	done
-	   @sed '/Entering directory/d' $(LOGFILE) > $(LOGFILE).tmp
-	   @sed '/Leaving directory/d'  $(LOGFILE).tmp > $(LOGFILE)
-	   @cp $(LOGFILE) ./HISTORY/
-	   @mv $(LOGFILE) ./latest_results.log
-	   @rm  $(LOGFILE).tmp
+$(SCRIPTS):
+	   @sed 's/CONF_/FEW_/g'  $(CONF_LOG_PATH)/confidence_test.sh >  ./confidence_test.sh
+	   @sed 's/FAULT_/FEW_/g'  $(FAULT_LOG_PATH)/fault_test.sh > ./fault_test.sh
+	   @sed 's/FEATURE_/FEW_/g'  $(FEATURE_LOG_PATH)/conformance_test.sh > ./conformance_test.sh
 
 
-confidence_test.sh:
-	   @cp $(CONF_LOG_PATH)/confidence_test.sh .;
-	   @sed 's/CONF_/FEW_/g' confidence_test.sh > confidence_test.sh.1
-	   @mv confidence_test.sh.1 confidence_test.sh
 
 header:
 	   @printf '\n%s\n\n%s\n\n' "---------------HPC Tools CAF SPECIFIC testsuite---------------" \
-			                      "Evaluating $(COMPILER) @ $(DATE)" | tee -a $(LOGFILE)
+			                      "Evaluating $(COMPILER)" | tee -a $(LOGFILE)
 
 
 testmodule.o: $(ROOT)/testmodule.f90

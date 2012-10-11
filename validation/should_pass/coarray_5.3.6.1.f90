@@ -1,10 +1,10 @@
 !declare dimension of coarray using codimension keyword
 
 program main
-    integer , codimension[1,*] :: i_sca, i_arr(2,3)
-    integer , allocatable, codimension[:,*] :: i_all_sca, i_all_arr(:,:)
-    real    , codimension[1,*] :: r_sca, r_arr(2,3)
-    real    , allocatable, codimension[:,*] :: r_all_sca, r_all_arr(:,:)
+    integer , codimension[*] :: i_sca, i_arr(2,3)
+    integer , allocatable, codimension[:] :: i_all_sca, i_all_arr(:,:)
+    real    , codimension[*] :: r_sca, r_arr(2,3)
+    real    , allocatable, codimension[:] :: r_all_sca, r_all_arr(:,:)
     integer :: rank
 
     rank = this_image()
@@ -14,18 +14,18 @@ program main
     r_sca = rank
     r_arr = rank
 
-    ALLOCATE(i_all_sca)
-    ALLOCATE(i_all_arr(2,3)[1,*])
-    ALLOCATE(r_all_sca)
-    ALLOCATE(r_all_arr(2,3)[1,*])
+    ALLOCATE(i_all_sca[*])
+    ALLOCATE(i_all_arr(2,3)[*])
+    ALLOCATE(r_all_sca[*])
+    ALLOCATE(r_all_arr(2,3)[*])
 
     sync all
 
     do i = 1 , NPROCS
       if (i_sca[i] /= i .AND. i_arr(1,1)[i] /= i   .AND.  &
           r_sca[i] /= i .AND. r_arr(1,1)[i] /= i   .AND.  &
-          i_all_sca[i] /= i .AND. i_all_arr(1,1)[i] .AND. &
-          r_all_sca[i] /= i .AND. r_all_arr(1,1)[i] .AND. &
+          i_all_sca[i] /= i .AND. i_all_arr(1,1)[i] /= i .AND. &
+          r_all_sca[i] /= i .AND. r_all_arr(1,1)[i] /= i      &
           ) then
           print *, "Error in semantics of coindexed object on image", &
           i, "when declared with 'codimension' keyword"

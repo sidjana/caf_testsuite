@@ -1,5 +1,5 @@
 # path vals
-ROOT="/home/sidjana/caf_testsuite/validation"
+ROOT="`pwd`/.."
 # this is the root of the individual test category (e.g.confidence, conformance) &  NOT the testsuite
 BIN_PATH="${ROOT}/bin"
 
@@ -65,6 +65,12 @@ FEW_LOG_PATH="${ROOT}/few_tests"
 NONCONF_COMPILE_PATH="${ROOT}/should_fail/compile_output"
 NONCONF_EXEC_PATH="${ROOT}/should_fail/exec_output"
 NONCONF_LOG_PATH="${ROOT}/should_fail"
+
+#for FAULT TESTS
+FAULT_COMPILE_PATH="${ROOT}/fault_tests/compile_output"
+FAULT_EXEC_PATH="${ROOT}/fault_tests/exec_output"
+FAULT_LOG_PATH="${ROOT}/fault_tests"
+
 
 
 #E-mail stuff
