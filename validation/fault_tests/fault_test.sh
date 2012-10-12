@@ -6,7 +6,7 @@ COMPILE_OUTPUT="${FAULT_COMPILE_PATH}"
 
 exec_out="0"
 
-$FC $FFLAGS -o $1  testmodule.o $2 &>$COMPILE_OUTPUT/$2.out
+$FC $FFLAGS -o $1  $2 &>$COMPILE_OUTPUT/$2.out
 if [ "$?" == "1" ]; then
 		printf '%-15s\t%-15s\n' "FAIL" "N/A"  | tee -a $3
 else

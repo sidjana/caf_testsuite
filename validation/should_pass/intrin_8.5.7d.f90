@@ -1,4 +1,4 @@
-! Testing for LOCK & UNLOCK without STAT specifier
+! Testing for LOCK & UNLOCK with STAT specifier
 
       program lock_unlock
 

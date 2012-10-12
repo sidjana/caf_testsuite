@@ -1,7 +1,6 @@
 ! SYNC ALL with the STAT specifier
 
       program sync_stat
-      use cross_test
       use, intrinsic:: iso_fortran_env
 
         implicit none

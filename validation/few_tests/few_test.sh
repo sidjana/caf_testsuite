@@ -5,6 +5,10 @@ CURRENT=$FEW_LOG_PATH
 for file in `cat test_file`
 do
 
+    if [ -z "$file" ]; then # empty line!
+      continue
+    fi
+
     if [ "$file" == "CONFORMANCE-TESTS" -o \
          "$file" == "CONFIDENCE-TESTS"  -o \
          "$file" == "FAULT-TESTS"       -o \
@@ -34,8 +38,13 @@ do
     else
 
           file_exec="`echo $file | sed "s/.f90/.x/g" `"
-		  printf '%-20s\t'  "`echo "$file"|sed 's/.f90//'| sed 's/*_//'`"
+		  printf '%-20s\t' "`echo "$file"|sed 's/.f90//'| \
+              sed 's/*_//'`" | tee -a $1
+          printf '%-50s\t' "`cat description | grep "$file" | \
+              sed 's/"$file"//'`"| tee -a $1
+
           if [ "$type" == "confidence" ]; then
+
             if [ -f $CONF_LOG_PATH/$file ]; then
                 cp $CONF_LOG_PATH/$file .
 			    sh confidence_test.sh "$file_exec" "$file" "$1"
@@ -63,5 +72,4 @@ do
                 echo "Not supported"
 		  fi
     fi
-
 done

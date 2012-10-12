@@ -2,7 +2,6 @@
 
 
       program errmsg_stat
-        use cross_test
         use, intrinsic:: iso_fortran_env
         integer :: stat_var, rank, size
         integer :: arr(1)

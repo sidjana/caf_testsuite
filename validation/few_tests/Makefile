@@ -11,11 +11,11 @@ LOGFILE:=$(FEW_LOG_PATH)/$(LOG_NAME)
 SCRIPTS = confidence_test.sh conformance_test.sh fault_test.sh
 
 
-all: clean-output test_file  testmodule.o $(SCRIPTS) header
+all: clean-output test_file  testmodule.o description $(SCRIPTS) header
 	   @sh few_test.sh  "$(LOGFILE)"
 	   @cp $(LOGFILE) ./HISTORY/
 	   @mv $(LOGFILE) ./latest_results.log
-	   @rm $(SCRIPTS)
+	   @rm $(SCRIPTS) description
 
 
 $(SCRIPTS):
@@ -34,6 +34,12 @@ testmodule.o: $(ROOT)/testmodule.f90
 	   @$(FC) $(FFLAGS) -c  ../testmodule.f90
 
 
+description:
+	   @cat $(CONF_LOG_PATH)/description >>./description
+	   @cat $(FAULT_LOG_PATH)/description >>./description
+	   @cat $(FEATURE_LOG_PATH)/description >>./description
+
+
 clean-output:
 	   @rm -rf compile_output/*.out exec_output/*.out
 
@@ -47,7 +53,7 @@ clean-history:
 
 
 clean-all:  clean-output clean-exec clean-history
-	   @rm -rf uhcaf.keep ./*.log ./*.o ./*.f90  $(SCRIPTS)
+	   @rm -rf uhcaf.keep ./*.log ./*.o ./*.f90  $(SCRIPTS) description
 
 
 clean:

@@ -78,10 +78,10 @@ returns the result based on the confidence of the cross-test.
 confidence of the actual tests.
 
 - The original tests (with the CAF constructs) are compiled as:
-  $(FC) $(PREPROCESSOR_FLAG) testmodule.f90 <file_name.f90>
+  $(FTN COMPILER) $(PREPROCESSOR_FLAG) testmodule.f90 <file_name.f90>
 
 - The cross tests (without the CAF constructs) are compiled as:
-  $(FC) $(PREPROCESSOR_FLAG) -DCROAA_ testmodule.f90
+  $(FTN COMPILER) $(PREPROCESSOR_FLAG) -DCROSS_ testmodule.f90
 <file_name.f90>
 
 - Image-1 is chosen as the one whose coarray is accessesed by
@@ -95,12 +95,10 @@ ________________________________________________________________
 |CODE |                    Meaning                             |
 | 0   | Default val returned to shell on successful execution  |
 | 1   | Default val returned to shell on incorrect execution   |
-| 2   | Successful Compilation                                 |
-| 3   | Unsuccessful Compilation                               |
-| 4   | Value returned when the feature test passes            |
-| 5   | Value returned when the feature test fails             |
-| 6   | Value returned when the cross test passes              |
-| 7   | Value returned when the cross test fails               |
+| 2   | Successful Compilation of confidence tests             |
+| 3   | Unsuccessful Compilation of confidence tests           |
+| 4   | returned when the feature test passes                  |
+| 5   | returned when the feature test fails                   |
 |_____|________________________________________________________|
 
 

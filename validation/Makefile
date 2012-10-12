@@ -1,6 +1,5 @@
 include ./config/make.def
 
-
 .PHONY: all conformance non-conformance confidence few
 
 
@@ -24,7 +23,7 @@ confidence:
 confidence-header:
 		@ printf '\n%s\n%s\n\n' "---------------HPC Tools CAF CONFIDENCE testsuite---------------" \
                     "Evaluating $(COMPILER)"
-	   	@ printf '%-15s\t%-50s\t%s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  "CONFIDENCE"
+	   	@ printf '%-20s\t%-65s\t%s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  "CONFIDENCE"
 
 
 

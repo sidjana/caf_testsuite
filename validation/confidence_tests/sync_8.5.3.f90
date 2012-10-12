@@ -20,7 +20,7 @@
 #endif
               if (rank == 1) then
                 call sleep(SLEEP)
-                num = rank
+                num = i*rank
 #ifndef CROSS_
                 sync all
 #endif
@@ -28,7 +28,7 @@
 #ifndef CROSS_
                 sync all
 #endif
-                if (num[1] /= 1) then
+                if (num[1] /= i) then
                   cross_err = cross_err + 1
                 end if
               end if

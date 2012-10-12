@@ -1,22 +1,20 @@
 include ../config/make.def
 
 DATE:=$(shell echo "`date +"%m-%d-%y-%T"`")
-EXEC_OUTPUT:=$(FAULT_EXEC_PATH)
-COMPILE_OUTPUT:=$(FAULT_COMPILE_PATH)
-
 LOG_NAME:=$(DATE).log
 LOGFILE:=$(FAULT_LOG_PATH)/$(LOG_NAME)
+
 
 F_TESTS = $(wildcard *.f90)
 F_EXES  = $(F_TESTS:.f90=.x)
 EXES    = $(addprefix $(BIN_PATH)/,$(F_EXES) )
 total_cnt:=0
 
-.PHONY: all header testmodule.o
+.PHONY: all header
 
-all:   clean-output header testmodule.o  $(EXES)
+all:   clean-output header   $(EXES)
 	   @cp $(LOGFILE) ./HISTORY/
-	   @mv $(LOGFILE) latest_results.log
+	   @mv $(LOGFILE) ./latest_results.log
 
 
 .SUFFIXES: .x
@@ -26,19 +24,16 @@ $(EXES): | $(BIN_PATH)
 
 
 header:
-	@cd ../ ; $(MAKE) -s fault-header | tee -a $(LOGFILE)
+	   @cd ../ ; $(MAKE) -s fault-header | tee -a $(LOGFILE)
+	   $(eval total_cnt=0)
 
 
 $(BIN_PATH)/%.x: %.f90
 	   $(eval SPEC_IDX:=$(shell echo "`echo "$^"|sed 's/.f90//'| sed 's/*_//'`"))
 	   $(eval DESCRIPTION:=$(shell echo "`cat description | grep "$^" | sed s/"$^"//`"))
 	   @printf '%-20s\t%-80s\t' "$(SPEC_IDX)" "$(DESCRIPTION)" | tee -a $(LOGFILE)
-	   @source fault_tests.sh "$@"  "$^" "$(LOGFILE)"
-
-
-testmodule.o: ../testmodule.f90
-	@$(FC) $(FFLAGS) -c  ../testmodule.f90
-
+	   @source fault_test.sh "$@"  "$^" "$(LOGFILE)"
+	   $(eval total_cnt=$(shell echo $(total_cnt)\+1 | bc))
 
 
 $(BIN_PATH):
@@ -63,6 +58,4 @@ clean-all:  clean-output clean-exec clean-history
 
 clean:
 	@ printf '%s\n%s\n' "Usage:" "$ $(MAKE) clean-<output | exec | history | all>"
-
-
 
