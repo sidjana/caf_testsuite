@@ -23,7 +23,7 @@
             sync all
 
              if (rank == 1) then
-               ! testing for lock_var on the same image
+               ! testing for double locking on the same image
                LOCK(lock_var[2])
                LOCK(lock_var[2], STAT=stat_var)
                if (stat_var /= STAT_LOCKED) then
@@ -40,7 +40,7 @@
             stat_var = 0
 
             if (rank == 1) then
-               ! testing for a_lock_var on the same image
+              ! testing for double locking on the same image
                LOCK(a_lock_var[2])
                LOCK(a_lock_var[2], STAT=stat_var)
                if (stat_var /= STAT_LOCKED) then

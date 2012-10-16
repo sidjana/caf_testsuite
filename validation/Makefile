@@ -3,6 +3,10 @@ include ./config/make.def
 .PHONY: all conformance non-conformance confidence few
 
 
+default:
+	@echo "Usage: $(MAKE) [all | conformance | non-conformance | confidence | fault | few-tests] "
+
+
 all: conformance confidence  fault
 
 
@@ -63,9 +67,5 @@ clean-all:
 
 clean:
 	@ printf '%s\n%s\n' "Usage:" "$$ $(MAKE) clean-<output | exec | history | all>"
-
-
-default:
-	@echo "Usage: $(MAKE) [all | conformance | non-conformance | confidence | fault | few-tests] "
 
 
