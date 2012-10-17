@@ -1,24 +1,11 @@
 CONFORMANCE-TESTS
-
-character_test.f90
-coarray_4.8.R468.f90
-intrin_13.7.165.f90
-
+coarray_5.3.6.1.f90
 
 
 CONFIDENCE-TESTS
 
-critical_8.1.5.f90
-intrin_8.5.7d.f90
-sync_8.5.4a.f90
-sync_8.5.4b.f90
-
-
 
 FAULT-TESTS
-
-sync_8.5.7a.f90
-sync_8.5.7b.f90
 
 
 

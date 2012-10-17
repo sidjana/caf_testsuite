@@ -17,7 +17,7 @@ conformance:
 conformance-header:
 	@printf '\n%s\n%s\n' "---------------HPC Tools CAF CONFORMANCE testsuite---------------"  \
 	   				"Evaluating $(COMPILER)"
-	@printf '%-20s\t%-80s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"
+	@printf '%-20s\t%-70s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"
 
 
 confidence:
@@ -27,7 +27,7 @@ confidence:
 confidence-header:
 		@ printf '\n%s\n%s\n\n' "---------------HPC Tools CAF CONFIDENCE testsuite---------------" \
                     "Evaluating $(COMPILER)"
-	   	@ printf '%-20s\t%-65s\t%s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  "CONFIDENCE"
+	   	@ printf '%-18s\t%-60s\t%s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  "CONFIDENCE"
 
 
 
@@ -48,7 +48,7 @@ fault:
 fault-header:
 	   @printf '\n%s\n%s\n' "---------------HPC Tools CAF FAULT testsuite---------------"  \
 	   				"Evaluating $(COMPILER)"
-	   @printf '%-20s\t%-80s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"
+	   @printf '%-20s\t%-70s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"
 
 
 

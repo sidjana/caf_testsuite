@@ -1,4 +1,4 @@
-! Testing for LOCK & UNLOCK without STAT specifier 
+! Testing for LOCK & UNLOCK without STAT specifier
 
       program lock_unlock
       use cross_test
@@ -6,37 +6,47 @@
          USE, INTRINSIC :: ISO_FORTRAN_ENV
          type(LOCK_TYPE) :: lock_var [*]
          integer :: num[*]
-         integer :: rank, size
+         integer :: rank
+         integer,parameter :: MAX=1000
+         integer :: dummy(MAX)
+
 
          rank = this_image()
-         num = 0
-         size = num_images()
 
-        if(size .gt. 1) then
+        if(NPROCS .gt. 1) then
           do i = 1,NITER
               num = 0
               sync all
-              if (rank /= 1) then
-                 call sleep(SLEEP) ! giving img 1 a head-start
-              end if
-#ifndef CROSS_
-              LOCK (lock_var[1])
-#endif
-              if (rank /= 1) then
-                 num[1] = rank    ! overwriting img 1's var before it is read
-              end if
-              if (rank == 1) then
-                ! if lock does not work , other images will modify 'num[1]' . sleep() gives time to do so.
 
-                 call sleep(SLEEP)
-                 if (num /= 0) then
-                   cross_err = cross_err + 1
-                 end if
-              end if
 #ifndef CROSS_
-         UNLOCK (lock_var[1])
+              ! testing whether img 1 can LOCK a reference to
+              ! non-cosubscripted local coarray
+              if(MOD(i,2) == 0 .and. rank == 1 ) then
+                 LOCK(lock_var)
+              else
+                 LOCK (lock_var[1])
+              end if
 #endif
-            sync all
+
+              do j = 1 , MAX
+                num[1] = num[1] + 1
+                dummy(j)=dummy(j)+1
+              end do
+
+#ifndef CROSS_
+              ! testing whether img 1 can UNLOCK a reference to
+              ! non-cosubscripted local coarray
+              if(MOD(i,2) == 0 .and. rank == 1 ) then
+                 UNLOCK(lock_var)
+              else
+                 UNLOCK (lock_var[1])
+              end if
+#endif
+             sync all
+             if (rank == 1 .and. num /=(1000*NPROCS)) then
+                cross_err = cross_err + 1
+             end if
+             sync all
           end do
 #ifndef CROSS_
           call calc_ori(cross_err)
@@ -44,6 +54,9 @@
           call calc(cross_err)
 #endif
 
+        else
+          print *, "Config Err: NPROCS shoud be > 1"
+          call EXIT (1)
         end if
 
       end program

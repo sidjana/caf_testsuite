@@ -3,25 +3,25 @@
 PROGRAM item12_c
     use cross_test
 
-        IMPLICIT NONE
+       IMPLICIT NONE
 
-        INTEGER :: total_images, rank, i
-        INTEGER :: arr(1)
-        INTEGER :: num[*]
+       INTEGER :: total_images, rank, i
+       INTEGER :: arr(1)
+       INTEGER :: num[*]
+       if(NPROCS .gt. 1) then
 
         rank=this_image()
-        total_images=num_images()
-
-        arr(1)=1
+        arr(1)=2
 
         sync all
 
         do i = 1,NITER
               num = 0
               sync all
-              if(rank == 1)  then
-                  call sleep(SLEEP)  ! giving other images a head start
-                  num = rank
+              if(rank == 2)  then
+                  num = 0
+                  call sleep(SLEEP)
+                  num = i*rank
 #ifndef CROSS_
                   sync images(*)
 #endif
@@ -29,7 +29,7 @@ PROGRAM item12_c
 #ifndef CROSS_
                   sync images(arr)
 #endif
-                  if (num[1] /= 0) then
+                  if (rank == 1 .and. num[2] /= i*2) then
                     cross_err = cross_err + 1
                   end if
               end if
@@ -42,5 +42,9 @@ PROGRAM item12_c
         call calc(cross_err)
 #endif
 
+      else
+          print *, "Config Err: NPROCS shoud be > 1"
+          call EXIT (1)
+        end if
       end program
 

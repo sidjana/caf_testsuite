@@ -10,7 +10,7 @@ F_EXES  = $(F_TESTS:.f90=.x)
 EXES    = $(addprefix $(BIN_PATH)/,$(F_EXES) )
 total_cnt:=0
 
-.PHONY: all header testmodule.o
+.PHONY: all header 
 
 all:  clean-output header testmodule.o  $(EXES)
 	   @cp $(LOGFILE) ./HISTORY/
@@ -30,7 +30,7 @@ header:
 $(BIN_PATH)/%.x: %.f90
 	   $(eval SPEC_IDX:=$(shell echo "`echo "$^"|sed 's/.f90//'| sed 's/*_//'`"))
 	   $(eval DESCRIPTION:=$(shell echo "`cat description | grep "$^" | sed s/"$^"//`"))
-	   @printf '%-20s\t%-65s\t' "$(SPEC_IDX)" "$(DESCRIPTION)" | tee -a $(LOGFILE)
+	   @printf '%-18s\t%-60s\t' "$(SPEC_IDX)" "$(DESCRIPTION)" | tee -a $(LOGFILE)
 	   @source confidence_test.sh "$@"  "$^" "$(LOGFILE)"
 	   $(eval total_cnt=$(shell echo $(total_cnt)\+1 | bc))
 

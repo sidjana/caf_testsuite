@@ -22,17 +22,10 @@
            STOP
         else
            call sleep(SLEEP)
-#ifndef CROSS_
            sync images(* , STAT=stat_var)
            if ( stat_var /= STAT_STOPPED_IMAGE) then
               call EXIT(1)
            end if
-#else
-           sync images(*)
-           if ( stat_var == STAT_STOPPED_IMAGE) then
-              call EXIT(1)
-           end if
-#endif
         end if
 
 

@@ -18,19 +18,30 @@ program main
     ALLOCATE(i_all_arr(2,3)[*])
     ALLOCATE(r_all_sca[*])
     ALLOCATE(r_all_arr(2,3)[*])
+    print *, "allocation complete"
+
+    i_all_sca = rank
+    i_all_arr = rank
+    r_all_sca = rank
+    r_all_arr = rank
 
     sync all
 
     do i = 1 , NPROCS
-      if (i_sca[i] /= i .AND. i_arr(1,1)[i] /= i   .AND.  &
-          r_sca[i] /= i .AND. r_arr(1,1)[i] /= i   .AND.  &
-          i_all_sca[i] /= i .AND. i_all_arr(1,1)[i] /= i .AND. &
-          r_all_sca[i] /= i .AND. r_all_arr(1,1)[i] /= i      &
+    print *, "image " , rank, "in iteration ", i
+      if (i_sca[i] /= i .OR. i_arr(2,2)[i] /= i   .OR.  &
+          r_sca[i] /= i .OR. r_arr(2,2)[i] /= i   .OR.  &
+          i_all_sca[i] /= i .OR. i_all_arr(2,2)[i] /= i .OR. &
+          r_all_sca[i] /= i .OR. r_all_arr(2,2)[i] /= i      &
           ) then
           print *, "Error in semantics of coindexed object on image", &
           i, "when declared with 'codimension' keyword"
           call EXIT(1)
         end if
    end do
-
+  sync all
+    DEALLOCATE(i_all_sca)
+    DEALLOCATE(i_all_arr)
+    DEALLOCATE(r_all_sca)
+    DEALLOCATE(r_all_arr)
 end program main

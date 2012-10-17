@@ -5,18 +5,18 @@ BIN_PATH="${ROOT}/bin"
 
 
 #for ALL TESTS
-NPROCS="8"
-NITER="10"
+NPROCS="4"
+NITER="3"
 SLEEP="4"
-TIMEOUT="180"
+TIMEOUT="30"
 
 
-#OpenUH CAF Compiler
-COMPILER="OpenUH"
-FC="uhcaf"
-FFLAGS="-ftpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
-LAUNCHER="cafrun -n ${NPROCS}"
-FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
+##OpenUH CAF Compiler
+#COMPILER="OpenUH"
+#FC="uhcaf"
+#FFLAGS="-ftpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
+#LAUNCHER="cafrun -n ${NPROCS}"
+#FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
 
 
 ##Cray CAF Compiler
@@ -27,12 +27,12 @@ FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
 #FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
 
 
-##Intel CAF Compiler
-#COMPILER="Intel"
-#FC="ifort"
-#FFLAGS="-coarray -coarray-num-images=4 -fpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
-#LAUNCHER=
-#FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
+#Intel CAF Compiler
+COMPILER="Intel"
+FC="ifort"
+FFLAGS="-coarray -coarray-num-images=4 -fpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
+LAUNCHER=
+FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
 
 
 ##GNU CAF Compiler

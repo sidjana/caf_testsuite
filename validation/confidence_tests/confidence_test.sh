@@ -5,15 +5,15 @@ EXEC_OUTPUT="${CONF_EXEC_PATH}"
 COMPILE_OUTPUT="${CONF_COMPILE_PATH}"
 
 $FC $FFLAGS -o $1 testmodule.o $2 &>$COMPILE_OUTPUT/$2.out
-if [ "$?" == "0" ]; then
+ANS="$?"
+if [ "$ANS" == "0" ]; then
    # feature test passed compilation
    printf '%-15s\t' "PASS"  | tee -a $3
 
    #run the feature test
    perl ../timedexec.pl $TIMEOUT $LAUNCHER $1 &>$EXEC_OUTPUT/$2.out
-
   # check if the feature test passed execution
-   if [ "$?" == "4" -o "$?" == "0" ]; then
+   if [ "$?" == "0" ]; then
        # feature test passed execution
        printf '%-15s\t' "PASS"  | tee -a $3
 
@@ -34,11 +34,13 @@ if [ "$?" == "0" ]; then
 
     #   fi
 
-   else
+  elif [ "$ANS" == "4" ]; then
+       # feature test timed out
+       printf '%-15s\t%-10s\n' "TIMEOUT" "--"  | tee -a $3
+  else
        # feature test failed execution
        printf '%-15s\t%-10s\n' "FAIL" "--"  | tee -a $3
-
-   fi
+  fi
 
 else
    # feature test failed compilation
