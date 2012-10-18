@@ -9,9 +9,9 @@
        subroutine calc_ori(cross_err)
           integer:: cross_err[*]
           if (cross_err .gt. 0) then
-            call EXIT(1)
+            STOP 1
           else
-            call EXIT(0)
+            STOP
           end if
        end subroutine
 
@@ -27,9 +27,9 @@
            ! do i = 1 , size
            !   cross_err = max(cross_err,cross_err[i])
            ! end do
-            print *, "we get" , cross_err[1]
+            !print *, "we get" , cross_err[1]
             percent=(cross_err[1]*100.0)/NITER
-            call EXIT(percent)
+            call exit(percent)
           end if
 
        end subroutine calc

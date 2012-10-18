@@ -6,50 +6,56 @@
 
         integer(atomic_int_kind) :: i_obj[*]
         logical(atomic_logical_kind) :: l_obj[*] = .true.
-        integer :: size, rank
-        integer :: i,k, i_val
+        integer :: sz, rank
+        integer :: i,k,j
         logical :: l_val
+        integer(atomic_int_kind) :: num,i_val
 
-        size = NPROCS
+        sz = NPROCS
         rank = this_image()
-        num = 2**rank
+        num = (int(256,atomic_int_kind))**(MOD(rank,sizeof(num)))
 
         if (NPROCS .lt. 2) then
           print *, "Config Error: Number of images must be >= 2"
           call EXIT(1)
         end if
 
-        sync all
-
-        do k = 1,NITER
-           i_obj=1
+        do k = 1,NITER*10000
+            i_val=-1
+            i_obj = -1
+            sync all
                if (rank == 1) then
-                    i_val=2
-                    ! get the latest copy in cache
 #ifndef CROSS_
-                    call atomic_ref(i_val, i_obj)
+                    do while (i_val == -1)
+                        call atomic_ref(i_val, i_obj)
+                    end do
 #else
-                    i_val = i_obj
+                    do while (i_val == -1)
+                        i_val = i_obj
+                    end do
 #endif
-                    do while (i_val .ge. 2)
-                      if ( MOD(i_val,2 ) /= 0) then
-                         print *, "Error for atomic_int_kind"
-                         cross_err = cross_err + 1
-                      end if
+                    do while ( MOD(i_val,int(2,atomic_int_kind)) == 0)
                       i_val = i_val / 2
-                    enddo
+                    end do
+
+                    if ( i_val /= 1) then
+                        print *, "Error for atomic_int_kind"
+                        cross_err = cross_err + 1
+                    end if
+
                else
-                  !Each image defines i_objo[1] multiple times
+                  !Each image defines i_obj[1] multiple times
                   !This increases the chance of an incorrect
                   !implementation of atomics to mess up
 #ifndef CROSS_
                      call atomic_define(i_obj[1],num)
 #else
-                     i_obj[1]=num
+                     do j = 1,NITER
+                         i_obj[1]=num
+                     end do
 #endif
                end if
 
-           sync all
         end do
 
 
@@ -72,14 +78,13 @@
         end if
 
 
+           sync all
+
 #ifndef CROSS_
            call calc_ori(cross_err)
 #else
            call calc(cross_err)
 #endif
-
-
-
 
       end program
 
