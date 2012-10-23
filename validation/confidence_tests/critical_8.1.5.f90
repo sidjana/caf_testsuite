@@ -4,8 +4,8 @@
          use  cross_test
 
          integer :: num[*], rank, i,j
-         integer,parameter :: MAX=1000
-         integer :: dummy(MAX)
+         integer,parameter :: M=100000
+         integer :: dummy(M)
 
 
          rank = this_image()
@@ -18,7 +18,7 @@
             critical
 #endif
 
-                do j = 1 , MAX
+                do j = 1 , M
                   num[1] = num[1] + 1
                   dummy(j)=dummy(j)+1
                 end do
@@ -26,13 +26,18 @@
              end critical
 #endif
              sync all
-             if (rank == 1 .and. num /=(1000*NPROCS)) then
+
+             if (rank == 1 .and. num /=(M*NPROCS)) then
                 cross_err = cross_err + 1
+                print *,"num = ", num
              end if
              sync all
+             print *, "image ", rank, "ended critical"
            end do
 #ifndef CROSS_
+           print * , "call before", rank, "err=", cross_err
            call calc_ori(cross_err)
+           print *, "call after", rank
 #else
            call calc(cross_err)
 #endif

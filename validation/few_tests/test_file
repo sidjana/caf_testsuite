@@ -1,6 +1,6 @@
 CONFORMANCE-TESTS
-coarray_5.3.6.1.f90
 
+character_test.f90
 
 CONFIDENCE-TESTS
 

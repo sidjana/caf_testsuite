@@ -31,7 +31,7 @@ $(BIN_PATH)/%.x: %.f90
 	   $(eval SPEC_IDX:=$(shell echo "`echo "$^"|sed 's/.f90//'| sed 's/*_//'`"))
 	   $(eval DESCRIPTION:=$(shell echo "`cat description | grep "$^" | sed s/"$^"//`"))
 	   @printf '%-18s\t%-60s\t' "$(SPEC_IDX)" "$(DESCRIPTION)" | tee -a $(LOGFILE)
-	   @source confidence_test.sh "$@ ${EXEC_OPTIONS}"  "$^" "$(LOGFILE)"
+	   @source confidence_test.sh "$@"  "$^" "$(LOGFILE)"
 	   $(eval total_cnt=$(shell echo $(total_cnt)\+1 | bc))
 
 

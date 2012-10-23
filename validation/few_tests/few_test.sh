@@ -40,8 +40,8 @@ do
           file_exec="`echo $file | sed "s/.f90/.x/g" `"
 		  printf '%-20s\t' "`echo "$file"|sed 's/.f90//'| \
               sed 's/*_//'`" | tee -a $1
-          printf '%-50s\t' "`cat description | grep "$file" | \
-              sed 's/"$file"//'`"| tee -a $1
+          printf '%-70s\t' "`cat description | grep "$file" | \
+              sed "s/$file//" | sed 's/^[ ]*//g'`"| tee -a $1
 
           if [ "$type" == "confidence" ]; then
 

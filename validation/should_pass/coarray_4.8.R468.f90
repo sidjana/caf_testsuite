@@ -6,6 +6,7 @@
 
         rank = this_image()
         sca[rank] = rank
+        sync all
 
         do i = 1 , NPROCS
            if (rank == i .and. sca/=i) then

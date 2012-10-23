@@ -5,11 +5,10 @@ source ../support/killprocs.sh
 EXEC_OUTPUT="${FEATURE_EXEC_PATH}"
 COMPILE_OUTPUT="${FEATURE_COMPILE_PATH}"
 
-#echo "$FC $FFLAGS  -o  $BIN_PATH/$1 $2 &>$COMPILE_OUTPUT/$2.out"
 $FC $FFLAGS  -o  $BIN_PATH/$1 $2 &>$COMPILE_OUTPUT/$2.out
 if [ "$?" == "0" ]; then
      printf '%s\t\t' "PASS" | tee -a $3
-	 perl ../timedexec.pl $TIMEOUT $LAUNCHER  $BIN_PATH/$1 &>$EXEC_OUTPUT/$1.out
+	 perl ../timedexec.pl $TIMEOUT $LAUNCHER  $BIN_PATH/$1 $EXEC_OPTIONS &>$EXEC_OUTPUT/$1.out
      ANS="$?"
 	 if [ "$ANS" == "0" ]; then
 	 	printf '%s\n' "PASS" | tee -a $3
