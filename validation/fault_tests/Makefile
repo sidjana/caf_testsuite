@@ -32,7 +32,7 @@ $(BIN_PATH)/%.x: %.f90
 	   $(eval SPEC_IDX:=$(shell echo "`echo "$^"|sed 's/.f90//'| sed 's/*_//'`"))
 	   $(eval DESCRIPTION:=$(shell echo "`cat description | grep "$^" | sed s/"$^"//`"))
 	   @printf '%-20s\t%-70s\t' "$(SPEC_IDX)" "$(DESCRIPTION)" | tee -a $(LOGFILE)
-	   @source fault_test.sh "$@"  "$^" "$(LOGFILE)"
+	   @source fault_test.sh "$@ ${EXEC_OPTIONS}"  "$^" "$(LOGFILE)"
 	   $(eval total_cnt=$(shell echo $(total_cnt)\+1 | bc))
 
 

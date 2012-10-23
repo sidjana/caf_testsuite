@@ -11,12 +11,13 @@ SLEEP="4"
 TIMEOUT="30"
 
 
-#OpenUH CAF Compiler
-COMPILER="OpenUH"
-FC="uhcaf"
-FFLAGS="-ftpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
-LAUNCHER="cafrun -n ${NPROCS}"
-FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
+##OpenUH CAF Compiler
+#COMPILER="OpenUH"
+#FC="uhcaf"
+#FFLAGS="-ftpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
+#LAUNCHER="cafrun -n ${NPROCS}"
+#EXEC_OPTIONS=""
+#FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
 
 
 ##Cray CAF Compiler
@@ -24,14 +25,16 @@ FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
 #FC="ftn"
 #FFLAGS="-h caf -F -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
 #LAUNCHER="aprun -n ${NPROCS} -N 1 "
+#EXEC_OPTIONS=""
 #FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
 
 
-##Intel CAF Compiler
+#Intel CAF Compiler
 #COMPILER="Intel"
 #FC="ifort"
 #FFLAGS="-coarray -coarray-num-images=4 -fpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
 #LAUNCHER=
+#EXEC_OPTIONS=""
 #FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
 
 
@@ -40,7 +43,17 @@ FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
 #FC="mpif90"
 #FFLAGS="-fcoarray=lib  -lcaf_mpi  -fpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
 #LAUNCHER="mpiexec -n ${NPROCS}"
+#EXEC_OPTIONS=""
 #FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
+
+
+#G95 CAF Compiler
+COMPILER="G95"
+FC="g95"
+FFLAGS="-cpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
+LAUNCHER=
+EXEC_OPTIONS="--g95 images=4"
+FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
 
 
 #for CONFIDENCE TESTS
