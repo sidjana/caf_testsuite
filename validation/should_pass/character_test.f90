@@ -13,7 +13,7 @@
         do i = 1 ,5
           do j = 1 , 5
             if (x(i,j)/=x(i,j)) then    !remote read into all locations
-              call EXIT(1)
+             STOP 1 
             end if
           end do
         end do

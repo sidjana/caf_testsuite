@@ -11,14 +11,16 @@
       rank = this_image()
       cosubs=this_image(arr)
 
+  
+
       if (cosubs(1) == this_image(arr,1) .AND. cosubs(2) == this_image(arr,2) &
           .AND. cosubs(3) == this_image(arr,3) ) then
            if( ((2*1)*(cosubs(3)-1)+ 2*(cosubs(2)-1) + cosubs(1)) /= rank ) then
               print * , "ERROR this_image(coarray)"
-              call EXIT(1)
+              STOP 1
            end if
       else
            print *, "ERROR this_image(coarray,dim)"
-           call EXIT(1)
+           STOP 1
       end if
    end program main

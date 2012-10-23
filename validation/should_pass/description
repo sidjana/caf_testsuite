@@ -10,9 +10,9 @@ intrin_13.7.172.f90  LCOBOUND(coarray) and LCOBOUND(coarray,dim)
 intrin_13.7.79.f90  IMAGE_INDEX(coarray, subs)
 intrin_13.7.91.f90  UCOBOUND(COARRAY[, DIM, KIND])
 intrin_6.7.3.2.11.f90  ALLOCATE and DEALLOCATE act as barriers
-item_4.8.a.f90  subobjects if a coarray is also a coarray
+item_4.8.a.f90  Subobjects of a coarray is also a coarray
 pointer_4.5.4.6b.f90  association of pointer components of coarrays with local objects
 intrin_8.5.7d.f90 STOP and LOCK construct with STAT=STAT_LOCKED specifier
 intrin_8.5.7e.f90 STOP and LOCK construct with STAT=STAT_LOCKED_OTHER_IMAGE specifier
 intrin_8.5.7f.f90 STOP and LOCK construct with STAT=STAT_UNLOCKED specifier
-
+derived_4.5.4.f90 (non-)coarray COMPONENTS of (non-)coarray derived types

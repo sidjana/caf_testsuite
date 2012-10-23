@@ -11,12 +11,12 @@ SLEEP="4"
 TIMEOUT="30"
 
 
-##OpenUH CAF Compiler
-#COMPILER="OpenUH"
-#FC="uhcaf"
-#FFLAGS="-ftpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
-#LAUNCHER="cafrun -n ${NPROCS}"
-#FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
+#OpenUH CAF Compiler
+COMPILER="OpenUH"
+FC="uhcaf"
+FFLAGS="-ftpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
+LAUNCHER="cafrun -n ${NPROCS}"
+FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
 
 
 ##Cray CAF Compiler
@@ -27,12 +27,12 @@ TIMEOUT="30"
 #FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
 
 
-#Intel CAF Compiler
-COMPILER="Intel"
-FC="ifort"
-FFLAGS="-coarray -coarray-num-images=4 -fpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
-LAUNCHER=
-FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
+##Intel CAF Compiler
+#COMPILER="Intel"
+#FC="ifort"
+#FFLAGS="-coarray -coarray-num-images=4 -fpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
+#LAUNCHER=
+#FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
 
 
 ##GNU CAF Compiler

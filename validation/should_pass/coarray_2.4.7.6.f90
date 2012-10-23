@@ -163,7 +163,7 @@
 
 
       if (is_err /= 0) then
-        call EXIT(1)
+           STOP 1
       end if
 
       end program
