@@ -74,23 +74,22 @@ FEW_EXEC_PATH="${ROOT}/few_tests/exec_output"
 FEW_LOG_PATH="${ROOT}/few_tests"
 
 
-#for NON-CONFORMANCE TESTS
-NONCONF_COMPILE_PATH="${ROOT}/should_fail/compile_output"
-NONCONF_EXEC_PATH="${ROOT}/should_fail/exec_output"
-NONCONF_LOG_PATH="${ROOT}/should_fail"
-
-
 #for FAULT TESTS
 FAULT_COMPILE_PATH="${ROOT}/fault_tests/compile_output"
 FAULT_EXEC_PATH="${ROOT}/fault_tests/exec_output"
 FAULT_LOG_PATH="${ROOT}/fault_tests"
 
 
+##for NON-CONFORMANCE TESTS
+#NONCONF_COMPILE_PATH="${ROOT}/should_fail/compile_output"
+#NONCONF_EXEC_PATH="${ROOT}/should_fail/exec_output"
+#NONCONF_LOG_PATH="${ROOT}/should_fail"
 
-#E-mail stuff
-SUBJ="Results of the CAF test suite with $COMPILER"
-LOGFILE=
-EMAIL_LIST=
-EMAIL_BODY="Results of the test suite with $COMPILER are attached -- OpenUH CAF Testsuite --"
+
+##E-mail stuff
+#SUBJ="Results of the CAF test suite with $COMPILER"
+#LOGFILE=
+#EMAIL_LIST=
+#EMAIL_BODY="Results of the test suite with $COMPILER are attached -- OpenUH CAF Testsuite --"
 
 

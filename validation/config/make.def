@@ -1,0 +1,96 @@
+# path vals
+ROOT:=/home/sidjana/caf_testsuite/validation/config/..
+
+BIN_PATH:=$(ROOT)/bin
+
+
+#for ALL TESTS
+NPROCS:=4
+NITER:=3
+SLEEP:=4
+TIMEOUT:=30
+
+
+##OpenUH CAF Compiler
+#COMPILER:=OpenUH
+#FC:=uhcaf
+#FFLAGS:=-ftpp -DNPROCS=$(NPROCS) -DNITER=$(NITER) -DSLEEP=$(SLEEP)
+#LAUNCHER:=cafrun -n $(NPROCS)
+#EXEC_OPTIONS:=
+#FFLAGS_CROSS:= $FFLAGS -DCROSS_ 
+
+
+##Cray CAF Compiler
+#COMPILER:=Cray
+#FC:=ftn
+#FFLAGS:=-h caf -F -DNPROCS=$(NPROCS) -DNITER=$(NITER) -DSLEEP=$(SLEEP)
+#LAUNCHER:=aprun -n $(NPROCS) -N 1 
+#EXEC_OPTIONS:=
+#FFLAGS_CROSS:= $FFLAGS -DCROSS_ 
+
+
+#Intel CAF Compiler
+#COMPILER:=Intel
+#FC:=ifort
+#FFLAGS:=-coarray -coarray-num-images=4 -fpp -DNPROCS=$(NPROCS) -DNITER=$(NITER) -DSLEEP=$(SLEEP)
+#LAUNCHER:=
+#EXEC_OPTIONS:=
+#FFLAGS_CROSS:= $FFLAGS -DCROSS_ 
+
+
+##GNU CAF Compiler
+#COMPILER:=GNU
+#FC:=mpif90
+#FFLAGS:=-fcoarray=lib  -lcaf_mpi  -fpp -DNPROCS=$(NPROCS) -DNITER=$(NITER) -DSLEEP=$(SLEEP)
+#LAUNCHER:=mpiexec -n $(NPROCS)
+#EXEC_OPTIONS:=
+#FFLAGS_CROSS:= $FFLAGS -DCROSS_ 
+
+
+#G95 CAF Compiler
+COMPILER:=G95
+FC:=g95
+FFLAGS:=-cpp -DNPROCS=$(NPROCS) -DNITER=$(NITER) -DSLEEP=$(SLEEP)
+LAUNCHER:=
+EXEC_OPTIONS:= --g95 images=$(NPROCS)
+FFLAGS_CROSS:= $FFLAGS -DCROSS_ 
+
+
+#for CONFIDENCE TESTS
+CONF_COMPILE_PATH:=$(ROOT)/confidence_tests/compile_output
+CONF_EXEC_PATH:=$(ROOT)/confidence_tests/exec_output
+CONF_LOG_PATH:=$(ROOT)/confidence_tests
+
+
+#for CONFORMANCE TESTS
+FEATURE_COMPILE_PATH:=$(ROOT)/should_pass/compile_output
+FEATURE_EXEC_PATH:=$(ROOT)/should_pass/exec_output
+FEATURE_LOG_PATH:=$(ROOT)/should_pass
+
+
+#for SPECIFIC TESTS
+FEW_COMPILE_PATH:=$(ROOT)/few_tests/compile_output
+FEW_EXEC_PATH:=$(ROOT)/few_tests/exec_output
+FEW_LOG_PATH:=$(ROOT)/few_tests
+
+
+#for NON-CONFORMANCE TESTS
+NONCONF_COMPILE_PATH:=$(ROOT)/should_fail/compile_output
+NONCONF_EXEC_PATH:=$(ROOT)/should_fail/exec_output
+NONCONF_LOG_PATH:=$(ROOT)/should_fail
+
+
+#for FAULT TESTS
+FAULT_COMPILE_PATH:=$(ROOT)/fault_tests/compile_output
+FAULT_EXEC_PATH:=$(ROOT)/fault_tests/exec_output
+FAULT_LOG_PATH:=$(ROOT)/fault_tests
+
+
+
+#E-mail stuff
+SUBJ:=Results of the CAF test suite with $COMPILER
+LOGFILE:=
+EMAIL_LIST:=
+EMAIL_BODY:=Results of the test suite with $COMPILER are attached -- OpenUH CAF Testsuite --
+
+
