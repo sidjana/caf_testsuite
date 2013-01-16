@@ -1,4 +1,5 @@
 #! /bin/bash
+
 ROOT=`pwd`/..
 for cfg in `ls CONFIG*` ; do
   postfix="`echo $cfg | sed 's/CONFIG//g'`"

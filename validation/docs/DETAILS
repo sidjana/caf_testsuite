@@ -29,11 +29,11 @@ compilers from the corresponding CONFIGs.
 all the other forders and listed in a file called 'test_file'
 (present in this folder)
 
-6. should_fail -- contains tests which contain codes that DO NOT
+6. nonconformance_tests -- contains tests which contain codes that DO NOT
 adhere to the CAF FORTRAN 2008 standard. The expectation is that
 the errors should be detected by the compiler / CAF-runtime
 
-7. should_pass -- contains tests which verify the implementation
+7. conformance -- contains tests which verify the implementation
 of the compiler/runtime in accordance with the CAF FORTRAN 2008
 standard.
 
@@ -193,7 +193,7 @@ subdivided into the corresponding categories
 
 
 ################### CONFORMANCE - TESTS ###################
--- can be found under validation/should_pass
+-- can be found under validation/conformance_tests
 
 -- The detailed description of each of the tests are as follows:
 

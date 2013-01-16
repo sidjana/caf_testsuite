@@ -1,0 +1,9 @@
+
+---------------HPC Tools CAF CONFORMANCE testsuite---------------
+Evaluating OpenUH
+SPEC_IDX            	DESCRIPTION                                                           	COMPILATION	EXECUTION
+
+character_test      	CHARACTER coarrays                                                    	PASS		FAIL
+coarray_2.4.7.6     	similar translation of co-subscripts and subscripts                   	PASS		FAIL
+coarray_4.8.R468    	reference of coarray without [] implies local object                  	PASS		FAIL
+coarray_5.3.6.1     	attribute CODIMENSION + remote accesses at single integer/real boundary	

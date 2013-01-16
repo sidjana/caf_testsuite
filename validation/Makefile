@@ -10,7 +10,7 @@ default:
 all:  conformance confidence  fault
 
 
-conformance: 
+conformance:
 	@cd $(FEATURE_LOG_PATH); $(MAKE) -s  all;
 
 
@@ -20,7 +20,7 @@ conformance-header:
 	@printf '%-20s\t%-70s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"
 
 
-confidence: 
+confidence:
 	@cd $(CONF_LOG_PATH); $(MAKE) -s all;
 
 
@@ -31,7 +31,7 @@ confidence-header:
 
 
 
-non-conformance: 
+non-conformance:
 	@cd $(NONCONF_LOG_PATH); $(MAKE) -s all
 
 
@@ -41,7 +41,7 @@ non-conformance-header:
 	   @printf '%-20s\t%-80s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"
 
 
-fault: 
+fault:
 	@cd $(FAULT_LOG_PATH); $(MAKE) -s all
 
 
@@ -56,13 +56,13 @@ few-tests:
 	@cd $(FEW_LOG_PATH); $(MAKE) -s  all
 
 
+
 clean-all:
 	@cd $(FEATURE_LOG_PATH); $(MAKE) -s clean-all; cd .. ;
-	@cd confidence_tests; $(MAKE) -s clean-all; cd .. ;
-	@cd should_fail; $(MAKE) -s clean-all; cd .. ;
-	@cd few_tests; $(MAKE) -s clean-all; cd .. ;
-	@cd fault_tests; $(MAKE) -s clean-all; cd .. ;
-	@rm -rf *.mod
+	@cd $(CONF_LOG_PATH); $(MAKE) -s clean-all; cd .. ;
+	@cd $(NONCONF_LOG_PATH); $(MAKE) -s clean-all; cd .. ;
+	@cd $(FEW_LOG_PATH); $(MAKE) -s clean-all; cd .. ;
+	@cd $(FAULT_LOG_PATH); $(MAKE) -s clean-all; cd .. ;
 
 
 clean:
