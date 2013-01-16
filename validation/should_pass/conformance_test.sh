@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source ../config/CONFIG
-source ../support/killprocs.sh
+#source ../support/killprocs.sh
 EXEC_OUTPUT="${FEATURE_EXEC_PATH}"
 COMPILE_OUTPUT="${FEATURE_COMPILE_PATH}"
 

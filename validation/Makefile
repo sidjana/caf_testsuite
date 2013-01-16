@@ -4,13 +4,13 @@ include ./config/make.def
 
 
 default:
-	@echo "Usage: $(MAKE) [all | conformance | non-conformance | confidence | fault | few-tests] "
+	@echo "Usage: $(MAKE) [all | conformance | non-conformance | confidence | fault | few-tests | clean(for further options)] "
 
 
-all: conformance confidence  fault
+all:  conformance confidence  fault
 
 
-conformance:
+conformance: 
 	@cd $(FEATURE_LOG_PATH); $(MAKE) -s  all;
 
 
@@ -20,7 +20,7 @@ conformance-header:
 	@printf '%-20s\t%-70s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"
 
 
-confidence:
+confidence: 
 	@cd $(CONF_LOG_PATH); $(MAKE) -s all;
 
 
@@ -31,7 +31,7 @@ confidence-header:
 
 
 
-non-conformance:
+non-conformance: 
 	@cd $(NONCONF_LOG_PATH); $(MAKE) -s all
 
 
@@ -41,7 +41,7 @@ non-conformance-header:
 	   @printf '%-20s\t%-80s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"
 
 
-fault:
+fault: 
 	@cd $(FAULT_LOG_PATH); $(MAKE) -s all
 
 

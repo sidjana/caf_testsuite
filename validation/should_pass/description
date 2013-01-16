@@ -1,5 +1,4 @@
 atomic_8.5.2.f90  ATOMIC subroutines
-
 character_test.f90  CHARACTER coarrays
 coarray_2.4.7.6.f90  similar translation of co-subscripts and subscripts
 coarray_4.8.R468.f90 reference of coarray without [] implies local object
