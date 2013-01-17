@@ -203,40 +203,41 @@ Tables~\ref{tab:conformance}~\ref{tab:confidence}~\ref{tab:fault} list the exten
 \begin{table}[tbh!]
 \caption{Results of Conformance tests}
 \label{tab:conformance}
-\begin{tabular}{|l|p{8cm}|p{1.5cm}|p{1.5cm}|}
+\begin{tabular}{|l|p{7cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
 \hline
-SPEC\_IDX              &  DESCRIPTION  & OpenUH & Intel \\\hline
-character\_test        &  CHARACTER coarrays & YES & YES \\\hline
-coarray\_2.4.7.6       &  similar translation of co-subscripts and subscripts & YES & YES \\\hline
-coarray\_4.8.R468      &  reference of coarray without [] implies local object & YES & YES \\\hline
-coarray\_5.3.6.1       &  attribute CODIMENSION + remote accesses at single integer/real boundary & YES & Execution times out \\\hline
-dummyargs\_12.3.2.2c   &  explicit shape, assumed size, assumed shape, allocatable dummy arguments & YES & YES \\\hline
-intrin\_13.7.126       &  NUM\_IMAGES() returns the number of images launched & YES & YES \\\hline
-intrin\_13.7.165       &  THIS\_IMAGE(), THIS\_IMAGE(coarray), THIS\_IMAGE(coarray, dim) & YES & YES \\\hline
-intrin\_13.7.172       &  LCOBOUND(coarray) and LCOBOUND(coarray,dim) & YES & YES \\\hline
-intrin\_13.7.79        &  IMAGE\_INDEX(coarray, subs) & YES & YES \\\hline
-intrin\_13.7.91        &  UCOBOUND(COARRAY[, DIM, KIND]) & YES & YES \\\hline
-intrin\_6.7.3.2.11     &  ALLOCATE and DEALLOCATE act as barriers & YES & YES \\\hline
-intrin\_8.5.7d         &  STOP and LOCK construct with STAT=STAT\_LOCKED specifier & YES & YES \\\hline
-intrin\_8.5.7e         &  STOP and LOCK construct with STAT=STAT\_LOCKED\_OTHER\_IMAGE specifier & Execution times out & Execution times out \\\hline
-intrin\_8.5.7f         &  STOP and LOCK construct with STAT=STAT\_UNLOCKED specifier & YES & Execution times out \\\hline
-item\_4.8.a            &  subobjects if a coarray is also a coarray & YES & YES \\\hline
-pointer\_4.5.4.6b      &  association of pointer components of coarrays with local objects & YES & Execution times out \\\hline
+SPEC\_IDX              &  DESCRIPTION  & OpenUH & Intel & G95 \\\hline
+character\_test        &  CHARACTER coarrays & YES & YES & YES\\\hline
+coarray\_2.4.7.6       &  similar translation of co-subscripts and subscripts & YES & YES & YES \\\hline
+coarray\_4.8.R468      &  reference of coarray without [] implies local object & YES & YES & YES \\\hline
+coarray\_5.3.6.1       &  attribute CODIMENSION + remote accesses at single integer/real boundary & YES & Exec times out & Exec fails\\\hline
+derived\_4.5.4         &  (non-)coarray COMPONENTS of (non-)coarray derived types & YES & YES & YES \\\hline
+dummyargs\_12.3.2.2c   &  explicit shape, assumed size, assumed shape, allocatable dummy arguments & YES & YES & comp fails\\\hline
+intrin\_13.7.126       &  NUM\_IMAGES() returns the number of images launched & YES & YES & YES\\\hline
+intrin\_13.7.165       &  THIS\_IMAGE(), THIS\_IMAGE(coarray), THIS\_IMAGE(coarray, dim) & YES & YES & YES\\\hline
+intrin\_13.7.172       &  LCOBOUND(coarray) and LCOBOUND(coarray,dim) & YES & YES & YES\\\hline
+intrin\_13.7.79        &  IMAGE\_INDEX(coarray, subs) & YES & YES & YES\\\hline
+intrin\_13.7.91        &  UCOBOUND(COARRAY[, DIM, KIND]) & YES & YES & YES\\\hline
+intrin\_6.7.3.2.11     &  ALLOCATE and DEALLOCATE act as barriers & YES & YES & YES\\\hline
+intrin\_8.5.7d         &  STOP and LOCK construct with STAT=STAT\_LOCKED specifier & YES & YES & comp fails\\\hline
+intrin\_8.5.7e         &  STOP and LOCK construct with STAT=STAT\_LOCKED\_OTHER\_IMAGE specifier & Exec times out & Exec times out & comp fails\\\hline
+intrin\_8.5.7f         &  STOP and LOCK construct with STAT=STAT\_UNLOCKED specifier & YES & Exec times out & comp fails\\\hline
+item\_4.8.a            &  subobjects if a coarray is also a coarray & YES & YES & YES\\\hline
+pointer\_4.5.4.6b      &  association of pointer components of coarrays with local objects & YES & Exec times out & YES\\\hline
 \end{tabular}
 \end{table}
 
 \begin{table}[tbh!]
 \caption{Results of Confidence tests}
 \label{tab:confidence}
-\begin{tabular}{|l|p{6cm}|p{2cm}|p{2cm}|}
+\begin{tabular}{|l|p{6cm}|p{2cm}|p{2cm}|p{2cm}|}
 \hline
-SPEC\_IDX          &  DESCRIPTION  & OpenUH & Intel \\\hline
-atomic\_8.5.2      &  Atomic subroutines & Passes with 0\% confidence & Fails compilation \\\hline
-critical\_8.1.5    &  CRITICAL - END CRITICAL sections & YES & Passes with 0\% confidence \\\hline
-intrin\_8.5.6      &  LOCK \& UNLOCK without STAT specifier & YES & Fails compilation \\\hline
-sync\_8.5.3        &  SYNC ALL without STAT specifier & YES & Passes with 0\% confidence \\\hline
-sync\_8.5.4a       &  SYNC IMAGES(arr) paired with SYNC IMAGES(*) & YES & Fails execution \\\hline
-sync\_8.5.4b       &  call to SYNC IMAGES(arr), should not behave like SYNC ALL & YES & Fails execution \\\hline
+SPEC\_IDX          &  DESCRIPTION  & OpenUH & Intel & G95 \\\hline
+atomic\_8.5.2      &  Atomic subroutines & Passes with 0\% confidence & Fails comp & comp fails\\\hline
+critical\_8.1.5    &  CRITICAL - END CRITICAL sections & YES & Passes with 0\% confidence & YES\\\hline
+intrin\_8.5.6      &  LOCK \& UNLOCK without STAT specifier & YES & Fails comp & comp fails\\\hline
+sync\_8.5.3        &  SYNC ALL without STAT specifier & YES & Passes with 0\% confidence & YES \\\hline
+sync\_8.5.4a       &  SYNC IMAGES(arr) paired with SYNC IMAGES(*) & YES & Exec fails& YES \\\hline
+sync\_8.5.4b       &  call to SYNC IMAGES(arr), should not behave like SYNC ALL & YES & Exec fails & YES \\\hline
 \end{tabular}
 \end{table}
 
@@ -244,12 +245,12 @@ sync\_8.5.4b       &  call to SYNC IMAGES(arr), should not behave like SYNC ALL 
 \begin{table}[tbh!]
 \caption{Results of Fault tests}
 \label{tab:fault}
-\begin{tabular}{|l|p{6cm}|p{2cm}|p{2cm}|}
+\begin{tabular}{|l|p{6cm}|p{2cm}|p{2cm}|p{2cm}|}
 \hline
-SPEC\_IDX          &      DESCRIPTION  & OpenUH & Intel \\\hline
-sync\_8.5.7a       &      STOP and SYNC ALL with STAT=STAT\_STOPPED\_IMAGE specifier & YES & Fails execution \\\hline
-sync\_8.5.7b       &      STOP and SYNC IMAGES(arr) with STAT=STAT\_STOPPED\_IMAGE specifier & YES & YES \\\hline
-sync\_8.5.7c       &      STOP and SYNC IMAGES(*) with STAT=STAT\_STOPPED\_IMAGE specifier & YES & Fails execution \\\hline
+SPEC\_IDX          &      DESCRIPTION  & OpenUH & Intel & G95 \\\hline
+sync\_8.5.7a       &      STOP and SYNC ALL with STAT=STAT\_STOPPED\_IMAGE specifier & YES & Exec fails & Exec fails \\\hline
+sync\_8.5.7b       &      STOP and SYNC IMAGES(arr) with STAT=STAT\_STOPPED\_IMAGE specifier & YES & YES & Exec fails \\\hline
+sync\_8.5.7c       &      STOP and SYNC IMAGES(*) with STAT=STAT\_STOPPED\_IMAGE specifier & YES & Exec fails & Exec fails \\\hline
 \end{tabular}
 \end{table}
 

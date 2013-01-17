@@ -87,21 +87,6 @@ confidence of the actual tests.
 - Image-1 is chosen as the one whose coarray is accessesed by
   different images for testing the feature under consideration.
 
-- Almost every test is performed 5 times for calculating the
-  confidence.
-
--- Error codes returned
-________________________________________________________________
-|CODE |                    Meaning                             |
-| 0   | Default val returned to shell on successful execution  |
-| 1   | Default val returned to shell on incorrect execution   |
-| 2   | Successful Compilation of confidence tests             |
-| 3   | Unsuccessful Compilation of confidence tests           |
-| 4   | returned when the feature test passes                  |
-| 5   | returned when the feature test fails                   |
-|_____|________________________________________________________|
-
-
 -- The description of the different feature tests are as
 follows:
 
@@ -259,6 +244,10 @@ reference of coarray without [] implies local object
 ** coarray_5.3.6.1.f90:
 
 use of attribute CODIMENSION to declare coarrays
+
+** derived_4.5.4.f90:
+
+Ultimate components of a derived type that are of intrinsic type or ALLOCATABLE or POINTER attribute + ultimate components that are of derived type and have neither the ALLOCATABLE nor the POINTER components
 
 
 **dummyargs_12.3.2.2c.f90:

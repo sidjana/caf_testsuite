@@ -10,8 +10,8 @@
           integer:: cross_err[*]
           if (cross_err .gt. 0) then
             STOP 1
-          else
-            STOP
+          !else
+          !  STOP 0
           end if
        end subroutine
 

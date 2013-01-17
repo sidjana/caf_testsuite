@@ -14,16 +14,16 @@
 
         if (NPROCS == 1) then
            print *, "Config error: NPROCS should be greater than 1"
-           call EXIT(0)
+           STOP 1
         end if
 
         if (rank == 1 ) then
-           STOP
+           print *, "rank 1 all clear"
         else
            call sleep(SLEEP)
            sync images(arr, STAT=stat_var)
            if ( stat_var /= STAT_STOPPED_IMAGE) then
-              call EXIT(1)
+              STOP 1
            end if
         end if
 

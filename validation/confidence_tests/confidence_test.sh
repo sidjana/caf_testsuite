@@ -21,18 +21,15 @@ if [ "$ANS" == "0" ]; then
        $FC $FFLAGS_CROSS  -o  $1 testmodule.o $2 &>/dev/null
 
        # run the cross test
-       perl ../timedexec.pl $TIMEOUT $LAUNCHER $1 $EXEC_OPTIONS &>/dev/null
+       perl ../timedexec.pl $TIMEOUT $LAUNCHER $1 $EXEC_OPTIONS &>./tmp
+       RETURN="$?"
 
-       echo "$?%"
-    #   if [ "$?" == "6"  ]; then
-    #     # feature test passed with high confidence
-    #     printf '%-10s\n' "PASS_HIGH"  | tee -a $3
-
-    #   else
-    #     # feature test passed with low confidence
-    #     printf '%-10s\n' "PASS_LOW"  | tee -a $3
-
-    #   fi
+       if [ "$FC" == "g95" ]; then 
+		echo "`sed -n 's/.*(//;s/).*//p' ./tmp`"%
+       else
+       		echo "$RETURN%"
+       fi
+	rm ./tmp
 
   elif [ "$ANS" == "4" ]; then
        # feature test timed out

@@ -32,7 +32,6 @@
                 print *,"num = ", num
              end if
              sync all
-             print *, "image ", rank, "ended critical"
            end do
 #ifndef CROSS_
            print * , "call before", rank, "err=", cross_err

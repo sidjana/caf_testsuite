@@ -13,7 +13,7 @@ total_cnt:=0
 .PHONY: all header
 
 all:   clean-output header   $(EXES)
-	   @cp $(LOGFILE) ./HISTORY/
+	   @cp $(LOGFILE) ./HISTORY
 	   @mv $(LOGFILE) ./latest_results.log
 
 
@@ -53,7 +53,7 @@ clean-history:
 
 
 clean-all:  clean-output clean-exec clean-history
-	    @rm -rf uhcaf.keep ./*.log ../bin/*
+	    @rm -rf uhcaf.keep ./*.log 
 
 
 clean:

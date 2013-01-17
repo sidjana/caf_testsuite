@@ -35,7 +35,7 @@ program main
           r_all_sca[i] /= i .OR. r_all_arr(2,2)[i] /= i      &
           ) then
           print *, "Error in semantics of coindexed object on image", &
-          i, "when declared with 'codimension' keyword"
+          rank, "when declared with 'codimension' keyword"
           call EXIT(1)
         end if
    end do

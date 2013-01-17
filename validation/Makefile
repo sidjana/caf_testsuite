@@ -57,15 +57,14 @@ few-tests:
 
 
 
-clean-all:
-	@cd $(FEATURE_LOG_PATH); $(MAKE) -s clean-all; cd .. ;
-	@cd $(CONF_LOG_PATH); $(MAKE) -s clean-all; cd .. ;
-	@cd $(NONCONF_LOG_PATH); $(MAKE) -s clean-all; cd .. ;
-	@cd $(FEW_LOG_PATH); $(MAKE) -s clean-all; cd .. ;
-	@cd $(FAULT_LOG_PATH); $(MAKE) -s clean-all; cd .. ;
-
-
 clean:
 	@ printf '%s\n%s\n' "Usage:" "$$ $(MAKE) clean-<output | exec | history | all>"
 
+
+clean-all:
+	@cd $(FEATURE_LOG_PATH); $(MAKE) -s clean-all; cd .. ;
+	@cd $(CONF_LOG_PATH); $(MAKE) -s clean-all; cd .. ;
+	@cd $(FEW_LOG_PATH); $(MAKE) -s clean-all; cd .. ;
+	@cd $(FAULT_LOG_PATH); $(MAKE) -s clean-all; cd .. ;
+	@rm -rf *.mod ./bin/*
 

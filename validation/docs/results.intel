@@ -7,6 +7,7 @@ character_test      	CHARACTER coarrays                                         
 coarray_2.4.7.6     	similar translation of co-subscripts and subscripts                   	 PASS		PASS
 coarray_4.8.R468    	reference of coarray without [] implies local object                  	 PASS		PASS
 coarray_5.3.6.1     	attribute CODIMENSION + remote accesses at single integer/real boundary	 PASS		TIMEOUT
+derived_4.5.4           (non-)coarray COMPONENTS of (non-)coarray derived types                  PASS            PASS
 dummyargs_12.3.2.2c 	explicit shape, assumed size, assumed shape, allocatable dummy arguments PASS		PASS
 intrin_13.7.126     	NUM_IMAGES() returns the number of images launched                    	 PASS		PASS
 intrin_13.7.165     	THIS_IMAGE(), THIS_IMAGE(coarray), THIS_IMAGE(coarray, dim)           	 PASS		PASS

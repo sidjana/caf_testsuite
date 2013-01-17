@@ -11,13 +11,13 @@ SLEEP:=4
 TIMEOUT:=30
 
 
-#OpenUH CAF Compiler
-COMPILER:=OpenUH
-FC:=uhcaf
-FFLAGS:=-ftpp -DNPROCS=$(NPROCS) -DNITER=$(NITER) -DSLEEP=$(SLEEP)
-LAUNCHER:=cafrun -n $(NPROCS)
-EXEC_OPTIONS:=
-FFLAGS_CROSS:= $FFLAGS -DCROSS_ 
+##OpenUH CAF Compiler
+#COMPILER:=OpenUH
+#FC:=uhcaf
+#FFLAGS:=-ftpp -DNPROCS=$(NPROCS) -DNITER=$(NITER) -DSLEEP=$(SLEEP)
+#LAUNCHER:=cafrun -n $(NPROCS)
+#EXEC_OPTIONS:=
+#FFLAGS_CROSS:= $FFLAGS -DCROSS_ 
 
 
 ##Cray CAF Compiler
@@ -30,12 +30,12 @@ FFLAGS_CROSS:= $FFLAGS -DCROSS_
 
 
 #Intel CAF Compiler
-#COMPILER:=Intel
-#FC:=ifort
-#FFLAGS:=-coarray -coarray-num-images=4 -fpp -DNPROCS=$(NPROCS) -DNITER=$(NITER) -DSLEEP=$(SLEEP)
-#LAUNCHER:=
-#EXEC_OPTIONS:=
-#FFLAGS_CROSS:= $FFLAGS -DCROSS_ 
+COMPILER:=Intel
+FC:=ifort
+FFLAGS:=-coarray -coarray-num-images=4 -fpp -DNPROCS=$(NPROCS) -DNITER=$(NITER) -DSLEEP=$(SLEEP)
+LAUNCHER:=
+EXEC_OPTIONS:=
+FFLAGS_CROSS:= $FFLAGS -DCROSS_ 
 
 
 ##GNU CAF Compiler
@@ -55,6 +55,9 @@ FFLAGS_CROSS:= $FFLAGS -DCROSS_
 #EXEC_OPTIONS:= --g95 images=$(NPROCS)
 #FFLAGS_CROSS:= $FFLAGS -DCROSS_ 
 
+############# FILE-PATH VARIABLES #################
+# Note: For the file path variables, LOG_PATH is same as the path for the test codes
+
 
 #for CONFIDENCE TESTS
 CONF_COMPILE_PATH:=$(ROOT)/confidence_tests/compile_output
@@ -63,9 +66,9 @@ CONF_LOG_PATH:=$(ROOT)/confidence_tests
 
 
 #for CONFORMANCE TESTS
-FEATURE_COMPILE_PATH:=$(ROOT)/should_pass/compile_output
-FEATURE_EXEC_PATH:=$(ROOT)/should_pass/exec_output
-FEATURE_LOG_PATH:=$(ROOT)/should_pass
+FEATURE_COMPILE_PATH:=$(ROOT)/conformance_tests/compile_output
+FEATURE_EXEC_PATH:=$(ROOT)/conformance_tests/exec_output
+FEATURE_LOG_PATH:=$(ROOT)/conformance_tests
 
 
 #for SPECIFIC TESTS
@@ -81,9 +84,9 @@ FAULT_LOG_PATH:=$(ROOT)/fault_tests
 
 
 ##for NON-CONFORMANCE TESTS
-#NONCONF_COMPILE_PATH:=$(ROOT)/should_fail/compile_output
-#NONCONF_EXEC_PATH:=$(ROOT)/should_fail/exec_output
-#NONCONF_LOG_PATH:=$(ROOT)/should_fail
+#NONCONF_COMPILE_PATH:=$(ROOT)/nonconformance_tests/compile_output
+#NONCONF_EXEC_PATH:=$(ROOT)/nonconformance_tests/exec_output
+#NONCONF_LOG_PATH:=$(ROOT)/nonconformance_tests
 
 
 ##E-mail stuff
