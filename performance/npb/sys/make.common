@@ -34,7 +34,7 @@ ${COMMON}/c_print_results.o: ${COMMON}/c_print_results.c
 	cd ${COMMON}; ${CCOMPILE} c_print_results.c
 
 ${COMMON}/timers.o: ${COMMON}/timers.f
-	cd ${COMMON}; ${FCOMPILE} timers.f
+	cd ${COMMON}; mpif90  -c timers.f
 
 ${COMMON}/c_timers.o: ${COMMON}/c_timers.c
 	cd ${COMMON}; ${CCOMPILE} c_timers.c

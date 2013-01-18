@@ -42,15 +42,15 @@ c          R. F. Van der Wijngaart
 c          H. Jin
 c
 c---------------------------------------------------------------------
-         !module reductions
-         ! use caf_reductions
-         !end module reductions
+         module reductions
+          use caf_reductions
+         end module reductions
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
       program cg
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
-        !use reductions
+        use reductions
 
       implicit none
 
@@ -199,7 +199,6 @@ CC      >           rcond=1.0d-1 )
       double precision  mflops
       double precision, allocatable  :: t(:)[:]
       double precision, save :: tmax
-      double precision, save :: remote_time
       external           timer_read
       double precision   timer_read
       character          class
@@ -557,18 +556,8 @@ c     >                 mpi_comm_world,
 c     >                 ierr )
 c     call shmem_real8_max_to_all(tmax,t,1,0,0,nprocs,pwrk,psync)
 
-      !call caf_real8_max_to_all(tmax,t(1))
-      tmax=0
-      sync all
-
+      call caf_real8_max_to_all(tmax,t(1))
       if( me .eq. root )then
-
-         do i = 1,num_images()
-           remote_time = t(1)[i]
-           if (tmax .gt. remote_time) then
-               tmax = remote_time
-           endif
-         enddo
          write(*,100)
  100     format(' Benchmark completed ')
 
