@@ -4,7 +4,7 @@ BENCHMARKU=CG
 
 include ../config/make.def
 
-OBJS = cg.o ${COMMON}/print_results.o ${COMMON}/${RAND}.o ${COMMON}/timers.o
+OBJS = cg.o ${COMMON}/print_results.o ${COMMON}/${RAND}.o ${COMMON}/timers.o ${COMMON}/wtime.o
 
 include ../sys/make.common
 

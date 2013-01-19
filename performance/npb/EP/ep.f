@@ -54,8 +54,8 @@ c   M is the Log_2 of the number of complex pairs of uniform (0, 1) random
 c   numbers.  MK is the Log_2 of the size of each batch of uniform random
 c   numbers.  MK can be set for convenience on a given system, since it does
 c   not affect the results.
-      use caf_reductions
-      use caf_reductions_1d
+      !use caf_reductions
+      !use caf_reductions_1d
       implicit none
       
       include 'npbparams.h'
@@ -91,6 +91,7 @@ c      double precision sx, sy, tm
       !common/storage/ x(2*nk), q(0:nq-1), qq(10000)
       common/storage/  qq(10000)
       data             dum /1.d0, 1.d0, 1.d0/
+      print *, "hello"
       allocate(sx[0:*]) 
       allocate(sy[0:*])  
       allocate(tm[0:*])
@@ -268,25 +269,25 @@ c      call mpi_allreduce(sx, x, 1, dp_type,
 c     >                   MPI_SUM, MPI_COMM_WORLD, ierr)
       ! call shmem_real8_sum_to_all(x,sx,1,0,0,no_nodes,pwrk,psync)
       !call caf_real8_sum_to_all_1d(x, sx)
-      call caf_real8_sum_to_all_root(xsca, sx, 1)
-!        xsca = 0.0
-!        do i=0,num_images()-1
-!         xsca  = xsca + sx[i]
-!        end do
-!       sync all
+      !call caf_real8_sum_to_all_root(xsca, sx, 1)
+      xsca = 0.0
+      do i=0,num_images()-1
+       xsca  = xsca + sx[i]
+      end do
+      sync all
       sx = xsca
-      !sync all
+      sync all
 
 c     call mpi_allreduce(sy, x, 1, dp_type,
 c     >                   MPI_SUM, MPI_COMM_WORLD, ierr)
       !call shmem_real8_sum_to_all(x,sy,1,0,0,no_nodes,pwrk,psync)
       !call caf_real8_sum_to_all_1d(x, sy)
-!        xsca = 0.0
-!        do i=0,num_images()-1
-!         xsca  = xsca + sy[i]
-!        end do
-!       sync all
-      call caf_real8_sum_to_all_root(xsca, sy, 1)
+      xsca = 0.0
+       do i=0,num_images()-1
+        xsca  = xsca + sy[i]
+       end do
+      sync all
+      !call caf_real8_sum_to_all_root(xsca, sy, 1)
       sy = xsca
       !sync all
 c      call mpi_allreduce(q, x, nq, dp_type,
@@ -294,12 +295,12 @@ c     >                   MPI_SUM, MPI_COMM_WORLD, ierr)
       !call shmem_real8_sum_to_all(x,q,nq,0,0,no_nodes,pwrk,psync)
       !call caf_real8_sum_to_all_1d(x, q)
 !       sync all
-!       x = 0.0
-!       do i=0,num_images()-1
-!         x(1:nq) = x(1:nq)+ q(0:nq-1)[i]
-!       end do
-!       sync all
-      call caf_real8_sum_to_all_root_1d(x, q, 1)
+       x = 0.0
+       do i=0,num_images()-1
+         x(1:nq) = x(1:nq)+ q(0:nq-1)[i]
+       end do
+       sync all
+      !call caf_real8_sum_to_all_root_1d(x, q, 1)
       q(:)= x(1:nq)
   
       do 160 i = 0, nq - 1

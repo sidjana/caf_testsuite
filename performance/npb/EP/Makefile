@@ -4,7 +4,7 @@ BENCHMARKU=EP
 
 include ../config/make.def
 
-OBJS = ep.o ${COMMON}/print_results.o ${COMMON}/${RAND}.o ${COMMON}/timers.o
+OBJS = ep.o ${COMMON}/print_results.o ${COMMON}/${RAND}.o ${COMMON}/timers.o ${COMMON}/wtime.o
 
 include ../sys/make.common
 
@@ -13,7 +13,7 @@ ${PROGRAM}: config ${OBJS}
 
 
 ep.o:		ep.f  mpinpb.h npbparams.h
-	${UHCAF} -c  ${FFLAGS} ep.f mpinpb.h npbparams.h 
+	${UHCAF} -c  ${FFLAGS} ep.f # npbparams.h # mpinpb.h 
 
 
 clean:

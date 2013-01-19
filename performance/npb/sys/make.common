@@ -34,7 +34,10 @@ ${COMMON}/c_print_results.o: ${COMMON}/c_print_results.c
 	cd ${COMMON}; ${CCOMPILE} c_print_results.c
 
 ${COMMON}/timers.o: ${COMMON}/timers.f
-	cd ${COMMON}; mpif90  -c timers.f
+	cd ${COMMON}; ${FCOMPILE}  timers.f
+
+${COMMON}/wtime.o: ${COMMON}/wtime.c ../config/make.def
+	cd ${COMMON}; ${CCOMPILE}  -o wtime.o ${COMMON}/wtime.c
 
 ${COMMON}/c_timers.o: ${COMMON}/c_timers.c
 	cd ${COMMON}; ${CCOMPILE} c_timers.c
