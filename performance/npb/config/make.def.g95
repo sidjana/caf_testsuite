@@ -39,7 +39,7 @@ FLINK	= $(UHCAF)
 #---------------------------------------------------------------------------
 # These macros are passed to the linker to help link with MPI correctly
 #---------------------------------------------------------------------------
-FMPI_LIB  := $(shell mpif90 -showme:link)
+FMPI_LIB  := #$(shell mpif90 -showme:link)
 
 #---------------------------------------------------------------------------
 # These macros are passed to the compiler to help find 'mpif.h'
@@ -79,7 +79,7 @@ FLINKFLAGS = -O3
 #---------------------------------------------------------------------------
 # This is the C compiler used for MPI programs
 #---------------------------------------------------------------------------
-MPICC = mpicc
+MPICC = cc
 # This links MPI C programs; usually the same as ${MPICC}
 CLINK	= $(MPICC)
 

@@ -12,9 +12,10 @@ ${PROGRAM}: config ${OBJS}
 	${FLINK}  ${FLINKFLAGS} -o ${PROGRAM}  ${OBJS}   ${FMPI_LIB}  
 
 
-ep.o:		ep.f  mpinpb.h npbparams.h
-	${UHCAF} -c  ${FFLAGS} ep.f # npbparams.h # mpinpb.h 
+ep.o:		ep.f 
+	${UHCAF} -c  ${FFLAGS} ep.f  
 
+#${UHCAF} -c  ${FFLAGS} ep.f # npbparams.h # mpinpb.h 
 
 clean:
 	- rm -f *.o *~ 

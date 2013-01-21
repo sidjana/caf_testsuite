@@ -56,7 +56,7 @@ clean:
 	- rm -f MPI_dummy/test MPI_dummy/libmpi.a
 	- rm -f sys/setparams sys/makesuite sys/setparams.h
 	- rm -f btio.*.out*
-	- rm -f ./bin/* */*.mod
+	- rm -f */*.mod
 
 veryclean: clean
 	- rm -f config/make.def config/suite.def
