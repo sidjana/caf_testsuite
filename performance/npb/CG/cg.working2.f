@@ -197,8 +197,8 @@ c      >                         w(na/num_proc_rows+2)
       integer            reduce_exch_proc(num_proc_cols)
       integer            reduce_send_starts(num_proc_cols)
       integer            reduce_send_lengths(num_proc_cols)
-      integer            reduce_recv_starts(num_proc_cols)[0:*]
-      integer            reduce_recv_lengths(num_proc_cols)[0:*]
+      integer            reduce_recv_starts(num_proc_cols)
+      integer            reduce_recv_lengths(num_proc_cols)
 
       integer            i, j, k, it
 
@@ -582,7 +582,7 @@ c      >                 root,
 c      >                 mpi_comm_world,
 c      >                 ierr )
 
-      call co_maxval0(t, tmax)
+      call co_maxval(t, tmax)
 
       if( me .eq. root )then
          write(*,100)
@@ -688,7 +688,7 @@ c---------------------------------------------------------------------
       use cg_global_coarrays
 
       implicit none
-
+      
       include 'mpinpb.h'
       include 'timing.h'
 
@@ -1133,9 +1133,8 @@ c---------------------------------------------------------------------
       integer   reduce_exch_proc(l2npcols)
       integer   reduce_send_starts(l2npcols)
       integer   reduce_send_lengths(l2npcols)
-      integer   reduce_recv_starts(l2npcols)[0:*]
-      integer   reduce_recv_lengths(l2npcols)[0:*]
-      integer   recv_length
+      integer   reduce_recv_starts(l2npcols)
+      integer   reduce_recv_lengths(l2npcols)
 
       integer   recv_start_idx, recv_end_idx, send_start_idx,
      >          send_end_idx
@@ -1143,8 +1142,8 @@ c---------------------------------------------------------------------
       integer   i, j, k, ierr
       integer   cgit, cgitmax
 
-      double precision, save  :: d[0:*], rho[0:*], sum
-      double precision   rho0, alpha, beta, rnorm
+      double precision, save  :: d[0:*], rho[0:*], sum[0:*]
+      double precision   rho0, alpha, beta, rnorm, sum1
 
       external         timer_read
       double precision timer_read
@@ -1169,10 +1168,11 @@ c---------------------------------------------------------------------
 c  rho = r.r
 c  Now, obtain the norm of r: First, sum squares of r elements locally...
 c---------------------------------------------------------------------
-      sum = 0.0d0
+      sum1 = 0.0d0
       do j=1, lastcol-firstcol+1
-         sum = sum + r(j)*r(j)
+         sum1 = sum1 + r(j)*r(j)
       enddo
+      sum = sum1
 
 
 c---------------------------------------------------------------------
@@ -1180,19 +1180,7 @@ c  Exchange and sum with procs identified in reduce_exch_proc
 c  (This is equivalent to mpi_allreduce.)
 c  Sum the partial sums of rho, leaving rho on all processors
 c---------------------------------------------------------------------
-      do i = 1, l2npcols
-         if (timeron) call timer_start(t_rcomm)
-
-         sync all
-         rho[reduce_exch_proc(i)] = sum
-         sync all
-
-         if (timeron) call timer_stop(t_rcomm)
-
-         sum = sum + rho
-      enddo
-      rho = sum
-
+      call co_sum( sum, rho) 
 
 
 c---------------------------------------------------------------------
@@ -1207,11 +1195,11 @@ c  q = A.p
 c  The partition submatrix-vector multiply: use workspace w
 c---------------------------------------------------------------------
           do j=1,lastrow-firstrow+1
-             sum = 0.d0
+             sum1 = 0.d0
              do k=rowstr(j),rowstr(j+1)-1
-                sum = sum + a(k)*p(colidx(k))
+                sum1 = sum1 + a(k)*p(colidx(k))
              enddo
-             w(j) = sum
+             w(j) = sum1
           enddo
 
 c---------------------------------------------------------------------
@@ -1223,20 +1211,16 @@ c---------------------------------------------------------------------
 
             send_start_idx = reduce_send_starts(i)
             send_end_idx = send_start_idx + reduce_send_lengths(i) - 1
-            recv_start_idx = reduce_recv_starts(i)[reduce_exch_proc(i)]
-            recv_length = reduce_recv_lengths(i)[reduce_exch_proc(i)]
-            recv_end_idx = recv_start_idx + recv_length - 1
-
+            recv_start_idx = reduce_recv_starts(i)
+            recv_end_idx = recv_start_idx + reduce_recv_lengths(i) - 1
             q(recv_start_idx:recv_end_idx)[reduce_exch_proc(i)] =
      >          w(send_start_idx:send_end_idx)
-
             sync all
 
             if (timeron) call timer_stop(t_rcomm)
-            do j=send_start,send_start + recv_length - 1
+            do j=send_start,send_start + reduce_recv_lengths(i) - 1
                w(j) = w(j) + q(j)
             enddo
-
             sync all
          enddo
 
@@ -1274,26 +1258,16 @@ c  Obtain p.q
 c---------------------------------------------------------------------
          sync all
 
-         sum = 0.0d0
+         sum1 = 0.0d0
          do j=1, lastcol-firstcol+1
-            sum = sum + p(j)*q(j)
+            sum1 = sum1 + p(j)*q(j)
          enddo
+         sum = sum1
 
 c---------------------------------------------------------------------
 c  Obtain d with a sum-reduce
 c---------------------------------------------------------------------
-         do i = 1, l2npcols
-            if (timeron) call timer_start(t_rcomm)
-
-            sync all
-            d[reduce_exch_proc(i)] = sum
-            sync all
-
-            if (timeron) call timer_stop(t_rcomm)
-
-            sum = sum + d
-         enddo
-         d = sum
+        call co_sum(sum, d)
 
 
 c---------------------------------------------------------------------
@@ -1319,26 +1293,16 @@ c---------------------------------------------------------------------
 c  rho = r.r
 c  Now, obtain the norm of r: First, sum squares of r elements locally...
 c---------------------------------------------------------------------
-         sum = 0.0d0
+         sum1 = 0.0d0
          do j=1, lastcol-firstcol+1
-            sum = sum + r(j)*r(j)
+            sum1 = sum1 + r(j)*r(j)
          enddo
+         sum = sum1
 
 c---------------------------------------------------------------------
 c  Obtain rho with a sum-reduce
 c---------------------------------------------------------------------
-         do i = 1, l2npcols
-            if (timeron) call timer_start(t_rcomm)
-
-            sync all
-            rho[reduce_exch_proc(i)] = sum
-            sync all
-
-            if (timeron) call timer_stop(t_rcomm)
-
-            sum = sum + rho
-         enddo
-         rho = sum
+        call co_sum(sum, rho)
 
 c---------------------------------------------------------------------
 c  Obtain beta:
@@ -1363,11 +1327,11 @@ c  First, form A.z
 c  The partition submatrix-vector multiply
 c---------------------------------------------------------------------
       do j=1,lastrow-firstrow+1
-         sum = 0.d0
+         sum1 = 0.d0
          do k=rowstr(j),rowstr(j+1)-1
-            sum = sum + a(k)*z(colidx(k))
+            sum1 = sum1 + a(k)*z(colidx(k))
          enddo
-         w(j) = sum
+         w(j) = sum1
       enddo
 
 
@@ -1380,17 +1344,15 @@ c---------------------------------------------------------------------
 
          send_start_idx = reduce_send_starts(i)
          send_end_idx = send_start_idx + reduce_send_lengths(i) - 1
-         recv_start_idx = reduce_recv_starts(i)[reduce_exch_proc(i)]
-         recv_length = reduce_recv_lengths(i)[reduce_exch_proc(i)]
-         recv_end_idx = recv_start_idx + recv_length - 1
+         recv_start_idx = reduce_recv_starts(i)
+         recv_end_idx = recv_start_idx + reduce_send_lengths(i) - 1
          r(recv_start_idx:recv_end_idx)[reduce_exch_proc(i)] =
      >       w(send_start_idx:send_end_idx)
-
          sync all
 
          if (timeron) call timer_stop(t_rcomm)
 
-         do j=send_start,send_start + recv_length - 1
+         do j=send_start,send_start + reduce_recv_lengths(i) - 1
             w(j) = w(j) + r(j)
          enddo
 
@@ -1406,7 +1368,6 @@ c---------------------------------------------------------------------
 
          send_start_idx = send_start
          send_end_idx = send_start + send_len - 1
-
          r(1:exch_recv_length)[exch_proc] =
      >            w(send_start_idx:send_end_idx)
 
@@ -1421,27 +1382,17 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c  At this point, r contains A.z
 c---------------------------------------------------------------------
-         sum = 0.0d0
+         sum1 = 0.0d0
          do j=1, lastcol-firstcol+1
             d   = x(j) - r(j)         
-            sum = sum + d*d
+            sum1 = sum1 + d*d
          enddo
+         sum = sum1
          
 c---------------------------------------------------------------------
 c  Obtain d with a sum-reduce
 c---------------------------------------------------------------------
-      do i = 1, l2npcols
-         if (timeron) call timer_start(t_rcomm)
-
-         sync all
-         d[reduce_exch_proc(i)] = sum
-         sync all
-
-         if (timeron) call timer_stop(t_rcomm)
-
-         sum = sum + d
-      enddo
-      d = sum
+      call co_sum(sum, d)
 
 
       if( me .eq. root ) rnorm = sqrt( d )

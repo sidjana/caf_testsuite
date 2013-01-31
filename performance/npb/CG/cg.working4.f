@@ -67,6 +67,8 @@ c---------------------------------------------------------------------
 
 
 
+
+
 c---------------------------------------------------------------------
 c  Class specific parameters: 
 c  It appears here for reference only.
@@ -197,8 +199,8 @@ c      >                         w(na/num_proc_rows+2)
       integer            reduce_exch_proc(num_proc_cols)
       integer            reduce_send_starts(num_proc_cols)
       integer            reduce_send_lengths(num_proc_cols)
-      integer            reduce_recv_starts(num_proc_cols)[0:*]
-      integer            reduce_recv_lengths(num_proc_cols)[0:*]
+      integer            reduce_recv_starts(num_proc_cols)
+      integer            reduce_recv_lengths(num_proc_cols)
 
       integer            i, j, k, it
 
@@ -225,6 +227,7 @@ c      >                         w(na/num_proc_rows+2)
 c---------------------------------------------------------------------
 c  Set up mpi initialization and number of proc testing
 c---------------------------------------------------------------------
+      !call initialize_mpi
       call initialize_image_info
 
       if( na .eq. 1400 .and. 
@@ -582,7 +585,7 @@ c      >                 root,
 c      >                 mpi_comm_world,
 c      >                 ierr )
 
-      call co_maxval0(t, tmax)
+      call co_maxval(t, tmax)
 
       if( me .eq. root )then
          write(*,100)
@@ -1092,6 +1095,7 @@ c---------------------------------------------------------------------
       include 'mpinpb.h'
       include 'timing.h'
 
+c       integer status(MPI_STATUS_SIZE ), request
 
 
       common / partit_size  /  naa, nzz, 
@@ -1133,9 +1137,8 @@ c---------------------------------------------------------------------
       integer   reduce_exch_proc(l2npcols)
       integer   reduce_send_starts(l2npcols)
       integer   reduce_send_lengths(l2npcols)
-      integer   reduce_recv_starts(l2npcols)[0:*]
-      integer   reduce_recv_lengths(l2npcols)[0:*]
-      integer   recv_length
+      integer   reduce_recv_starts(l2npcols)
+      integer   reduce_recv_lengths(l2npcols)
 
       integer   recv_start_idx, recv_end_idx, send_start_idx,
      >          send_end_idx
@@ -1143,8 +1146,8 @@ c---------------------------------------------------------------------
       integer   i, j, k, ierr
       integer   cgit, cgitmax
 
-      double precision, save  :: d[0:*], rho[0:*], sum
-      double precision   rho0, alpha, beta, rnorm
+      double precision, save  :: d[0:*], rho[0:*], sum[0:*]
+      double precision   rho0, alpha, beta, rnorm, sum1
 
       external         timer_read
       double precision timer_read
@@ -1169,10 +1172,11 @@ c---------------------------------------------------------------------
 c  rho = r.r
 c  Now, obtain the norm of r: First, sum squares of r elements locally...
 c---------------------------------------------------------------------
-      sum = 0.0d0
+      sum1 = 0.0d0
       do j=1, lastcol-firstcol+1
-         sum = sum + r(j)*r(j)
+         sum1 = sum1 + r(j)*r(j)
       enddo
+      sum = sum1
 
 
 c---------------------------------------------------------------------
@@ -1180,18 +1184,41 @@ c  Exchange and sum with procs identified in reduce_exch_proc
 c  (This is equivalent to mpi_allreduce.)
 c  Sum the partial sums of rho, leaving rho on all processors
 c---------------------------------------------------------------------
-      do i = 1, l2npcols
-         if (timeron) call timer_start(t_rcomm)
+cc         do i = 1, l2npcols
+cc            if (timeron) call timer_start(t_rcomm)
+cc   c          call mpi_irecv( rho,
+cc   c      >                   1,
+cc   c      >                   dp_type,
+cc   c      >                   reduce_exch_proc(i),
+cc   c      >                   i,
+cc   c      >                   mpi_comm_world,
+cc   c      >                   request,
+cc   c      >                   ierr )
+cc   c          call mpi_send(  sum,
+cc   c      >                   1,
+cc   c      >                   dp_type,
+cc   c      >                   reduce_exch_proc(i),
+cc   c      >                   i,
+cc   c      >                   mpi_comm_world,
+cc   c      >                   ierr )
+cc   c          call mpi_wait( request, status, ierr )
+cc   
+cc   c        sync all
+cc            sync images( (/ reduce_exch_proc(i)+1 /) )
+cc            rho[reduce_exch_proc(i)] = sum
+cc   c        rho = sum[reduce_exch_proc(i)]
+cc               
+cc   c         sync images( (/ reduce_exch_proc(i)+1 /) )
+cc             sync all
+cc   
+cc   
+cc            if (timeron) call timer_stop(t_rcomm)
+cc   
+cc            sum = sum + rho
+cc         enddo
+cc         rho = sum
 
-         sync all
-         rho[reduce_exch_proc(i)] = sum
-         sync all
-
-         if (timeron) call timer_stop(t_rcomm)
-
-         sum = sum + rho
-      enddo
-      rho = sum
+      call co_sum( sum, rho) 
 
 
 
@@ -1201,17 +1228,19 @@ c  The conj grad iteration loop
 c---->
 c---------------------------------------------------------------------
       do cgit = 1, cgitmax
+c      do cgit = 1, 1
+
 
 c---------------------------------------------------------------------
 c  q = A.p
 c  The partition submatrix-vector multiply: use workspace w
 c---------------------------------------------------------------------
           do j=1,lastrow-firstrow+1
-             sum = 0.d0
+             sum1 = 0.d0
              do k=rowstr(j),rowstr(j+1)-1
-                sum = sum + a(k)*p(colidx(k))
+                sum1 = sum1 + a(k)*p(colidx(k))
              enddo
-             w(j) = sum
+             w(j) = sum1
           enddo
 
 c---------------------------------------------------------------------
@@ -1220,20 +1249,38 @@ c  Exchange and sum piece of w with procs identified in reduce_exch_proc
 c---------------------------------------------------------------------
          do i = l2npcols, 1, -1
             if (timeron) call timer_start(t_rcomm)
+c             call mpi_irecv( q(reduce_recv_starts(i)),
+c      >                      reduce_recv_lengths(i),
+c      >                      dp_type,
+c      >                      reduce_exch_proc(i),
+c      >                      i,
+c      >                      mpi_comm_world,
+c      >                      request,
+c      >                      ierr )
+c             call mpi_send(  w(reduce_send_starts(i)),
+c      >                      reduce_send_lengths(i),
+c      >                      dp_type,
+c      >                      reduce_exch_proc(i),
+c      >                      i,
+c      >                      mpi_comm_world,
+c      >                      ierr )
+c             call mpi_wait( request, status, ierr )
 
             send_start_idx = reduce_send_starts(i)
             send_end_idx = send_start_idx + reduce_send_lengths(i) - 1
-            recv_start_idx = reduce_recv_starts(i)[reduce_exch_proc(i)]
-            recv_length = reduce_recv_lengths(i)[reduce_exch_proc(i)]
-            recv_end_idx = recv_start_idx + recv_length - 1
-
-            q(recv_start_idx:recv_end_idx)[reduce_exch_proc(i)] =
+            recv_start_idx = reduce_recv_starts(i)
+            recv_end_idx = recv_start_idx + reduce_recv_lengths(i) - 1
+c               sync images( (/ reduce_exch_proc(i) + 1 /) )
+             q(recv_start_idx:recv_end_idx)[reduce_exch_proc(i)] =
      >          w(send_start_idx:send_end_idx)
+c             q(recv_start_idx:recv_end_idx) =
+c       >          w(send_start_idx:send_end_idx)[reduce_exch_proc(i)]
 
+c               sync images( (/ reduce_exch_proc(i) + 1 /) )
             sync all
 
             if (timeron) call timer_stop(t_rcomm)
-            do j=send_start,send_start + recv_length - 1
+            do j=send_start,send_start + reduce_recv_lengths(i) - 1
                w(j) = w(j) + q(j)
             enddo
 
@@ -1247,11 +1294,31 @@ c  Exchange piece of q with transpose processor:
 c---------------------------------------------------------------------
          if( l2npcols .ne. 0 )then
             if (timeron) call timer_start(t_rcomm)
+c             call mpi_irecv( q,               
+c      >                      exch_recv_length,
+c      >                      dp_type,
+c      >                      exch_proc,
+c      >                      1,
+c      >                      mpi_comm_world,
+c      >                      request,
+c      >                      ierr )
+c 
+c             call mpi_send(  w(send_start),   
+c      >                      send_len,
+c      >                      dp_type,
+c      >                      exch_proc,
+c      >                      1,
+c      >                      mpi_comm_world,
+c      >                      ierr )
+c             call mpi_wait( request, status, ierr )
 
             send_start_idx = send_start
             send_end_idx = send_start + send_len - 1
             q(1:exch_recv_length)[exch_proc] =
      >                  w(send_start_idx:send_end_idx)
+c             q(1:exch_recv_length)=
+c      >                  w(send_start_idx:send_end_idx)[exch_proc]
+c            sync images( (/ exch_proc + 1 /) )
 
             if (timeron) call timer_stop(t_rcomm)
          else
@@ -1259,7 +1326,6 @@ c---------------------------------------------------------------------
                q(j) = w(j)
             enddo
          endif
-
 
 c---------------------------------------------------------------------
 c  Clear w for reuse...
@@ -1274,26 +1340,49 @@ c  Obtain p.q
 c---------------------------------------------------------------------
          sync all
 
-         sum = 0.0d0
+         sum1 = 0.0d0
          do j=1, lastcol-firstcol+1
-            sum = sum + p(j)*q(j)
+            sum1 = sum1 + p(j)*q(j)
          enddo
+         sum = sum1
 
 c---------------------------------------------------------------------
 c  Obtain d with a sum-reduce
 c---------------------------------------------------------------------
-         do i = 1, l2npcols
-            if (timeron) call timer_start(t_rcomm)
-
-            sync all
-            d[reduce_exch_proc(i)] = sum
-            sync all
-
-            if (timeron) call timer_stop(t_rcomm)
-
-            sum = sum + d
-         enddo
-         d = sum
+cc            do i = 1, l2npcols
+cc               if (timeron) call timer_start(t_rcomm)
+cc   c             call mpi_irecv( d,
+cc   c      >                      1,
+cc   c      >                      dp_type,
+cc   c      >                      reduce_exch_proc(i),
+cc   c      >                      i,
+cc   c      >                      mpi_comm_world,
+cc   c      >                      request,
+cc   c      >                      ierr )
+cc   c             call mpi_send(  sum,
+cc   c      >                      1,
+cc   c      >                      dp_type,
+cc   c      >                      reduce_exch_proc(i),
+cc   c      >                      i,
+cc   c      >                      mpi_comm_world,
+cc   c      >                      ierr )
+cc   c 
+cc   c             call mpi_wait( request, status, ierr )
+cc   
+cc               sync all
+cc   
+cc               d[reduce_exch_proc(i)] = sum
+cc   c             d = sum[reduce_exch_proc(i)]
+cc   
+cc               sync all
+cc   c            sync images( (/ reduce_exch_proc(i) + 1 /) )
+cc   
+cc               if (timeron) call timer_stop(t_rcomm)
+cc   
+cc               sum = sum + d
+cc            enddo
+cc            d = sum
+        call co_sum(sum, d)
 
 
 c---------------------------------------------------------------------
@@ -1319,26 +1408,47 @@ c---------------------------------------------------------------------
 c  rho = r.r
 c  Now, obtain the norm of r: First, sum squares of r elements locally...
 c---------------------------------------------------------------------
-         sum = 0.0d0
+         sum1 = 0.0d0
          do j=1, lastcol-firstcol+1
-            sum = sum + r(j)*r(j)
+            sum1 = sum1 + r(j)*r(j)
          enddo
+         sum = sum1
 
 c---------------------------------------------------------------------
 c  Obtain rho with a sum-reduce
 c---------------------------------------------------------------------
-         do i = 1, l2npcols
-            if (timeron) call timer_start(t_rcomm)
-
-            sync all
-            rho[reduce_exch_proc(i)] = sum
-            sync all
-
-            if (timeron) call timer_stop(t_rcomm)
-
-            sum = sum + rho
-         enddo
-         rho = sum
+cc            do i = 1, l2npcols
+cc               if (timeron) call timer_start(t_rcomm)
+cc   c             call mpi_irecv( rho,
+cc   c      >                      1,
+cc   c      >                      dp_type,
+cc   c      >                      reduce_exch_proc(i),
+cc   c      >                      i,
+cc   c      >                      mpi_comm_world,
+cc   c      >                      request,
+cc   c      >                      ierr )
+cc   c             call mpi_send(  sum,
+cc   c      >                      1,
+cc   c      >                      dp_type,
+cc   c      >                      reduce_exch_proc(i),
+cc   c      >                      i,
+cc   c      >                      mpi_comm_world,
+cc   c      >                      ierr )
+cc   c             call mpi_wait( request, status, ierr )
+cc   
+cc               sync all
+cc               rho[reduce_exch_proc(i)] = sum
+cc   c             rho = sum[reduce_exch_proc(i)]
+cc   
+cc   c            sync images( (/ reduce_exch_proc(i) + 1 /) )
+cc               sync all
+cc   
+cc               if (timeron) call timer_stop(t_rcomm)
+cc   
+cc               sum = sum + rho
+cc            enddo
+cc            rho = sum
+        call co_sum(sum, rho)
 
 c---------------------------------------------------------------------
 c  Obtain beta:
@@ -1353,6 +1463,7 @@ c---------------------------------------------------------------------
          enddo
 
 
+
       enddo                             ! end of do cgit=1,cgitmax
 
 
@@ -1363,11 +1474,11 @@ c  First, form A.z
 c  The partition submatrix-vector multiply
 c---------------------------------------------------------------------
       do j=1,lastrow-firstrow+1
-         sum = 0.d0
+         sum1 = 0.d0
          do k=rowstr(j),rowstr(j+1)-1
-            sum = sum + a(k)*z(colidx(k))
+            sum1 = sum1 + a(k)*z(colidx(k))
          enddo
-         w(j) = sum
+         w(j) = sum1
       enddo
 
 
@@ -1377,24 +1488,41 @@ c  Sum the partition submatrix-vec A.z's across rows
 c---------------------------------------------------------------------
       do i = l2npcols, 1, -1
          if (timeron) call timer_start(t_rcomm)
+c          call mpi_irecv( r(reduce_recv_starts(i)),
+c      >                   reduce_recv_lengths(i),
+c      >                   dp_type,
+c      >                   reduce_exch_proc(i),
+c      >                   i,
+c      >                   mpi_comm_world,
+c      >                   request,
+c      >                   ierr )
+c          call mpi_send(  w(reduce_send_starts(i)),
+c      >                   reduce_send_lengths(i),
+c      >                   dp_type,
+c      >                   reduce_exch_proc(i),
+c      >                   i,
+c      >                   mpi_comm_world,
+c      >                   ierr )
+c          call mpi_wait( request, status, ierr )
 
          send_start_idx = reduce_send_starts(i)
          send_end_idx = send_start_idx + reduce_send_lengths(i) - 1
-         recv_start_idx = reduce_recv_starts(i)[reduce_exch_proc(i)]
-         recv_length = reduce_recv_lengths(i)[reduce_exch_proc(i)]
-         recv_end_idx = recv_start_idx + recv_length - 1
+         recv_start_idx = reduce_recv_starts(i)
+         recv_end_idx = recv_start_idx + reduce_send_lengths(i) - 1
          r(recv_start_idx:recv_end_idx)[reduce_exch_proc(i)] =
      >       w(send_start_idx:send_end_idx)
-
-         sync all
+c          r(recv_start_idx:recv_end_idx) =
+c       >      w(send_start_idx:send_end_idx)[reduce_exch_proc(i)]
+c         sync images( (/ reduce_exch_proc(i) + 1 /) )
+        sync all
 
          if (timeron) call timer_stop(t_rcomm)
 
-         do j=send_start,send_start + recv_length - 1
+         do j=send_start,send_start + reduce_recv_lengths(i) - 1
             w(j) = w(j) + r(j)
          enddo
 
-         sync all
+        sync all
       enddo
       
 
@@ -1403,12 +1531,33 @@ c  Exchange piece of q with transpose processor:
 c---------------------------------------------------------------------
       if( l2npcols .ne. 0 )then
          if (timeron) call timer_start(t_rcomm)
+c          call mpi_irecv( r,               
+c      >                   exch_recv_length,
+c      >                   dp_type,
+c      >                   exch_proc,
+c      >                   1,
+c      >                   mpi_comm_world,
+c      >                   request,
+c      >                   ierr )
+c    
+c          call mpi_send(  w(send_start),   
+c      >                   send_len,
+c      >                   dp_type,
+c      >                   exch_proc,
+c      >                   1,
+c      >                   mpi_comm_world,
+c      >                   ierr )
+c          call mpi_wait( request, status, ierr )
 
          send_start_idx = send_start
          send_end_idx = send_start + send_len - 1
-
          r(1:exch_recv_length)[exch_proc] =
      >            w(send_start_idx:send_end_idx)
+c          r(1:exch_recv_length) =
+c      >            w(send_start_idx:send_end_idx)[exch_proc]
+
+c         sync images ( (/ exch_proc +  1 /) )
+        sync all
 
          if (timeron) call timer_stop(t_rcomm)
       else
@@ -1421,27 +1570,48 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c  At this point, r contains A.z
 c---------------------------------------------------------------------
-         sum = 0.0d0
+         sum1 = 0.0d0
          do j=1, lastcol-firstcol+1
             d   = x(j) - r(j)         
-            sum = sum + d*d
+            sum1 = sum1 + d*d
          enddo
+         sum = sum1
          
 c---------------------------------------------------------------------
 c  Obtain d with a sum-reduce
 c---------------------------------------------------------------------
-      do i = 1, l2npcols
-         if (timeron) call timer_start(t_rcomm)
-
-         sync all
-         d[reduce_exch_proc(i)] = sum
-         sync all
-
-         if (timeron) call timer_stop(t_rcomm)
-
-         sum = sum + d
-      enddo
-      d = sum
+cc         do i = 1, l2npcols
+cc            if (timeron) call timer_start(t_rcomm)
+cc   c          call mpi_irecv( d,
+cc   c      >                   1,
+cc   c      >                   dp_type,
+cc   c      >                   reduce_exch_proc(i),
+cc   c      >                   i,
+cc   c      >                   mpi_comm_world,
+cc   c      >                   request,
+cc   c      >                   ierr )
+cc   c          call mpi_send(  sum,
+cc   c      >                   1,
+cc   c      >                   dp_type,
+cc   c      >                   reduce_exch_proc(i),
+cc   c      >                   i,
+cc   c      >                   mpi_comm_world,
+cc   c      >                   ierr )
+cc   c          call mpi_wait( request, status, ierr )
+cc   
+cc           sync all
+cc            d[reduce_exch_proc(i)] = sum
+cc   c          d = sum[reduce_exch_proc(i)]
+cc   
+cc   c         sync images ( (/ reduce_exch_proc(i) + 1  /) )
+cc           sync all
+cc   
+cc            if (timeron) call timer_stop(t_rcomm)
+cc   
+cc            sum = sum + d
+cc         enddo
+cc         d = sum
+      call co_sum(sum, d)
 
 
       if( me .eq. root ) rnorm = sqrt( d )

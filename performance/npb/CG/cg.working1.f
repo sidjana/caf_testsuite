@@ -197,8 +197,8 @@ c      >                         w(na/num_proc_rows+2)
       integer            reduce_exch_proc(num_proc_cols)
       integer            reduce_send_starts(num_proc_cols)
       integer            reduce_send_lengths(num_proc_cols)
-      integer            reduce_recv_starts(num_proc_cols)[0:*]
-      integer            reduce_recv_lengths(num_proc_cols)[0:*]
+      integer            reduce_recv_starts(num_proc_cols)
+      integer            reduce_recv_lengths(num_proc_cols)
 
       integer            i, j, k, it
 
@@ -582,7 +582,7 @@ c      >                 root,
 c      >                 mpi_comm_world,
 c      >                 ierr )
 
-      call co_maxval0(t, tmax)
+      call co_maxval(t, tmax)
 
       if( me .eq. root )then
          write(*,100)
@@ -1133,9 +1133,8 @@ c---------------------------------------------------------------------
       integer   reduce_exch_proc(l2npcols)
       integer   reduce_send_starts(l2npcols)
       integer   reduce_send_lengths(l2npcols)
-      integer   reduce_recv_starts(l2npcols)[0:*]
-      integer   reduce_recv_lengths(l2npcols)[0:*]
-      integer   recv_length
+      integer   reduce_recv_starts(l2npcols)
+      integer   reduce_recv_lengths(l2npcols)
 
       integer   recv_start_idx, recv_end_idx, send_start_idx,
      >          send_end_idx
@@ -1223,9 +1222,8 @@ c---------------------------------------------------------------------
 
             send_start_idx = reduce_send_starts(i)
             send_end_idx = send_start_idx + reduce_send_lengths(i) - 1
-            recv_start_idx = reduce_recv_starts(i)[reduce_exch_proc(i)]
-            recv_length = reduce_recv_lengths(i)[reduce_exch_proc(i)]
-            recv_end_idx = recv_start_idx + recv_length - 1
+            recv_start_idx = reduce_recv_starts(i)
+            recv_end_idx = recv_start_idx + reduce_recv_lengths(i) - 1
 
             q(recv_start_idx:recv_end_idx)[reduce_exch_proc(i)] =
      >          w(send_start_idx:send_end_idx)
@@ -1233,7 +1231,7 @@ c---------------------------------------------------------------------
             sync all
 
             if (timeron) call timer_stop(t_rcomm)
-            do j=send_start,send_start + recv_length - 1
+            do j=send_start,send_start + reduce_recv_lengths(i) - 1
                w(j) = w(j) + q(j)
             enddo
 
@@ -1380,9 +1378,8 @@ c---------------------------------------------------------------------
 
          send_start_idx = reduce_send_starts(i)
          send_end_idx = send_start_idx + reduce_send_lengths(i) - 1
-         recv_start_idx = reduce_recv_starts(i)[reduce_exch_proc(i)]
-         recv_length = reduce_recv_lengths(i)[reduce_exch_proc(i)]
-         recv_end_idx = recv_start_idx + recv_length - 1
+         recv_start_idx = reduce_recv_starts(i)
+         recv_end_idx = recv_start_idx + reduce_send_lengths(i) - 1
          r(recv_start_idx:recv_end_idx)[reduce_exch_proc(i)] =
      >       w(send_start_idx:send_end_idx)
 
@@ -1390,7 +1387,7 @@ c---------------------------------------------------------------------
 
          if (timeron) call timer_stop(t_rcomm)
 
-         do j=send_start,send_start + recv_length - 1
+         do j=send_start,send_start + reduce_recv_lengths(i) - 1
             w(j) = w(j) + r(j)
          enddo
 

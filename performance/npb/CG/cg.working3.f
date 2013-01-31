@@ -67,6 +67,8 @@ c---------------------------------------------------------------------
 
 
 
+
+
 c---------------------------------------------------------------------
 c  Class specific parameters: 
 c  It appears here for reference only.
@@ -197,8 +199,8 @@ c      >                         w(na/num_proc_rows+2)
       integer            reduce_exch_proc(num_proc_cols)
       integer            reduce_send_starts(num_proc_cols)
       integer            reduce_send_lengths(num_proc_cols)
-      integer            reduce_recv_starts(num_proc_cols)[0:*]
-      integer            reduce_recv_lengths(num_proc_cols)[0:*]
+      integer            reduce_recv_starts(num_proc_cols)
+      integer            reduce_recv_lengths(num_proc_cols)
 
       integer            i, j, k, it
 
@@ -225,6 +227,7 @@ c      >                         w(na/num_proc_rows+2)
 c---------------------------------------------------------------------
 c  Set up mpi initialization and number of proc testing
 c---------------------------------------------------------------------
+      !call initialize_mpi
       call initialize_image_info
 
       if( na .eq. 1400 .and. 
@@ -582,7 +585,7 @@ c      >                 root,
 c      >                 mpi_comm_world,
 c      >                 ierr )
 
-      call co_maxval0(t, tmax)
+      call co_maxval(t, tmax)
 
       if( me .eq. root )then
          write(*,100)
@@ -1093,6 +1096,8 @@ c---------------------------------------------------------------------
       include 'timing.h'
 
 
+c       integer status(MPI_STATUS_SIZE ), request
+
 
       common / partit_size  /  naa, nzz, 
      >                         npcols, nprows,
@@ -1133,9 +1138,8 @@ c---------------------------------------------------------------------
       integer   reduce_exch_proc(l2npcols)
       integer   reduce_send_starts(l2npcols)
       integer   reduce_send_lengths(l2npcols)
-      integer   reduce_recv_starts(l2npcols)[0:*]
-      integer   reduce_recv_lengths(l2npcols)[0:*]
-      integer   recv_length
+      integer   reduce_recv_starts(l2npcols)
+      integer   reduce_recv_lengths(l2npcols)
 
       integer   recv_start_idx, recv_end_idx, send_start_idx,
      >          send_end_idx
@@ -1143,8 +1147,8 @@ c---------------------------------------------------------------------
       integer   i, j, k, ierr
       integer   cgit, cgitmax
 
-      double precision, save  :: d[0:*], rho[0:*], sum
-      double precision   rho0, alpha, beta, rnorm
+      double precision, save  :: d[0:*], rho[0:*]
+      double precision   rho0, alpha, beta, rnorm, sum
 
       external         timer_read
       double precision timer_read
@@ -1202,6 +1206,7 @@ c---->
 c---------------------------------------------------------------------
       do cgit = 1, cgitmax
 
+
 c---------------------------------------------------------------------
 c  q = A.p
 c  The partition submatrix-vector multiply: use workspace w
@@ -1223,21 +1228,17 @@ c---------------------------------------------------------------------
 
             send_start_idx = reduce_send_starts(i)
             send_end_idx = send_start_idx + reduce_send_lengths(i) - 1
-            recv_start_idx = reduce_recv_starts(i)[reduce_exch_proc(i)]
-            recv_length = reduce_recv_lengths(i)[reduce_exch_proc(i)]
-            recv_end_idx = recv_start_idx + recv_length - 1
-
+            recv_start_idx = reduce_recv_starts(i)
+            recv_end_idx = recv_start_idx + reduce_recv_lengths(i) - 1
+            sync all
             q(recv_start_idx:recv_end_idx)[reduce_exch_proc(i)] =
      >          w(send_start_idx:send_end_idx)
-
             sync all
 
             if (timeron) call timer_stop(t_rcomm)
-            do j=send_start,send_start + recv_length - 1
+            do j=send_start,send_start + reduce_recv_lengths(i) - 1
                w(j) = w(j) + q(j)
             enddo
-
-            sync all
          enddo
 
 
@@ -1245,6 +1246,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c  Exchange piece of q with transpose processor:
 c---------------------------------------------------------------------
+         sync all
          if( l2npcols .ne. 0 )then
             if (timeron) call timer_start(t_rcomm)
 
@@ -1260,6 +1262,8 @@ c---------------------------------------------------------------------
             enddo
          endif
 
+         sync all
+
 
 c---------------------------------------------------------------------
 c  Clear w for reuse...
@@ -1272,8 +1276,6 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c  Obtain p.q
 c---------------------------------------------------------------------
-         sync all
-
          sum = 0.0d0
          do j=1, lastcol-firstcol+1
             sum = sum + p(j)*q(j)
@@ -1353,6 +1355,7 @@ c---------------------------------------------------------------------
          enddo
 
 
+
       enddo                             ! end of do cgit=1,cgitmax
 
 
@@ -1380,21 +1383,18 @@ c---------------------------------------------------------------------
 
          send_start_idx = reduce_send_starts(i)
          send_end_idx = send_start_idx + reduce_send_lengths(i) - 1
-         recv_start_idx = reduce_recv_starts(i)[reduce_exch_proc(i)]
-         recv_length = reduce_recv_lengths(i)[reduce_exch_proc(i)]
-         recv_end_idx = recv_start_idx + recv_length - 1
+         recv_start_idx = reduce_recv_starts(i)
+         recv_end_idx = recv_start_idx + reduce_send_lengths(i) - 1
+         sync all
          r(recv_start_idx:recv_end_idx)[reduce_exch_proc(i)] =
      >       w(send_start_idx:send_end_idx)
-
          sync all
 
          if (timeron) call timer_stop(t_rcomm)
 
-         do j=send_start,send_start + recv_length - 1
+         do j=send_start,send_start + reduce_recv_lengths(i) - 1
             w(j) = w(j) + r(j)
          enddo
-
-         sync all
       enddo
       
 
@@ -1406,9 +1406,10 @@ c---------------------------------------------------------------------
 
          send_start_idx = send_start
          send_end_idx = send_start + send_len - 1
-
+         sync all
          r(1:exch_recv_length)[exch_proc] =
      >            w(send_start_idx:send_end_idx)
+         sync all
 
          if (timeron) call timer_stop(t_rcomm)
       else
