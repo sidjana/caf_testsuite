@@ -621,7 +621,6 @@ c     call shmem_real8_max_to_all(tmax,t,1,0,0,nprocs,pwrk,psync)
       endif
  600  format( i4, 2e19.12)
      
-       write *,'end'
 c      call mpi_finalize(ierr)
 
       end                              ! end main
