@@ -62,34 +62,38 @@ FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
 #for CONFIDENCE TESTS
 CONF_COMPILE_PATH="${ROOT}/confidence_tests/compile_output"
 CONF_EXEC_PATH="${ROOT}/confidence_tests/exec_output"
+CONF_TEST_PATH="${ROOT}/confidence_tests"
 CONF_LOG_PATH="${ROOT}/confidence_tests"
 
 
-#for CONFORMANCE TESTS
-FEATURE_COMPILE_PATH="${ROOT}/conformance_tests/compile_output"
-FEATURE_EXEC_PATH="${ROOT}/conformance_tests/exec_output"
-FEATURE_LOG_PATH="${ROOT}/conformance_tests"
+#for FEATURE TESTS
+FEATURE_COMPILE_PATH="${ROOT}/feature_tests/compile_output"
+FEATURE_EXEC_PATH="${ROOT}/feature_tests/exec_output"
+FEATURE_TEST_PATH="${ROOT}/feature_tests"
+FEATURE_LOG_PATH="${ROOT}/feature_tests"
 
 
 #for SPECIFIC TESTS
 FEW_COMPILE_PATH="${ROOT}/few_tests/compile_output"
 FEW_EXEC_PATH="${ROOT}/few_tests/exec_output"
+FEW_TEST_PATH="${ROOT}/few_tests"
 FEW_LOG_PATH="${ROOT}/few_tests"
 
 
 #for FAULT TESTS
 FAULT_COMPILE_PATH="${ROOT}/fault_tests/compile_output"
 FAULT_EXEC_PATH="${ROOT}/fault_tests/exec_output"
+FAULT_TEST_PATH="${ROOT}/fault_tests"
 FAULT_LOG_PATH="${ROOT}/fault_tests"
 
 
-##for NON-CONFORMANCE TESTS
+##for NON-CONFORMANCE TESTS  (lacks full support)
 #NONCONF_COMPILE_PATH="${ROOT}/nonconformance_tests/compile_output"
 #NONCONF_EXEC_PATH="${ROOT}/nonconformance_tests/exec_output"
 #NONCONF_LOG_PATH="${ROOT}/nonconformance_tests"
 
 
-##E-mail stuff
+##E-mail stuff (lacks full support)
 #SUBJ="Results of the CAF test suite with $COMPILER"
 #LOGFILE=
 #EMAIL_LIST=

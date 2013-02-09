@@ -1,27 +1,28 @@
 include ./config/make.def
 
-.PHONY: all conformance non-conformance confidence few
+.PHONY: all feature non-conformance confidence few
 
 
-default:
-	@echo "Usage: $(MAKE) [all | conformance | non-conformance | confidence | fault | few-tests | clean(for further options)] "
+default help :
+	@echo "For testing: $(MAKE) [all | feature | non-conformance | confidence | fault | few-tests ] "
+	@echo -n "For cleanup:"; $(MAKE) -s clean
 
 
-all:  conformance confidence  fault
+all:  feature confidence  fault
 
 
-conformance:
-	@cd $(FEATURE_LOG_PATH); $(MAKE) -s  all;
+feature:
+	@cd $(FEATURE_TEST_PATH); $(MAKE) -s  all;
 
 
-conformance-header:
-	@printf '\n%s\n%s\n' "---------------HPC Tools CAF CONFORMANCE testsuite---------------"  \
+feature-header:
+	@printf '\n%s\n%s\n' "---------------HPC Tools CAF FEATURE testsuite---------------"  \
 	   				"Evaluating $(COMPILER)"
 	@printf '%-20s\t%-70s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"
 
 
 confidence:
-	@cd $(CONF_LOG_PATH); $(MAKE) -s all;
+	@cd $(CONF_TEST_PATH); $(MAKE) -s all;
 
 
 confidence-header:
@@ -32,7 +33,7 @@ confidence-header:
 
 
 non-conformance:
-	@cd $(NONCONF_LOG_PATH); $(MAKE) -s all
+	@cd $(NONCONF_TEST_PATH); $(MAKE) -s all
 
 
 non-conformance-header:
@@ -42,7 +43,7 @@ non-conformance-header:
 
 
 fault:
-	@cd $(FAULT_LOG_PATH); $(MAKE) -s all
+	@cd $(FAULT_TEST_PATH); $(MAKE) -s all
 
 
 fault-header:
@@ -53,18 +54,18 @@ fault-header:
 
 
 few-tests:
-	@cd $(FEW_LOG_PATH); $(MAKE) -s  all
+	@cd $(FEW_TEST_PATH); $(MAKE) -s  all
 
 
 
 clean:
-	@ printf '%s\n%s\n' "Usage:" "$$ $(MAKE) clean-<output | exec | history | all>"
+	@ printf '%s %s\n' " use" " $(MAKE) clean-<output | exec | history | all>"
 
 
 clean-all:
-	@cd $(FEATURE_LOG_PATH); $(MAKE) -s clean-all; cd .. ;
-	@cd $(CONF_LOG_PATH); $(MAKE) -s clean-all; cd .. ;
-	@cd $(FEW_LOG_PATH); $(MAKE) -s clean-all; cd .. ;
-	@cd $(FAULT_LOG_PATH); $(MAKE) -s clean-all; cd .. ;
+	@cd $(FEATURE_TEST_PATH); $(MAKE) -s clean-all; cd .. ;
+	@cd $(CONF_TEST_PATH); $(MAKE) -s clean-all; cd .. ;
+	@cd $(FEW_TEST_PATH); $(MAKE) -s clean-all; cd .. ;
+	@cd $(FAULT_TEST_PATH); $(MAKE) -s clean-all; cd .. ;
 	@rm -rf *.mod ./bin/*
 

@@ -8,7 +8,7 @@ COMPILE_OUTPUT:=$(FEW_COMPILE_PATH)
 
 LOG_NAME:=$(DATE).log
 LOGFILE:=$(FEW_LOG_PATH)/$(LOG_NAME)
-SCRIPTS = confidence_test.sh conformance_test.sh fault_test.sh
+SCRIPTS = confidence_test.sh feature_test.sh fault_test.sh
 
 
 all: clean-output test_file  testmodule.o description $(SCRIPTS) header
@@ -18,10 +18,11 @@ all: clean-output test_file  testmodule.o description $(SCRIPTS) header
 	   @rm $(SCRIPTS) description
 
 
+#copying scripts from other folders to this one (after modifying the var names).
 $(SCRIPTS):
-	   @sed 's/CONF_/FEW_/g'  $(CONF_LOG_PATH)/confidence_test.sh >  ./confidence_test.sh
-	   @sed 's/FAULT_/FEW_/g'  $(FAULT_LOG_PATH)/fault_test.sh > ./fault_test.sh
-	   @sed 's/FEATURE_/FEW_/g'  $(FEATURE_LOG_PATH)/conformance_test.sh > ./conformance_test.sh
+	   @sed 's/CONF_/FEW_/g'  $(CONF_TEST_PATH)/confidence_test.sh >  ./confidence_test.sh
+	   @sed 's/FAULT_/FEW_/g'  $(FAULT_TEST_PATH)/fault_test.sh > ./fault_test.sh
+	   @sed 's/FEATURE_/FEW_/g'  $(FEATURE_TEST_PATH)/feature_test.sh > ./feature_test.sh
 
 
 
@@ -35,9 +36,9 @@ testmodule.o: $(ROOT)/testmodule.f90
 
 
 description:
-	   @cat $(CONF_LOG_PATH)/description >>./description
-	   @cat $(FAULT_LOG_PATH)/description >>./description
-	   @cat $(FEATURE_LOG_PATH)/description >>./description
+	   @cat $(CONF_TEST_PATH)/description >>./description
+	   @cat $(FAULT_TEST_PATH)/description >>./description
+	   @cat $(FEATURE_TEST_PATH)/description >>./description
 
 
 clean-output:

@@ -1,6 +1,6 @@
 #!/bin/bash
 source ../config/CONFIG
-CURRENT=$FEW_LOG_PATH
+CURRENT=$FEW_TEST_PATH
 
 for file in `cat test_file`
 do
@@ -9,15 +9,15 @@ do
       continue
     fi
 
-    if [ "$file" == "CONFORMANCE-TESTS" -o \
+    if [ "$file" == "FEATURE-TESTS" -o \
          "$file" == "CONFIDENCE-TESTS"  -o \
          "$file" == "FAULT-TESTS"       -o \
-         "$file" == "NON-CONFORMANCE-TESTs"   -o \
+         "$file" == "NON-CONFORMANCE-TESTS"   -o \
          "$file" == "END-TESTS" ]; then
 
-	      if [ "$file" == "CONFORMANCE-TESTS" ]; then
-                cd ../; make -s conformance-header
-			    type="conformance"
+	      if [ "$file" == "FEATURE-TESTS" ]; then
+                cd ../; make -s feature-header
+			    type="feature"
     	  elif [ "$file" == "CONFIDENCE-TESTS" ]; then
                 cd ../; make -s confidence-header
                	type="confidence"
@@ -45,24 +45,24 @@ do
 
           if [ "$type" == "confidence" ]; then
 
-            if [ -f $CONF_LOG_PATH/$file ]; then
-                cp $CONF_LOG_PATH/$file .
+            if [ -f $CONF_TEST_PATH/$file ]; then
+                cp $CONF_TEST_PATH/$file .
 			    sh confidence_test.sh "$file_exec" "$file" "$1"
                 rm ./$file
             else
                 echo "ABSENT"
             fi
-	      elif [ "$type" == "conformance" ]; then
-             if [ -f $FEATURE_LOG_PATH/$file ]; then
-                cp $FEATURE_LOG_PATH/$file .
-			    sh conformance_test.sh "$file_exec" "$file" "$1"
+	      elif [ "$type" == "feature" ]; then
+             if [ -f $FEATURE_TEST_PATH/$file ]; then
+                cp $FEATURE_TEST_PATH/$file .
+			    sh feature_test.sh "$file_exec" "$file" "$1"
                 rm ./$file
             else
                 echo "ABSENT"
             fi
           elif [ "$type" == "fault" ]; then
-             if [ -f $FAULT_LOG_PATH/$file ]; then
-                cp $FAULT_LOG_PATH/$file .
+             if [ -f $FAULT_TEST_PATH/$file ]; then
+                cp $FAULT_TEST_PATH/$file .
 			    sh fault_test.sh "$file_exec" "$file" "$1"
                 rm ./$file
             else

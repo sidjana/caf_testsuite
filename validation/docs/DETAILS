@@ -6,7 +6,7 @@ Contents:
 I. Introduction
 II. Confidence tests
 III. Specific tests
-IV. Conformance tests
+IV. Feature tests
 
 
 ################### INTRODUCTION ###################
@@ -33,7 +33,7 @@ all the other forders and listed in a file called 'test_file'
 adhere to the CAF FORTRAN 2008 standard. The expectation is that
 the errors should be detected by the compiler / CAF-runtime
 
-7. conformance -- contains tests which verify the implementation
+7. feature_tests -- contains tests which verify the implementation
 of the compiler/runtime in accordance with the CAF FORTRAN 2008
 standard.
 
@@ -163,7 +163,7 @@ record this error in 'cross_err'.
 programs that the user wants to run. The fils is divided into
 three sections:
 1. CONFIDENCE tests
-2. CONFORMANCE tests
+2. FEATURE tests
 3. NON_CONFORMANCE tests
 
 -- If one wants to test specific programs that fall under one of
@@ -177,8 +177,8 @@ subdivided into the corresponding categories
 -- NOTE: DO NOT list any tests below the "END-TESTS" line.
 
 
-################### CONFORMANCE - TESTS ###################
--- can be found under validation/conformance_tests
+################### FEATURE - TESTS ###################
+-- can be found under validation/feature_tests
 
 -- The detailed description of each of the tests are as follows:
 
