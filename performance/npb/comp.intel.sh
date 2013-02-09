@@ -2,11 +2,11 @@
 
 PREV=1
 
-for BM in CG 
+for BM in SP BT 
 do
-for CLASS in S A B C
+for CLASS in C
 do
-for NPROCS in 1 2 4 8 16 
+for NPROCS in 1 4 9 16 
 do
 sed "s/-coarray-num-images=$PREV /-coarray-num-images=$NPROCS /g" ./config/make.def > ./config/make.def.intel
 PREV=$NPROCS

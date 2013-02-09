@@ -31,7 +31,7 @@
 #---------------------------------------------------------------------------
 # This is the fortran compiler used for MPI programs
 #---------------------------------------------------------------------------
-UHCAF = ifort -coarray -coarray-num-images=16       
+UHCAF = ifort -coarray -coarray-num-images=16         
 MPIF77 = $(UHCAF) 
 # This links MPI fortran programs; usually the same as ${MPIF77}
 FLINK	= $(UHCAF)

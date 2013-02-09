@@ -1,38 +1,35 @@
 #!/bin/bash
 
-## execute EP
-#echo "EP"
-#for CLASS in S A B C
-#do
-#for NPROCS in 32 16 8 4 2 1  
-#do
-#echo -n "CLASS=$CLASS NPROCS=$NPROCS "
-## cafrun -n $NPROCS ./ep.$CLASS.$NPROCS 2>&1 | grep -i seconds
-#./ep.$CLASS.$NPROCS --g95 images=$NPROCS 2>&1 | grep -i seconds
-#done
-#done
 
-## execute SP
-#echo "SP"
-#for CLASS in  S A B C
-#do
-#for NPROCS in 9 4 1 
-#do
-#echo -n "CLASS=$CLASS NPROCS=$NPROCS "
-## cafrun -n $NPROCS ./sp.$CLASS.$NPROCS 2>&1 | grep -i seconds
-#./sp.$CLASS.$NPROCS --g95 images=$NPROCS 2>&1 | grep -i seconds
-#done 
-#done
+## execute with diff CAF implementations
+# UHCAF --  cafrun -n $NPROCS ./sp.$CLASS.$NPROCS 2>&1 | grep -i seconds
+# G95 -- ./sp.$CLASS.$NPROCS --g95 images=$NPROCS 2>&1 | grep -i seconds
+# Intel -- ./cg.$CLASS.$NPROCS 2>&1 | grep -i seconds
 
-# execute CG
-echo "CG"
-for CLASS in S A B C
+
+# execute EP
+for BM in  ep 
+do
+for CLASS in  S A B C
 do
 for NPROCS in 1 2 4 8 16 
 do
-echo -n "CLASS=$CLASS NPROCS=$NPROCS "
-#cafrun -n $NPROCS ./bt.$CLASS.$NPROCS 2>&1 | grep -i seconds
-#./bt.$CLASS.$NPROCS --g95 images=$NPROCS 2>&1 | grep -i seconds
-./cg.$CLASS.$NPROCS 2>&1 | grep -i seconds
+echo -n "BM=$BM CLASS=$CLASS NPROCS=$NPROCS "
+cafrun -n $NPROCS --image-heap=1G ./$BM.$CLASS.$NPROCS 2>&1 | grep -i seconds
 done 
+done 
+done
+
+
+# execute SP BT
+for CLASS in  S A B C
+do
+for BM in  sp bt 
+do
+for NPROCS in 1 4 9 16 
+do
+echo -n "BM=$BM CLASS=$CLASS NPROCS=$NPROCS "
+cafrun -n $NPROCS --image-heap=1G ./$BM.$CLASS.$NPROCS 2>&1 | grep -i seconds
+done 
+done
 done

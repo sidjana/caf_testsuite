@@ -31,20 +31,20 @@
 #---------------------------------------------------------------------------
 # This is the fortran compiler used for MPI programs
 #---------------------------------------------------------------------------
-UHCAF = ifort -coarray -coarray-num-images=16         
+UHCAF = uhcaf --layer=armci #-L/home/sidjana/commlib/armci/armci-1-4/lib/LINUX64 
 MPIF77 = $(UHCAF) 
 # This links MPI fortran programs; usually the same as ${MPIF77}
-FLINK	= $(UHCAF)
+FLINK = $(UHCAF)
 
 #---------------------------------------------------------------------------
 # These macros are passed to the linker to help link with MPI correctly
 #---------------------------------------------------------------------------
-FMPI_LIB  := 
+FMPI_LIB =
 
 #---------------------------------------------------------------------------
 # These macros are passed to the compiler to help find 'mpif.h'
 #---------------------------------------------------------------------------
-FMPI_INC = 
+FMPI_INC =  
 
 #---------------------------------------------------------------------------
 # Global *compile time* flags for Fortran programs
@@ -95,7 +95,7 @@ CMPI_INC =
 #---------------------------------------------------------------------------
 # Global *compile time* flags for C programs
 #---------------------------------------------------------------------------
-CFLAGS	= -O3
+CFLAGS	= -O3 
 
 #---------------------------------------------------------------------------
 # Global *link time* flags. Flags for increasing maximum executable 

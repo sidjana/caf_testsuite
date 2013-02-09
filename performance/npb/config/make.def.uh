@@ -31,8 +31,8 @@
 #---------------------------------------------------------------------------
 # This is the fortran compiler used for MPI programs
 #---------------------------------------------------------------------------
-UHCAF = uhcaf
-MPIF77 = uhcaf 
+UHCAF = uhcaf --layer=armci -L/home/sidjana/commlib/armci/armci-1-4/lib/LINUX64 
+MPIF77 = $(UHCAF) 
 # This links MPI fortran programs; usually the same as ${MPIF77}
 FLINK = $(UHCAF)
 
