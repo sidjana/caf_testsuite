@@ -24,7 +24,7 @@ $(EXES): | $(BIN_PATH)
 
 
 header:
-	   @cd ../ ; $(MAKE) -s fault-header | tee -a $(LOGFILE)
+	   @cd ../ ; $(MAKE) -s   -f Makefile.in  fault-header | tee -a $(LOGFILE)
 	   $(eval total_cnt=0)
 
 

@@ -22,7 +22,7 @@ all:   clean-output header $(EXES) tail
 
 
 header:
-	@cd ../ ; $(MAKE) -s non-conformance-header | tee -a $(LOGFILE)
+	@cd ../ ; $(MAKE) -s  -f Makefile.in  non-conformance-header | tee -a $(LOGFILE)
 
 
 tail:

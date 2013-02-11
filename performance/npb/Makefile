@@ -59,9 +59,10 @@ clean:
 	- rm -f */*.mod
 
 veryclean: clean
-	- rm -f config/make.def config/suite.def
+	- rm -f config/suite.def
 	- rm -f bin/sp.* bin/lu.* bin/mg.* bin/ft.* bin/bt.* bin/is.*
 	- rm -f bin/ep.* bin/cg.* bin/dt.*
+	- rm -rf log regression_op
 
 header:
 	@ sys/print_header

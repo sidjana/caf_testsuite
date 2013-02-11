@@ -6,8 +6,56 @@
 
 #---------------------------------------------------------------------------
 # Items in this file will need to be changed for each platform.
-# (Note these definitions are inconsistent with NPB2.1.)
 #---------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------
+# Parallel Coarray Fortran:
+#
+# For CG, EP, FT, MG, LU, SP, BT and UA, which are in Fortran, the following 
+# must be defined:
+#
+# CAF          - Coarray Fortran compiler
+# CAFFLAGS     - Coarray Fortran compilation arguments
+# CAF_INC      - any -I arguments required for compiling Coarray Fortran 
+# CAFLINK      - Coarray Fortran linker
+# CAFLINKFLAGS - Coarray Fortran linker arguments
+# CAF_LIB      - any -L and -l arguments required for linking Coarray Fortran 
+# 
+# compilations are done with $(CAF) $(CAF_INC) $(CAFFLAGS) or
+#                            $(CAF) $(CAFFLAGS)
+# linking is done with       $(CAFLINK) $(CAF_LIB) $(CAFLINKFLAGS)
+#---------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------
+# This is the fortran compiler used for CAF programs
+#---------------------------------------------------------------------------
+CAF = uhcaf --layer=gasnet
+
+#---------------------------------------------------------------------------
+# This links fortran programs; usually the same as ${F90}
+#---------------------------------------------------------------------------
+CAFLINK	= $(CAF)
+
+#---------------------------------------------------------------------------
+# These macros are passed to the linker 
+#---------------------------------------------------------------------------
+CAF_LIB  =
+
+#---------------------------------------------------------------------------
+# These macros are passed to the compiler 
+#---------------------------------------------------------------------------
+CAF_INC =
+
+#---------------------------------------------------------------------------
+# Global *compile time* flags for Coarray Fortran programs
+#---------------------------------------------------------------------------
+CAFFLAGS	= -O3
+
+#---------------------------------------------------------------------------
+# Global *link time* flags. Flags for increasing maximum executable 
+# size usually go here. 
+#---------------------------------------------------------------------------
+CAFLINKFLAGS = $(CAFFLAGS)
 
 #---------------------------------------------------------------------------
 # Parallel Fortran:
@@ -15,7 +63,7 @@
 # For CG, EP, FT, MG, LU, SP and BT, which are in Fortran, the following must 
 # be defined:
 #
-# UHCAF      - UH CAF compiler
+# UHCAF      - Any CAF compiler
 # MPIF77     - Fortran compiler
 # FFLAGS     - Fortran compilation arguments
 # FMPI_INC   - any -I arguments required for compiling MPI/Fortran 
@@ -31,20 +79,20 @@
 #---------------------------------------------------------------------------
 # This is the fortran compiler used for MPI programs
 #---------------------------------------------------------------------------
-UHCAF = ifort -coarray -coarray-num-images=16         
-MPIF77 = $(UHCAF) 
+UHCAF = $(CAF)
+MPIF77 = $(UHCAF)
 # This links MPI fortran programs; usually the same as ${MPIF77}
-FLINK	= $(UHCAF)
+FLINK = $(UHCAF)
 
 #---------------------------------------------------------------------------
 # These macros are passed to the linker to help link with MPI correctly
 #---------------------------------------------------------------------------
-FMPI_LIB  := 
+FMPI_LIB  = 
 
 #---------------------------------------------------------------------------
 # These macros are passed to the compiler to help find 'mpif.h'
 #---------------------------------------------------------------------------
-FMPI_INC = 
+FMPI_INC =
 
 #---------------------------------------------------------------------------
 # Global *compile time* flags for Fortran programs
@@ -55,13 +103,12 @@ FFLAGS	= -O3 -I./
 # Global *link time* flags. Flags for increasing maximum executable 
 # size usually go here. 
 #---------------------------------------------------------------------------
-FLINKFLAGS = -O3 
-
+FLINKFLAGS = -O3
 
 #---------------------------------------------------------------------------
 # Parallel C:
 #
-#For IS, which is in C, the following must be defined:
+# For IS, which is in C, the following must be defined:
 #
 # MPICC      - C compiler 
 # CFLAGS     - C compilation arguments
@@ -78,14 +125,14 @@ FLINKFLAGS = -O3
 #---------------------------------------------------------------------------
 # This is the C compiler used for MPI programs
 #---------------------------------------------------------------------------
-MPICC = cc
+MPICC = uhcc
 # This links MPI C programs; usually the same as ${MPICC}
 CLINK	= $(MPICC)
 
 #---------------------------------------------------------------------------
 # These macros are passed to the linker to help link with MPI correctly
 #---------------------------------------------------------------------------
-CMPI_LIB  = 
+CMPI_LIB  =
 
 #---------------------------------------------------------------------------
 # These macros are passed to the compiler to help find 'mpi.h'
@@ -163,3 +210,4 @@ RAND   = randi8
 # The following is highly reliable but may be slow:
 # RAND   = randdp
 
+WTIME = wtime.c

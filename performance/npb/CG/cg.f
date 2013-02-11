@@ -582,7 +582,7 @@ c      >                 root,
 c      >                 mpi_comm_world,
 c      >                 ierr )
 
-      call co_maxval0(t, tmax)
+      call co_maxval(t, tmax)
 
       if( me .eq. root )then
          write(*,100)
