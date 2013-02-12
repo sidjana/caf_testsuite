@@ -4,12 +4,12 @@ each of the tests in the testsuite.
 
 Contents:
 I. Introduction
-II. Confidence tests
-III. Specific tests
-IV. Feature tests
+II. Feature tests
+III. Confidence tests
+IV. Specific tests
 
 
-################### INTRODUCTION ###################
+################### I. INTRODUCTION ###################
 
 The primary folders:
 
@@ -25,17 +25,18 @@ compilers from the corresponding CONFIGs.
 
 4. docs -- contains this file and other explanations
 
-5. few_tests -- this allows user to compiler specific tests in
+5. feature_tests -- contains tests which verify the implementation
+of the compiler/runtime in accordance with the CAF FORTRAN 2008
+standard.
+
+6. few_tests -- this allows user to compiler specific tests in
 all the other forders and listed in a file called 'test_file'
 (present in this folder)
 
-6. nonconformance_tests -- contains tests which contain codes that DO NOT
+7. nonconformance_tests -- contains tests which contain codes that DO NOT
 adhere to the CAF FORTRAN 2008 standard. The expectation is that
 the errors should be detected by the compiler / CAF-runtime
 
-7. feature_tests -- contains tests which verify the implementation
-of the compiler/runtime in accordance with the CAF FORTRAN 2008
-standard.
 
 Support files include:
 
@@ -50,134 +51,7 @@ confidence tests are linked with the module in this file before
 loading.
 
 
-################### CONFIDENCE - TESTS ###################
--- can be found under validation/confidence_tests
-
-
--- All tests in this category verify CAF constructs that avoid
-race conditions. The tests include calls to the sleep()
-intrinsic for introducing delays in some images so enforce a
-certain level of determinism. This is essential for testing the
-different features as listed below,
-
--- Design of the tests:
-- Every test had a cross test. The cross test verifies whether
-  the introduction of sleep() calls introduces the races. The
-tests DO NOT include the CAF contruct / statement being tested.
-(The macro CROSS_ is used to exclude these contructs)
-
-- Every test includes a module called 'crosstest'.
-
-- The module 'crosstest' (defined in file testmofule.f90)
-  includes the declaration of an integer coscalar called
-'cross_err' which is modified by every image that detects an
-error(the usage differs for different tests as explained below).
-It also contains two subroutines - calc_ori and calc.The former
-returns the test result of the feature being tested. The latter
-returns the result based on the confidence of the cross-test.
-confidence of the actual tests.
-
-- The original tests (with the CAF constructs) are compiled as:
-  $(FTN COMPILER) $(PREPROCESSOR_FLAG) testmodule.f90 <file_name.f90>
-
-- The cross tests (without the CAF constructs) are compiled as:
-  $(FTN COMPILER) $(PREPROCESSOR_FLAG) -DCROSS_ testmodule.f90
-<file_name.f90>
-
-- Image-1 is chosen as the one whose coarray is accessesed by
-  different images for testing the feature under consideration.
-
--- The description of the different feature tests are as
-follows:
-
-
-
-** critical_8.1.5.f90:
-
-This tests the CRITICAL constructs. The aim of the test is to
-determine whether the CRITICAL stmt blocks other images from
-entering the CRITICAL section. For this purpose, image 1 is
-given a head start and is allowed to enter the section. The
-image1 one then sleeps for a few seconds giving the other images
-an opportunity to break into the section in case of incorrect
-implementation of the CRITICAL statement. If other images enter
-the section, they read the unchanged value of 'num' on image1
-and records the error in 'cross_err'.
-
-
-** intrin_8.5.6.f90:
-
-This tests the LOCK - UNLOCK constructs. The aim is to test
-whether the LOCK stmt blocks other imags when already acquired.
-Image-1 is given a head-start and acquires the lock. on
-Acquiring the lock, image1 sleeps for a while. If the LOCK
-constructu is correctly implemented, other images overwrites on
-1's 'num' coarray. On retrn from sleep() image 1 checks whether
-its 'num' is untouched or not. If not, it records the error in
-'cross_err'.
-
-
-** sync_8.5.3.f90:
-
-This tests for SYNC ALL image control stmt. The aim of the test
-is to verify the barrier-like behavior by the SYNC ALL contruct.
-Before writing to its 'num' coarray, image1 sleeps. If the SYNC
-stmt does not act as a barrier, other images bypass it and read
-a zeroed num[1] and records the error in 'cross_err'. If the
-SYNC ALL statement is correctly implemented, all the other
-images wait at the barrier till image1 writes to its 'num'
-before joining others at the snchronization contruct.
-
-
-** The test case for SYNC IMAGES is subdivided into 2 parts:
-
-**a. sync_8.5.4a.f90:
-
-This tests for the correct working of SYNC IMAGES(*) executed by
-image1. The aim is to determine whether other images block till
-the images being waited on call SYNC IMAGES(*). Image-1 sleeps
-for a while before modifying its 'num' coarray. All the other
-images expect to see the modified 'num[1]' after executing SYNC
-IMAGES(ARR). If the modified data object on image1 is still not
-accessible, then the other images record the error in
-'cross_err'.
-
-**b. sync_8.5.4b.f90:
-
-In this case, image-2 executes SYNC IMAGES(*). All other images
-execute SYNC IMAGES(ARR), where ARR in a rank-one array with 1
-element - 2.The aim of the test is to verify whether images
-executing SYNC IMAGES(ARR) incorrectly synchronize with each
-other. The spec mentions that SYNC IMAGES is not the same as
-SYNC ALL. Image-1 makes a change to its 'num' coarray. If SYNC
-IMAGES(ARR) act as a barrier, the other images(besides 1 and 2)
-will be able to see this modified object. This would imply an
-inconsistent behavior with the standard and the images will
-record this error in 'cross_err'.
-
-
-################### SPECIFIC - TESTS ###################
--- can be found under validation/few_tests
-
--- The primary file, 'test_file' contains a list of all the
-programs that the user wants to run. The fils is divided into
-three sections:
-1. CONFIDENCE tests
-2. FEATURE tests
-3. NON_CONFORMANCE tests
-
--- If one wants to test specific programs that fall under one of
-these categories, one must ensure that those files must exist
-under the respective folders and must be mentioned in the
-correct section in the file './test_file'.
-
--- The results of the tests listed in latest_results.log are all
-subdivided into the corresponding categories
-
--- NOTE: DO NOT list any tests below the "END-TESTS" line.
-
-
-################### FEATURE - TESTS ###################
+################### II. FEATURE - TESTS ###################
 -- can be found under validation/feature_tests
 
 -- The detailed description of each of the tests are as follows:
@@ -294,4 +168,135 @@ subobjects if a coarray is also a coarray
 ** pointer_4.5.4.6b.f90:
 
 association of pointer components of coarrays with local objects
+
+
+
+
+################### III. CONFIDENCE - TESTS ###################
+
+-- can be found under validation/confidence_tests
+
+
+-- All tests in this category verify CAF constructs that avoid
+race conditions. The tests include calls to the sleep()
+intrinsic for introducing delays in some images so enforce a
+certain level of determinism. This is essential for testing the
+different features as listed below,
+
+-- Design of the tests:
+- Every test had a cross test. The cross test verifies whether
+  the introduction of sleep() calls introduces the races. The
+tests DO NOT include the CAF contruct / statement being tested.
+(The macro CROSS_ is used to exclude these contructs)
+
+- Every test includes a module called 'crosstest'.
+
+- The module 'crosstest' (defined in file testmofule.f90)
+  includes the declaration of an integer coscalar called
+'cross_err' which is modified by every image that detects an
+error(the usage differs for different tests as explained below).
+It also contains two subroutines - calc_ori and calc.The former
+returns the test result of the feature being tested. The latter
+returns the result based on the confidence of the cross-test.
+confidence of the actual tests.
+
+- The original tests (with the CAF constructs) are compiled as:
+  $(FTN COMPILER) $(PREPROCESSOR_FLAG) testmodule.f90 <file_name.f90>
+
+- The cross tests (without the CAF constructs) are compiled as:
+  $(FTN COMPILER) $(PREPROCESSOR_FLAG) -DCROSS_ testmodule.f90
+<file_name.f90>
+
+- Image-1 is chosen as the one whose coarray is accessesed by
+  different images for testing the feature under consideration.
+
+-- The description of the different feature tests are as
+follows:
+
+
+
+** critical_8.1.5.f90:
+
+This tests the CRITICAL constructs. The aim of the test is to
+determine whether the CRITICAL stmt blocks other images from
+entering the CRITICAL section. For this purpose, image 1 is
+given a head start and is allowed to enter the section. The
+image1 one then sleeps for a few seconds giving the other images
+an opportunity to break into the section in case of incorrect
+implementation of the CRITICAL statement. If other images enter
+the section, they read the unchanged value of 'num' on image1
+and records the error in 'cross_err'.
+
+
+** intrin_8.5.6.f90:
+
+This tests the LOCK - UNLOCK constructs. The aim is to test
+whether the LOCK stmt blocks other imags when already acquired.
+Image-1 is given a head-start and acquires the lock. on
+Acquiring the lock, image1 sleeps for a while. If the LOCK
+constructu is correctly implemented, other images overwrites on
+1's 'num' coarray. On retrn from sleep() image 1 checks whether
+its 'num' is untouched or not. If not, it records the error in
+'cross_err'.
+
+
+** sync_8.5.3.f90:
+
+This tests for SYNC ALL image control stmt. The aim of the test
+is to verify the barrier-like behavior by the SYNC ALL contruct.
+Before writing to its 'num' coarray, image1 sleeps. If the SYNC
+stmt does not act as a barrier, other images bypass it and read
+a zeroed num[1] and records the error in 'cross_err'. If the
+SYNC ALL statement is correctly implemented, all the other
+images wait at the barrier till image1 writes to its 'num'
+before joining others at the snchronization contruct.
+
+
+** The test case for SYNC IMAGES is subdivided into 2 parts:
+
+**a. sync_8.5.4a.f90:
+
+This tests for the correct working of SYNC IMAGES(*) executed by
+image1. The aim is to determine whether other images block till
+the images being waited on call SYNC IMAGES(*). Image-1 sleeps
+for a while before modifying its 'num' coarray. All the other
+images expect to see the modified 'num[1]' after executing SYNC
+IMAGES(ARR). If the modified data object on image1 is still not
+accessible, then the other images record the error in
+'cross_err'.
+
+**b. sync_8.5.4b.f90:
+
+In this case, image-2 executes SYNC IMAGES(*). All other images
+execute SYNC IMAGES(ARR), where ARR in a rank-one array with 1
+element - 2.The aim of the test is to verify whether images
+executing SYNC IMAGES(ARR) incorrectly synchronize with each
+other. The spec mentions that SYNC IMAGES is not the same as
+SYNC ALL. Image-1 makes a change to its 'num' coarray. If SYNC
+IMAGES(ARR) act as a barrier, the other images(besides 1 and 2)
+will be able to see this modified object. This would imply an
+inconsistent behavior with the standard and the images will
+record this error in 'cross_err'.
+
+
+################### IV. SPECIFIC - TESTS ###################
+
+-- can be found under validation/few_tests
+
+-- The primary file, 'test_file' contains a list of all the
+programs that the user wants to run. The fils is divided into
+three sections:
+1. CONFIDENCE tests
+2. FEATURE tests
+3. NON_CONFORMANCE tests
+
+-- If one wants to test specific programs that fall under one of
+these categories, one must ensure that those files must exist
+under the respective folders and must be mentioned in the
+correct section in the file './test_file'.
+
+-- The results of the tests listed in latest_results.log are all
+subdivided into the corresponding categories
+
+-- NOTE: DO NOT list any tests below the "END-TESTS" line.
 

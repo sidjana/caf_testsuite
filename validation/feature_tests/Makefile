@@ -50,11 +50,11 @@ clean-exec:
 
 
 clean-history:
-	    @rm -rf ./HISTORY/*.log
+	    @rm -rf ./HISTORY/*.log 
 
 
 clean-all:  clean-output clean-exec clean-history
-	    @rm -rf uhcaf.keep ./*.log
+	    @rm -rf uhcaf.keep ./*.log ./*.mod
 
 
 clean:

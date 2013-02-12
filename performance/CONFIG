@@ -1,0 +1,45 @@
+## These variables are needed for the output files and for the graphs' naming.
+## Please set these variables to their appropiate values.
+
+echo "env setting"
+# common vars
+DATE=`date +"%m-%d-%y-%T"` 
+BENCH_PATH=`pwd`
+ROOT=$BENCH_PATH
+COMPILE_TESTS="0"
+EXECUTE_TESTS="0"
+BOTH="0"
+TIMEOUT=120
+PASSED_COMPILE_COUNT=0
+FAILED_COMPILE_COUNT=0
+COMPILE_STATUS="UNKNOWN"
+EXEC_STATUS="UNKNOWN"
+EXEC_OUT="0"
+logfile=$DATE.log
+
+# for microbenchmarks
+BENCH_BINDIR=$BENCH_PATH/bin
+DATA_PATH=$BENCH_PATH/data/output
+CAF_PATH=$DATA_PATH/caf
+INTELCAF_PATH=$DATA_PATH/intelcaf
+DIAGS_PATH=$BENCH_PATH/data/diags
+NITER=100
+COMPILE_CMD=uhcaf
+EXEC_CMD=cafrun
+NPOPT=-n
+
+# for NPB
+LOG_DIR=$ROOT/log/                # directory for the output of the regression
+OUTPUT_DIR=$ROOT/regression_op/   # directory for the output of the compiler/execution
+BIN_DIR=$ROOT/bin/                # directory for the binaries
+EXEC_OUT_DIR=$OUTPUT_DIR/latest_execute
+COMP_OUT_DIR=$OUTPUT_DIR/latest_compile
+HISTORY_OUT_DIR=$OUTPUT_DIR/history
+
+# The timer we used for this benchmark supports the following architectures :
+#   ARCH_X86
+#   ARCH_X86_64
+#   ARCH_IA64
+#   ARCH_PPC64
+#   ARCH_NONE to use gettimeofday instead
+TIMER_ARCH=ARCH_X86_64
