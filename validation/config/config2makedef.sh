@@ -1,6 +1,8 @@
 #! /bin/bash
 
-ROOT=`pwd`/..
+ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $ROOT
+ROOT=$ROOT/..
 for cfg in `ls CONFIG*` ; do
   postfix="`echo $cfg | sed 's/CONFIG//g'`"
   sed "s/\"//g" $cfg > tmp1
@@ -11,3 +13,5 @@ for cfg in `ls CONFIG*` ; do
   sed "s|pwd/..|$ROOT|g" tmp1 > make.def$postfix
   rm tmp1 tmp2
 done
+cd -
+

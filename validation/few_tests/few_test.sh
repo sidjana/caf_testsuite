@@ -1,7 +1,7 @@
 #!/bin/bash
 source ../config/CONFIG
 CURRENT=$FEW_TEST_PATH
-MAKE_CMD="make -s  -f Makefile.in"
+MAKE_CMD="make -s "
 
 for file in `cat test_file`
 do

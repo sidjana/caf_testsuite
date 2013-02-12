@@ -22,7 +22,7 @@ all:   clean-output header $(EXES) tail
 
 
 header:
-	 @cd .. ; $(MAKE) -s -f Makefile.in feature-header | tee -a $(LOGFILE)
+	 @cd .. ; $(MAKE) -s  feature-header | tee -a $(LOGFILE)
 
 
 tail:

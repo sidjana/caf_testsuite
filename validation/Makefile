@@ -1,12 +1,13 @@
+
 .PHONY: all feature non-conformance confidence few-tests
 
+TEMP_1:=$(shell ./config/config2makedef.sh)
+include ./config/make.def
 
-help :
+help : 
 	@echo "For testing: $(MAKE) [all | feature | non-conformance | confidence | fault | few-tests ] "
 	@echo -n "For cleanup:"; $(MAKE) -s clean
 
-TEMP=$(shell cd ./config;./config2makedef.sh)
-include ./config/make.def
 
 all:  feature confidence  fault
 

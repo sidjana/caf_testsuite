@@ -24,7 +24,7 @@ $(EXES): | $(BIN_PATH)
 
 
 header:
-	   @cd ../ ; $(MAKE) -s  -f Makefile.in  confidence-header | tee -a $(LOGFILE)
+	   @cd ../ ; $(MAKE) -s  confidence-header | tee -a $(LOGFILE)
 
 
 $(BIN_PATH)/%.x: %.f90

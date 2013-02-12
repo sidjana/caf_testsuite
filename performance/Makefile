@@ -59,7 +59,7 @@ clean:
 	@echo "USAGE: $(MAKE) clean_<type>" 
 	@echo "where type = <performance/all | kernels | microbenchmarks | npb>"
 
-clean_performance clean_all: clean_kernels clean_microbenchmarks clean_npb
+clean_performance clean-all: clean_kernels clean_microbenchmarks clean_npb
 
 clean_kernels:
 	@cd $(KERNELS_PATH) ;   $(MAKE) veryclean
