@@ -43,6 +43,10 @@ program bidirectional
   allocate(msg1(nt)[*],msg2(nt)[*])
 
   me=this_image()
+  if (num_images() ==  1) then
+     print *, "number of images can not be 1"
+     call exit(0)
+  end if
 
   call getarg(1,path)
   call getarg(2,layer)
@@ -50,16 +54,17 @@ program bidirectional
   call getarg(4,ncore)
   call getarg(5,nproc)
 
-  suffix=trim(layer)//"_"//trim(cluster)//&
-       "_NC"//trim(ncore)//"_NP"//trim(nproc)//".dat"
+  !suffix=trim(layer)//"_"//trim(cluster)//&
+  !     "_NC"//trim(ncore)//"_NP"//trim(nproc)//".dat"
 
-  output=trim(path)//"/bidirectional_CAF_"//suffix
+  !output=trim(path)//"/bidirectional_CAF_"//suffix
 
   if (me == 1) then
-     open(unit=10,file=trim(output),form='formatted', &
-          status='replace',access='sequential',       &
-          action='write',iostat=ierr                  )
-     write(10,'(A1,A10,A21,A20)') "#","[Bytes]","[Microsec]","[KB/sec]"
+     !open(unit=10,file=trim(output),form='formatted', &
+     !     status='replace',access='sequential',       &
+     !     action='write',iostat=ierr                  )
+     !write(10,'(A1,A10,A21,A20)') "#","[Bytes]","[Microsec]","[KB/sec]"
+     write(* ,'(A1,A10,A21,A20)') "#","[Bytes]","[Microsec]","[KB/sec]"
   endif
 
   i=1
@@ -96,7 +101,8 @@ program bidirectional
         r_msgsize=msg_size*2
         r_iterations=iterations
 
-        write(10,'(I10,A1,E20.8,A1,E20.8)') 4*msg_size,";",rtc*1000000.0/r_iterations,";",4.0*r_msgsize*r_iterations/rtc/1024.0
+        !write(10,'(I10,A1,E20.8,A1,E20.8)') 4*msg_size,";",rtc*1000000.0/r_iterations,";",4.0*r_msgsize*r_iterations/rtc/1024.0
+        write(*,'(I10,A1,E20.8,A1,E20.8)') 4*msg_size,";",rtc*1000000.0/r_iterations,";",4.0*r_msgsize*r_iterations/rtc/1024.0
 
         i=i+1
 
@@ -108,10 +114,8 @@ program bidirectional
 
   deallocate (msg1, msg2)
 
-  if (me == 1) then
-     close(unit=10,iostat=ierr)
-  endif
-
-  stop
+  !if (me == 1) then
+  !   close(unit=10,iostat=ierr)
+  !endif
 
 end program bidirectional

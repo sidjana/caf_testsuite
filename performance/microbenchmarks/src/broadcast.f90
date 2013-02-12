@@ -58,10 +58,10 @@ program broadcast
   output=trim(path)//"/broadcast_CAF_"//suffix
 
   if (me == 1) then
-     open(unit=10,file=trim(output),form='formatted', &
-          status='replace',access='sequential',       &
-          action='write',iostat=ierr                  )
-     write(10,'(A1,A10,A21,A20)') "#","[Bytes]","[Microsec]","[KB/sec]"
+     !open(unit=10,file=trim(output),form='formatted', &
+     !     status='replace',access='sequential',       &
+     !     action='write',iostat=ierr                  )
+     write(*,'(A1,A10,A21,A20)') "#","[Bytes]","[Microsec]","[KB/sec]"
   endif
 
   i=1
@@ -92,7 +92,7 @@ program broadcast
         r_msgsize=msg_size
         r_iterations=iterations
 
-        write(10,'(I10,A1,E20.8,A1,E20.8)') 4*msg_size,";",rtc*1000000.0/r_iterations,";",4.0*r_msgsize*r_iterations/rtc/1024.0 !!KB/sec
+        write(*,'(I10,A1,E20.8,A1,E20.8)') 4*msg_size,";",rtc*1000000.0/r_iterations,";",4.0*r_msgsize*r_iterations/rtc/1024.0 !!KB/sec
 
       endif
 
@@ -104,7 +104,7 @@ program broadcast
 
            if (msg(k) /= 1) then
               write(*,*) "Data received is incomplete."
-              stop
+              call EXIT(1)
            endif
 
         enddo
@@ -118,9 +118,9 @@ program broadcast
   
   deallocate ( msg )
 
-  if (me == 1) then
-     close(unit=10,iostat=ierr)
-  endif
+  !if (me == 1) then
+     !close(unit=10,iostat=ierr)
+  !endif
 
   stop
 

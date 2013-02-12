@@ -13,35 +13,33 @@
 #     PART     Partial data
 #
 # For example:
-# 1. these setting: (for TOTAL Houston HPC environment)
+# 1. use these settings: (for TOTAL Houston HPC environment)
 #   RUNCMD=autompirunB
 #   RUNOPT=-nopam
 #   NCOREOPT=-nc
 #   NPROCOPT=-np
-### PingPong
-#   NCOREPP=1
-#   NPROCPP=2
 # implies the command
 # > autompirunB -nopam -nc 1 -np 2 .../ping_pong .....
-#
-# 2. these seeting: (for generic mpirun environment)
-#   RUNCMD=mpirun
+
+# 2. use these settings: (for generic mpirun environment)
+   RUNCMD=cafrun
 #   RUNOPT=-hostfile myhostfile
-#   NCOREOPT=
-#   NPROCOPT=-np
-### PingPong
-#   NCOREPP=
-#   NPROCPP=2
+#   NCOREOPT= -n 
+   NPROCOPT=-n
 # implies the command
 # > mpirun -hostfile myhostfile -np 2 .../ping_pong .....
 
-JOBCMD=salloc
-NCOREOPT=-N
-JOBOPT=-p crill --exclusive
-RUNCMD=cafrun
-NPROCOPT=-n
-RUNOPT=--image-heap=250M -v
-RUNOPT2=--loadbalance
+# 3. use these settings: (for SLURM environment)
+#   JOBCMD=salloc
+#   NCOREOPT=-N
+#   JOBOPT=-p ... --exclusive
+#   RUNCMD=mpirun
+#   NPROCOPT=-n
+#   RUNOPT=--image-heap=1G -v
+#   RUNOPT2=--loadbalance
+# implies the command
+# > salloc -n ... -N .. -p ... 
+
 
 # Latency 
 NCORELAT=2
@@ -66,3 +64,4 @@ NPROCBCST=8
 # Noncontiguous
 NCORENC=2
 NPROCNC=2
+

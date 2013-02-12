@@ -43,6 +43,10 @@ program put_latency
   allocate(msg(1)[*])
 
   me=this_image()
+  if (num_images() ==  1) then
+     print *, "number of images can not be 1"
+     call exit(0)
+  end if
 
   call getarg(1,path)
   call getarg(2,layer)
@@ -56,10 +60,10 @@ program put_latency
   output=trim(path)//"/put-latency_CAF_"//suffix
 
   if (me == 1) then
-     open(unit=10,file=trim(output),form='formatted',&
-          status='replace',access='sequential',          &
-          action='write',iostat=ierr                     )
-     write(10,'(A1,A10,A20)') "#","[Bytes]","[Microsec]"
+     !open(unit=10,file=trim(output),form='formatted',&
+     !     status='replace',access='sequential',          &
+     !     action='write',iostat=ierr                     )
+     write(*,'(A1,A10,A20)') "#","[Bytes]","[Microsec]"
 
   endif
 
@@ -87,7 +91,7 @@ program put_latency
     r_msgsize=msg_size
     r_iterations=iterations
 
-    write(10,'(I10,A1,E20.8)') 4,";",rtc*1000000.0/r_iterations
+    write(*,'(I10,A1,E20.8)') 4,";",rtc*1000000.0/r_iterations
 
     i=i+1
 
@@ -99,15 +103,15 @@ program put_latency
 
    if (msg(1) /= 1) then
       write(*,*) "Data received is incomplete."
-          stop
+      call EXIT(1)    
    endif
 
  endif
 
  deallocate(msg)
 
- if (me == 1) then
-    close(unit=10,iostat=ierr)
- endif
+ !if (me == 1) then
+ !   close(unit=10,iostat=ierr)
+ !endif
 
 end program put_latency

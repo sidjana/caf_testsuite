@@ -44,6 +44,10 @@ program latency_bandwidth
   allocate(msg(nt)[*])
 
   me=this_image()
+  if (num_images() ==  1) then
+     print *, "number of images can not be 1"
+     call exit(0)
+  end if
 
   call getarg(1,path)
   call getarg(2,layer)
@@ -57,10 +61,10 @@ program latency_bandwidth
   output_bwd=trim(path)//"/put-bandwidth_CAF_"//suffix
 
   if (me == 1) then
-     open(unit=11,file=trim(output_bwd),form='formatted',&
-          status='replace',access='sequential',          &
-          action='write',iostat=ierr                     )
-     write(11,'(A1,A10,A21,A20)') "#","[Bytes]","[Microsec]","[KB/sec]"
+     !open(unit=11,file=trim(output_bwd),form='formatted',&
+     !     status='replace',access='sequential',          &
+     !     action='write',iostat=ierr                     )
+     write(*,'(A1,A10,A21,A20)') "#","[Bytes]","[Microsec]","[KB/sec]"
   endif
 
   i=1
@@ -90,7 +94,7 @@ program latency_bandwidth
         r_iterations=iterations
 
         !write(11,'(I10,A1,E20.8)') 4*msg_size,";",4.0*r_msgsize*r_iterations/rtc/1024.0 !!KB/sec
-        write(11,'(I10,A1,E20.8,A1,E20.8)') 4*msg_size,";",rtc*1000000.0/r_iterations,";",4.0*r_msgsize*r_iterations/rtc/1024.0
+        write(*,'(I10,A1,E20.8,A1,E20.8)') 4*msg_size,";",rtc*1000000.0/r_iterations,";",4.0*r_msgsize*r_iterations/rtc/1024.0
 
         i=i+1
 
@@ -104,7 +108,7 @@ program latency_bandwidth
 
            if (msg(k) /= 1) then
               write(*,*) "Data received is incomplete."
-              stop
+              call EXIT(1)
            endif
 
         enddo
@@ -117,8 +121,8 @@ program latency_bandwidth
 
   deallocate(msg)
 
-  if (me == 1) then
-     close(unit=11,iostat=ierr)
-  endif
+  !if (me == 1) then
+  !   close(unit=11,iostat=ierr)
+  !endif
 
 end program latency_bandwidth

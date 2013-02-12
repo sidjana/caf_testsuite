@@ -7,7 +7,7 @@ implicit none
 !
 !  Discussion:
 !
-!    This program uses MPI to do a Buffon-Laplace simulation in parallel.
+!    This program used MPI to do a Buffon-Laplace simulation in parallel.
 !
 !    This is an example of an "embarassingly parallel" computation.  Each
 !    processor does the same randomized computation, counting "successes",
@@ -81,7 +81,7 @@ implicit none
     write ( *, '(a)' ) ' '
     write ( *, '(a)' ) 'BUFFON_LAPLACE - Master process:'
     write ( *, '(a)' ) '  FORTRAN90 version'
-    write ( *, '(a)' ) '  An MPI example program to estimate PI'
+    write ( *, '(a)' ) '  An CAF example program to estimate PI'
     write ( *, '(a)' ) '  using the Buffon-Laplace needle experiment.'
     write ( *, '(a)' ) '  On a grid of cells of  width A and height B,'
     write ( *, '(a)' ) '  a needle of length L is dropped at random.'

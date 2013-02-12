@@ -1,6 +1,6 @@
 #!/bin/sh
 
-source ../CONFIG
+source ../support/CONFIG
 
 if [ $# == 1 ]; then
   if [ "$1" == "compile" ]; then
@@ -17,11 +17,9 @@ else
 fi
 
 # delete past regression results and make folders if needed
-rm -rf $COMP_OUT_DIR $EXEC_OUT_DIR
-echo "mkdir -p $COMP_OUT_DIR $EXEC_OUT_DIR  $HISTORY_OUT_DIR $BIN_DIR $LOG_DIR"
+rm -rf $COMP_OUT_DIR $EXEC_OUT_DIR $BIN_DIR
 mkdir -p $COMP_OUT_DIR $EXEC_OUT_DIR  $HISTORY_OUT_DIR $BIN_DIR $LOG_DIR
 
-echo "Testing the NPB"
 printf '%8s %8s %8s %15s %15s %10s \n' "<NAME>" "<CLASS>" "<NPROCS>" "<COMPILATION>" "<EXECUTION>" "<RESULT>" 
 
 

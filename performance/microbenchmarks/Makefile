@@ -1,17 +1,15 @@
-SHELL = /bin/sh
 
-help: 
-	@echo
-	@echo "Please use one of the following targets:"
-	@echo
-	@echo "    compile, execute, clean "
-	@echo
+help default: ./test_microbenchmarks.sh 
+	@echo "Usage: make [ compile | execute | complete/all ]"
 
-compile:
-	sh test_microbenchmarks.sh compile
+compile: ./test_microbenchmarks.sh
+	@./test_microbenchmarks.sh compile
 
-run:
-	sh test_microbenchmarks.sh execute
+run: ./test_microbenchmarks.sh
+	@./test_microbenchmarks.sh execute
 
-clean:
-	sh clean.sh
+complete all: ./test_microbenchmarks.sh
+	@./test_microbenchmarks.sh  complete
+
+veryclean: 
+	@rm -rf log regression_op bin

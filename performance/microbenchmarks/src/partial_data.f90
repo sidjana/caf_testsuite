@@ -44,6 +44,10 @@ program partial_data
   allocate(msg(nt,nt)[*])
 
   me=this_image()
+  if (num_images() ==  1) then
+     print *, "number of images can not be 1"
+     call exit(0)
+  end if
 
   call getarg(1,path)
   call getarg(2,layer)
@@ -57,10 +61,10 @@ program partial_data
   output=trim(path)//"/partial_CAF_"//suffix
 
   if (me == 1) then
-     open(unit=10,file=trim(output),form='formatted', &
-          status='replace',access='sequential',       &
-          action='write',iostat=ierr                  )
-     write(10,'(A1,A10,A21,A20)') "#","[Bytes]","[Microsec]","[KB/sec]"
+    ! open(unit=10,file=trim(output),form='formatted', &
+    !      status='replace',access='sequential',       &
+    !      action='write',iostat=ierr                  )
+     write(*,'(A1,A10,A21,A20)') "#","[Bytes]","[Microsec]","[KB/sec]"
   endif
 
   i=1
@@ -91,7 +95,7 @@ program partial_data
         r_msgsize=nt*msg_size/2
         r_iterations=iterations
 
-        write(10,'(I10,A1,E20.8,A1,E20.8)') 2*nt*msg_size,";",rtc*1000000.0/r_iterations,";",4.0*r_msgsize*r_iterations/rtc/1024.0
+        write(*,'(I10,A1,E20.8,A1,E20.8)') 2*nt*msg_size,";",rtc*1000000.0/r_iterations,";",4.0*r_msgsize*r_iterations/rtc/1024.0
 
         i=i+1
 
@@ -99,7 +103,7 @@ program partial_data
            do j=1,msg_size
               if (msg(k,j)[2] /= me) then
                  write(*,*) "Data is missing."
-                 stop
+                 call EXIT(1)
               endif
            enddo
         enddo
@@ -114,8 +118,8 @@ program partial_data
 
   deallocate(msg)
 
-  if (me == 1) then
-     close(unit=10,iostat=ierr)
-  endif
+  !if (me == 1) then
+  !   close(unit=10,iostat=ierr)
+  !endif
 
 end program partial_data
