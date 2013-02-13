@@ -33,8 +33,6 @@ DIAGS_PATH=${BENCH_PATH}/data/diags
 NITER=100
 CC=gcc
 LD=gcc
-COMPILE_CMD=uhcaf
-EXEC_CMD="cafrun --image-heap=1G "
 NPOPT=-n
 
 # The timer we used for this benchmark supports the following architectures :
@@ -44,3 +42,14 @@ NPOPT=-n
 #   ARCH_PPC64
 #   ARCH_NONE to use gettimeofday instead
 TIMER_ARCH=ARCH_X86_64
+
+#OpenUH CAF Compiler
+COMPILER="OpenUH"
+FC="uhcaf"
+FFLAGS="-ftpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
+LAUNCHER="cafrun -n ${NPROCS} --image-heap=1G"
+EXEC_OPTIONS=""
+FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
+
+COMPILE_CMD="${FC} ${FFLAGS} "
+EXEC_CMD="${LAUNCHER} ${EXEC_OPTIONS} "

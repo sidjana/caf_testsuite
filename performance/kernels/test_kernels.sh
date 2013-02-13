@@ -2,18 +2,25 @@
 
 source ../support/CONFIG
 
-if [ $# == 1 ]; then
+if [ $# == 2 ]; then
   if [ "$1" == "compile" ]; then
     COMPILE_TESTS="1"
+    compiler=$2
   elif [ "$1" == "execute" ]; then
     EXECUTE_TESTS="1"
+    compiler=$2
   elif [ "$1" == "complete" ]; then
     BOTH="1"
+    compiler=$2
   else
     echo "USAGE:  compile | execute | complete"
   fi
 else
-  echo "USAGE: compile | execute | complete"
+  echo "USAGE: test_kernels.sh [mode] [compiler] where "
+  echo "           mode     = compile|execute|complete"
+  echo "           compiler = uhcaf|ifort|g95"
+
+  exit 1
 fi
 
 # delete past regression results and make folders if needed
@@ -27,12 +34,14 @@ printf '%20s %5s %20s %20s\n' "<NAME>" "<NPROCS>" "<COMPILATION>" "<EXECUTION>" 
 for file in `ls *.f90`; do
     for NP  in  2 4 8
     do
+       NPROCS=$NP
+       source ${BENCH_PATH}/../support/CONFIG-compiler.${compiler}
        type=`echo $file | awk -F"/" '{print $NF}'`
        opfile=$type.$NP
        logfile=$DATE.log
        printf '%20s %5s ' "$type" "$NP" | tee -a $LOG_DIR/$logfile
        if [ "$COMPILE_TESTS"=="1" -o "$BOTH"=="1" ]; then
-        COMPILE_OUT=`$COMPILE_CMD  $type -o $BIN_DIR/$opfile -ftpp -DNITER=$NITER >>$COMP_OUT_DIR/$opfile.compile 2>&1 && echo 1 || echo -1`
+        COMPILE_OUT=`$COMPILE_CMD  $type -o $BIN_DIR/$opfile >>$COMP_OUT_DIR/$opfile.compile 2>&1 && echo 1 || echo -1`
         if [ "$COMPILE_OUT" -eq "1" ]; then
           COMPILE_STATUS="PASS"
         else
@@ -42,7 +51,7 @@ for file in `ls *.f90`; do
        printf '%20s ' "$COMPILE_STATUS" | tee -a $LOG_DIR/$logfile
        if [ "$EXECUTE_TESTS" -eq "1" -o "$BOTH" -eq "1" ]; then           #execution enabled
              if [ -f  $BIN_DIR/$opfile ]; then  #compilation passed
-                EXEC_OUT=` perl $ROOT/../../support/timedexec.pl $TIMEOUT "$EXEC_CMD -np $NP $BIN_DIR/$opfile "  &> $EXEC_OUT_DIR/$opfile.exec  && echo 1||echo -1`
+                EXEC_OUT=` perl $ROOT/../../support/timedexec.pl $TIMEOUT "$LAUNCHER $BIN_DIR/$opfile $EXEC_OPTIONS "  &> $EXEC_OUT_DIR/$opfile.exec  && echo 1||echo -1`
 
                 if [ "$EXEC_OUT" == "-1" ]; then                         #runtime error
                     EXEC_STATUS="RUNTIME ERROR"
