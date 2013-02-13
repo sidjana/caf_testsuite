@@ -31,7 +31,7 @@ mkdir -p $COMP_OUT_DIR $EXEC_OUT_DIR  $HISTORY_OUT_DIR $BIN_DIR $LOG_DIR
 printf '%8s %8s %8s %15s %15s %10s %15s \n' "<NAME>" "<CLASS>" "<NPROCS>" "<COMPILATION>" "<EXECUTION>" "<RESULT>" "<TIME(secs)>" | tee -a $LOG_DIR/$logfile  
 
 cp ./config/make.def.$compiler ./config/make.def
-for BM in ep sp bt cg 
+for BM in cg sp bt 
 do
 	for CLASS in S A B C
 	do
@@ -47,7 +47,7 @@ do
 			source ${BENCH_PATH}/../support/CONFIG-compiler.$compiler
 			cp ./config/make.def.$compiler ./config/make.def
   		     	opfile=$BM.$CLASS.$NP
-			printf '%6s %6s %6s ' "$BM" "$NP" "$CLASS" 
+			printf '%8s %8s %8s ' "$BM" "$NP" "$CLASS"  | tee -a $LOG_DIR/$logfile 
   		     	if [ "$COMPILE_TESTS"=="1" -o "$BOTH"=="1" ]; then
 			
 			 	# adding make.def support for intel
@@ -60,7 +60,7 @@ do
   		     	 	  	 COMPILE_STATUS="FAIL"
   		     	 	fi
   		     	fi
-			printf '%15s ' "$COMPILE_STATUS"
+			printf '%15s ' "$COMPILE_STATUS"  | tee -a $LOG_DIR/$logfile
   		     	if [ "$EXECUTE_TESTS" -eq "1" -o "$BOTH" -eq "1" ]; then           #execution enabled
 			      VERIFICATION="UNKNOWN"
 			      TIME="--"
@@ -73,14 +73,14 @@ do
   		     	         else                                                      #execution completed cleanly
 				     EXEC_STATUS="PASS"
 				     PASSED_COUNT=$(($PASSED_COUNT+1))
-				     VERIFICATION=`grep -oh "\w*SUCCESSFUL"  $EXEC_OUT_DIR/$opfile.exec`
+				     VERIFICATION=`grep "Verification"  $EXEC_OUT_DIR/$opfile.exec | grep -oh "\w*SUCCESSFUL"  `
 				     TIME=`grep "seconds"  $EXEC_OUT_DIR/$opfile.exec | sed 's/.*=//g' |sed 's/\s\+//g' `
   		     	         fi
   		     	     else
   		     	         EXEC_STATUS="NO BINARY"                                   #compilation failed
   		     	     fi
   		     	fi
-  		     	printf '%15s %18s %15s\n' "$EXEC_STATUS" "$VERIFICATION" "$TIME" | tee -a $LOG_DIR/$logfile 
+  		     	printf '%15s %18s %15s\n' "${EXEC_STATUS}" "${VERIFICATION}" "${TIME}" | tee -a $LOG_DIR/$logfile 
   		  done
 	done
 done

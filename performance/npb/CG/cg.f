@@ -582,9 +582,15 @@ c      >                 root,
 c      >                 mpi_comm_world,
 c      >                 ierr )
 
-      call co_maxval(t, tmax)
+      !call co_maxval(t, tmax)
 
+      sync all
+	
       if( me .eq. root )then
+         tmax=0
+         do j=1,num_images()
+	     tmax = max(tmax,t[j]) 
+	 enddo
          write(*,100)
  100     format(' Benchmark completed ')
 
@@ -654,9 +660,19 @@ c      >                0, MPI_COMM_WORLD, ierr)
 c       call MPI_Reduce(t1, tmaxg, t_last+2, dp_type, MPI_MAX, 
 c      >                0, MPI_COMM_WORLD, ierr)
 
-      call co_sum(t1, tsum)
-      call co_minval(t1, tming)
-      call co_maxval(t1, tmaxg)
+      !call co_sum(t1, tsum)
+      !call co_minval(t1, tming)
+      !call co_maxval(t1, tmaxg)
+      sync all
+      tsum=0
+      tming=huge(tming)
+      tmaxg=-1*huge(tmaxg)-1
+      do i = 1 , num_images()
+        tsum=tsum+t1(:)[i]
+        tming=min(tming,1*t1(:)[i])
+        tmaxg=max(tmaxg,1*t1(:)[i])
+      enddo
+      sync all
 
       if (me .eq. 0) then
          write(*, 800) nprocs
@@ -717,11 +733,12 @@ c       call mpi_comm_size( mpi_comm_world, nprocs, ierr )
 c       call mpi_bcast(timeron, 1, MPI_LOGICAL, 0, mpi_comm_world, ierr)
       
       !call co_bcast(timeron, 0)
+      sync all
       if (me .eq. root) then
-          timeron[me] = timeron
-!           do i=1,nprocs-1
-!               timeron[i] = timeron
-!           end do
+          !timeron[me] = timeron
+           do i=1,nprocs-1
+               timeron[i] = timeron
+           end do
       end if 
       sync all
 
@@ -1226,18 +1243,16 @@ c---------------------------------------------------------------------
             recv_start_idx = reduce_recv_starts(i)[reduce_exch_proc(i)]
             recv_length = reduce_recv_lengths(i)[reduce_exch_proc(i)]
             recv_end_idx = recv_start_idx + recv_length - 1
+	     sync all
 
             q(recv_start_idx:recv_end_idx)[reduce_exch_proc(i)] =
      >          w(send_start_idx:send_end_idx)
-
             sync all
 
             if (timeron) call timer_stop(t_rcomm)
             do j=send_start,send_start + recv_length - 1
                w(j) = w(j) + q(j)
             enddo
-
-            sync all
          enddo
 
 
@@ -1245,6 +1260,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c  Exchange piece of q with transpose processor:
 c---------------------------------------------------------------------
+         sync all
          if( l2npcols .ne. 0 )then
             if (timeron) call timer_start(t_rcomm)
 
@@ -1259,6 +1275,8 @@ c---------------------------------------------------------------------
                q(j) = w(j)
             enddo
          endif
+
+         sync all
 
 
 c---------------------------------------------------------------------
@@ -1406,9 +1424,10 @@ c---------------------------------------------------------------------
 
          send_start_idx = send_start
          send_end_idx = send_start + send_len - 1
-
+         sync all
          r(1:exch_recv_length)[exch_proc] =
      >            w(send_start_idx:send_end_idx)
+         sync all
 
          if (timeron) call timer_stop(t_rcomm)
       else
