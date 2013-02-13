@@ -11,7 +11,7 @@ if [ "$ANS" == "0" ]; then
    printf '%-15s\t' "PASS"  | tee -a $3
 
    #run the feature test
-   perl ../timedexec.pl $TIMEOUT $LAUNCHER $1 $EXEC_OPTIONS &>$EXEC_OUTPUT/$2.out
+   perl ../support/timedexec.pl $TIMEOUT $LAUNCHER $1 $EXEC_OPTIONS &>$EXEC_OUTPUT/$2.out
   # check if the feature test passed execution
    if [ "$?" == "0" ]; then
        # feature test passed execution
@@ -21,7 +21,7 @@ if [ "$ANS" == "0" ]; then
        $FC $FFLAGS_CROSS  -o  $1 testmodule.o $2 &>/dev/null
 
        # run the cross test
-       perl ../timedexec.pl $TIMEOUT $LAUNCHER $1 $EXEC_OPTIONS &>./tmp
+       perl ../support/timedexec.pl $TIMEOUT $LAUNCHER $1 $EXEC_OPTIONS &>./tmp
        RETURN="$?"
 
        if [ "$FC" == "g95" ]; then 

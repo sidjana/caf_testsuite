@@ -51,6 +51,9 @@ suite:
 # It would be nice to make clean in each subdirectory (the targets
 # are defined) but on a really clean system this will won't work
 # because those makefiles need config/make.def
+
+.PHONY: clean 
+
 clean:
 	- rm -f core
 	- rm -f *~ */core */*~ */*.o */npbparams.h */*.obj */*.exe
@@ -59,7 +62,7 @@ clean:
 	- rm -f btio.*.out*
 	- rm -f */*.mod
 	
-veryclean:
+cleanall: clean
 	- rm -f config/suite.def
 	- rm -f bin/sp.* bin/lu.* bin/mg.* bin/ft.* bin/bt.* bin/is.*
 	- rm -f bin/ep.* bin/cg.* bin/dt.*

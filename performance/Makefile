@@ -13,7 +13,8 @@ help default:
 	@printf '%-20s%-90s\n' " |_ clean_<suite>:" "cleans up the logs, executables and all previous history of the regression runs"
 	@printf '%-20s%-90s\n' " |_ <suite>:" "[kernels | microbenchmarks | npb | all]"
 	@printf '%-20s%-90s\n\n' " |_ help:" " displays this message"
-	@printf '%-20s\n' " COMPILER set to uhcaf by default"
+	@printf '%-20s%-90s\n\n' " |_ cleanall:" " Cleans up the entire performance test suite"
+	@printf '%-20s\n' "Note:  COMPILER set to uhcaf by default"
 
 
 compile_performance: compile_performance run_performance
@@ -24,7 +25,7 @@ compile_kernels:
 	@cd $(KERNELS_PATH) ; ./test_kernels.sh compile $(COMPILER);
 
 compile_microbenchmarks:
-	@cd $(MICROBENCH_PATH) ; source ./test_microbenchmarks.sh compile;
+	@cd $(MICROBENCH_PATH) ; source ./test_microbenchmarks.sh compile  $(COMPILER);
 
 compile_npb:
 	@cd $(NPB_PATH); source ./test_npb.sh compile $(COMPILER);
@@ -35,7 +36,7 @@ run_kernels:
 	@cd $(KERNELS_PATH) ; ./test_kernels.sh execute $(COMPILER);
 
 run_microbenchmarks:
-	@cd $(MICROBENCH_PATH) ; source ./test_microbenchmarks.sh execute;
+	@cd $(MICROBENCH_PATH) ; source ./test_microbenchmarks.sh execute  $(COMPILER);
 
 run_npb:
 	@cd $(NPB_PATH) ; source ./test_npb.sh execute $(COMPILER);
@@ -46,7 +47,7 @@ complete_kernels:
 	@cd $(KERNELS_PATH) ; ./test_kernels.sh complete $(COMPILER);
 
 complete_microbenchmarks:
-	@cd $(MICROBENCH_PATH) ; source ./test_microbenchmarks.sh complete;
+	@cd $(MICROBENCH_PATH) ; source ./test_microbenchmarks.sh complete  $(COMPILER);
 
 complete_npb:
 	@cd $(NPB_PATH) ; source test_npb.sh complete $(COMPILER);
@@ -58,17 +59,16 @@ complete_npb:
 .PHONY: clean clean_kernels clean_microbenchmarks clean_npb 
 
 clean:
-	@echo "USAGE: $(MAKE) clean_<type>" 
-	@echo "where type = <performance/all | kernels | microbenchmarks | npb>"
+	@echo "USAGE: $(MAKE) clean<type>" 
+	@echo "where type = < _performance/all | _kernels | _microbenchmarks | _npb >"
 
-clean_performance clean_all: clean_kernels clean_microbenchmarks clean_npb
+clean_performance cleanall: clean_kernels clean_microbenchmarks clean_npb
 
 clean_kernels:
-	@cd $(KERNELS_PATH) ;   $(MAKE) veryclean
+	@cd $(KERNELS_PATH) ;   $(MAKE) cleanall
 
 clean_microbenchmarks:
-	@cd $(MICROBENCH_PATH) ;  $(MAKE) veryclean 
+	@cd $(MICROBENCH_PATH) ;  $(MAKE) cleanall
 
 clean_npb:
-	@cd $(NPB_PATH) ;  $(MAKE) veryclean
-
+	@cd $(NPB_PATH) ;  $(MAKE) cleanall

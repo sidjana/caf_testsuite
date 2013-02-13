@@ -2,18 +2,25 @@
 
 source ../support/CONFIG
 
-if [ $# == 1 ]; then
+if [ $# == 2 ]; then
   if [ "$1" == "compile" ]; then
     COMPILE_TESTS="1"
+    compiler=$2
   elif [ "$1" == "execute" ]; then
     EXECUTE_TESTS="1"
+    compiler=$2
   elif [ "$1" == "complete" ]; then
     BOTH="1"
+    compiler=$2
   else
     echo "USAGE:  compile | execute | complete"
   fi
 else
-  echo "USAGE: compile | execute | complete"
+  echo "USAGE: test_microbenchmarks.sh [mode] [compiler] where "
+  echo "           mode     = compile|execute|complete"
+  echo "           compiler = uhcaf|ifort|g95"
+
+  exit 1
 fi
 
 # delete past regression results and make folders if needed
@@ -21,6 +28,7 @@ rm -rf $COMP_OUT_DIR $EXEC_OUT_DIR $BIN_DIR
 mkdir -p $COMP_OUT_DIR $EXEC_OUT_DIR  $HISTORY_OUT_DIR $BIN_DIR $LOG_DIR
 
 cd $TESTS_DIR
+
 $CC -c rtc.c -o rtc.o -D$TIMER_ARCH 
 
 printf '%20s %5s %20s %20s\n' "<NAME>" "<NPROCS>" "<COMPILATION>" "<EXECUTION>"  | tee -a $LOG_DIR/$logfile
@@ -28,6 +36,8 @@ printf '%20s %5s %20s %20s\n' "<NAME>" "<NPROCS>" "<COMPILATION>" "<EXECUTION>" 
 for file in `ls *.f90`; do
     for NP  in  2 4 8
     do
+       NPROCS=$NP
+       source ${BENCH_PATH}/../support/CONFIG-compiler.${compiler}
        type=`echo $file | awk -F"/" '{print $NF}'`
        opfile=$type.$NP
        logfile=$DATE.log
@@ -43,7 +53,7 @@ for file in `ls *.f90`; do
        printf '%20s ' "$COMPILE_STATUS"  | tee -a $LOG_DIR/$logfile
        if [ "$EXECUTE_TESTS" -eq "1" -o "$BOTH" -eq "1" ]; then           #execution enabled
              if [ -f  $BIN_DIR/$opfile ]; then  #compilation passed
-                EXEC_OUT=` perl $ROOT/../../support/timedexec.pl $TIMEOUT "$EXEC_CMD $NPOPT $NP $BIN_DIR/$opfile "  &> $EXEC_OUT_DIR/$opfile.exec  && echo 1||echo -1`
+                EXEC_OUT=` perl $ROOT/../../support/timedexec.pl $TIMEOUT "$LAUNCHER $BIN_DIR/$opfile $EXEC_OPTIONS  "  &> $EXEC_OUT_DIR/$opfile.exec  && echo 1||echo -1`
 
                 if [ "$EXEC_OUT" == "-1" ]; then                         #runtime error
                     EXEC_STATUS="RUNTIME ERROR"

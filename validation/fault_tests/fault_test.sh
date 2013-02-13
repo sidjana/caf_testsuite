@@ -11,7 +11,7 @@ if [ "$?" == "0" ]; then
 		printf '%-15s\t' "PASS"  | tee -a $3
 		for i in {1..$NITER}
 		do
-			perl ../timedexec.pl $TIMEOUT $LAUNCHER  $1 $EXEC_OPTIONS &> $EXEC_OUTPUT/$2.out
+			perl ../support/timedexec.pl $TIMEOUT $LAUNCHER  $1 $EXEC_OPTIONS &> $EXEC_OUTPUT/$2.out
 			if [ "$?" != "0" ]; then
 				exec_out="1"
 				break
