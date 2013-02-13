@@ -2,13 +2,14 @@ SHELL=/bin/sh
 CLASS=U
 NPROCS=1
 SFILE=config/suite.def
+COMPILER?=uhcaf
 
 default: header
 	@ sys/print_instructions
 
 BT: bt
 bt: header
-	cd BT; $(MAKE) NPROCS=$(NPROCS) CLASS=$(CLASS) SUBTYPE=$(SUBTYPE)
+	cd BT; $(MAKE) NPROCS=$(NPROCS) CLASS=$(CLASS) SUBTYPE=$(SUBTYPE) 
 
 SP: sp
 sp: header
@@ -57,8 +58,8 @@ clean:
 	- rm -f sys/setparams sys/makesuite sys/setparams.h
 	- rm -f btio.*.out*
 	- rm -f */*.mod
-
-veryclean: clean
+	
+veryclean:
 	- rm -f config/suite.def
 	- rm -f bin/sp.* bin/lu.* bin/mg.* bin/ft.* bin/bt.* bin/is.*
 	- rm -f bin/ep.* bin/cg.* bin/dt.*
