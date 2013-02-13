@@ -31,7 +31,7 @@ mkdir -p $COMP_OUT_DIR $EXEC_OUT_DIR  $HISTORY_OUT_DIR $BIN_DIR $LOG_DIR
 printf '%8s %8s %8s %15s %15s %10s %15s \n' "<NAME>" "<CLASS>" "<NPROCS>" "<COMPILATION>" "<EXECUTION>" "<RESULT>" "<TIME(secs)>" | tee -a $LOG_DIR/$logfile  
 
 cp ./config/make.def.$compiler ./config/make.def
-for BM in cg sp bt 
+for BM in ep cg sp bt 
 do
 	for CLASS in S A B C
 	do
