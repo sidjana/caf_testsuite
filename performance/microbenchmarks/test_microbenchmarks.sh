@@ -23,7 +23,7 @@ mkdir -p $COMP_OUT_DIR $EXEC_OUT_DIR  $HISTORY_OUT_DIR $BIN_DIR $LOG_DIR
 cd $TESTS_DIR
 $CC -c rtc.c -o rtc.o -D$TIMER_ARCH 
 
-printf '%20s %5s %20s %20s\n' "<NAME>" "<NPROCS>" "<COMPILATION>" "<EXECUTION>" 
+printf '%20s %5s %20s %20s\n' "<NAME>" "<NPROCS>" "<COMPILATION>" "<EXECUTION>"  | tee -a $LOG_DIR/$logfile
 
 for file in `ls *.f90`; do
     for NP  in  2 4 8
@@ -31,7 +31,7 @@ for file in `ls *.f90`; do
        type=`echo $file | awk -F"/" '{print $NF}'`
        opfile=$type.$NP
        logfile=$DATE.log
-       printf '%20s %5s ' "$type" "$NP" 
+       printf '%20s %5s ' "$type" "$NP"  | tee -a $LOG_DIR/$logfile
        if [ "$COMPILE_TESTS" == "1" -o "$BOTH"=="1" ]; then
         COMPILE_OUT=`$COMPILE_CMD  $type rtc.o -o $BIN_DIR/$opfile -ftpp -DNITER=$NITER >>$COMP_OUT_DIR/$opfile.compile 2>&1 && echo 1 || echo -1`
         if [ "$COMPILE_OUT" -eq "1" ]; then
@@ -40,7 +40,7 @@ for file in `ls *.f90`; do
           COMPILE_STATUS="FAIL"
         fi
        fi
-       printf '%20s ' "$COMPILE_STATUS"
+       printf '%20s ' "$COMPILE_STATUS"  | tee -a $LOG_DIR/$logfile
        if [ "$EXECUTE_TESTS" -eq "1" -o "$BOTH" -eq "1" ]; then           #execution enabled
              if [ -f  $BIN_DIR/$opfile ]; then  #compilation passed
                 EXEC_OUT=` perl $ROOT/../../support/timedexec.pl $TIMEOUT "$EXEC_CMD $NPOPT $NP $BIN_DIR/$opfile "  &> $EXEC_OUT_DIR/$opfile.exec  && echo 1||echo -1`

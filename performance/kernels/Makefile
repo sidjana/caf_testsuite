@@ -1,6 +1,6 @@
 
 help default: ./test_kernels.sh
-	@echo "Usage: make [ compile | execute | complete/all ]"
+	@echo "Usage: make [ compile | execute | complete/all  | veryclean]"
 
 compile: ./test_kernels.sh
 	@./test_kernels.sh compile

@@ -47,10 +47,8 @@ do
   		     	 	COMPILE_OUT=`make $BM NPROCS=$NP CLASS=$CLASS >>$COMP_OUT_DIR/$opfile.compile 2>&1 && echo 1 || echo -1`
   		     	 	if [ "$COMPILE_OUT" == "1" ]; then
   		     	 		 COMPILE_STATUS="PASS"
-  		     	 	 	 PASSED_COMPILE_COUNT=$(($PASSED_COMPILE_COUNT+1))
   		     	 	else
   		     	 	  	 COMPILE_STATUS="FAIL"
-  		     	 	  	 FAILED_COMPILE_COUNT=$(($FAILED_COMPILE_COUNT+1))
   		     	 	fi
   		     	fi
 			printf '%15s ' "$COMPILE_STATUS"
@@ -61,8 +59,10 @@ do
   		     	         EXEC_OUT=` perl $ROOT/../../support/timedexec.pl $TIMEOUT "$EXEC_CMD -np $NP $BIN_DIR/$opfile " &> $EXEC_OUT_DIR/$opfile.exec && echo 1||echo -1`
   		     	         if [ "$EXEC_OUT" == "-1" ]; then                         #runtime error
   		     	             EXEC_STATUS="RUNTIME ERROR"
+				     FAILED_COUNT=$(($FAILED_COUNT+1))
   		     	         else                                                      #execution completed cleanly
 				     EXEC_STATUS="PASS"
+				     PASSED_COUNT=$(($PASSED_COUNT+1))
 				     VERIFICATION=`grep -oh "\w*SUCCESSFUL"  $EXEC_OUT_DIR/$opfile.exec`
   		     	         fi
   		     	     else
@@ -74,8 +74,8 @@ do
 	done
 done
 
-echo "______________________________STATISTICS__________________________________" | tee -a $LOG_DIR/$logfile
-echo "TOTAL PASSED = $PASSED_COMPILE_COUNT TOTAL FAILED = $FAILED_COMPILE_COUNT"  | tee -a $LOG_DIR/$logfile
+echo "______________________________EXECUTION STATISTICS (not compilation)__________________________" | tee -a $LOG_DIR/$logfile
+echo "TOTAL PASSED = $PASSED_COUNT TOTAL FAILED = $FAILED_COUNT"  | tee -a $LOG_DIR/$logfile
 echo "Results of this performance run can be found in: $LOG_DIR/$logfile"
 
 # backing up results to HISTORY folder
