@@ -1,0 +1,19 @@
+The validation suite comes bundled along with the performance test suite. The validation suite is located under: 
+
+VALIDATION\_PATH = /caf\_testsuite/validation/
+
+The installation just requires the setup of a few configuration parameters. These parameters are located in the file \$VALIDATION\_PATH/config/CONFIG . The configuration parameters are enlisted under section \ref{sec:config}.
+
+
+\subsubsection{Configuration params}
+\input{config}
+
+
+\subsubsection{Running the tests}
+For running the tests:
+\begin{enumerate}
+\item cd \$VALIDATION\_PATH
+\item make [all | feature | non-conformance | confidence | fault | few-tests | help ]
+\end{enumerate}
+
+

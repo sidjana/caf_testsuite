@@ -3,9 +3,9 @@ ALL_FILES = $(wildcard *.tex)  $(wildcard *.bib)  $(wildcard */*.png)
 MAIN = main
 TARGET = $(MAIN).pdf
 
-.PHONY: all tidy    clean
+.PHONY: all tidy clean
 
-all: $(TARGET)
+all: clean $(TARGET)
 
 $(TARGET):  $(ALL_FILES)
 	pdflatex $(MAIN)

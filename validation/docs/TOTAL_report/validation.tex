@@ -1,56 +1,56 @@
-\section{CAF Validation suite}
-This test suite can be used to evaluate a CAF compiler
-implementation to determine the extent to which it supports the
+This section outlines the different categories of tests within the suite 
+that can be used to evaluate a CAF compiler
+implementation. The primary gaol is to determine the extent to which it supports the
 coaray-features of the Fortran 2008 standard in accordance with
 ISO/IEC 1539-1:2010 (E)\cite{ftn2008}.
 
 
-\subsection{Test Categories}
+In this report, ROOT = <parent\_directory of the validation suite>.
+
+There are three main categories of tests in the test suite. Each category is located in a different subdirectory within \$ROOT, and all the tests within the same category can be executed using the makefile. 
 
 \subsubsection{Feature Tests}
 
-These tests can be found under \$(VALIDATION\_PATH)~/should\_pass.
-These test the correctness of the basic constructs/semantics
-of the Coarray FORTRAN. The tests mainly focus on the
-verification of the correctness of contiguous and strided remote
-read/write operations, the coarray syntax, the use of strided
-co-subscript notation, coarrays of different data types and
+These tests can be found under \$ROOT/feature\_tests. The tests under this category verify the support and correctness of the implementations of the basic constructs/semantics of CAF. The tests concentrate on the verification of the correctness of contiguous and strided remote read/write operations, the coarray syntax, the use of strided co-subscript notation, coarrays of different data types and
 image-query intrinsics.
 
 
-\subsection{Confidence Tests}
-These tests can be found under
-\$(VALIDATION\_PATH)~/confidence\_tests. All tests in this
-category verify CAF constructs whose primary purpose is to
-maintain consistency among images. Such constructs aid in
-avoiding race conditions. The tests include computation
-intensive loops or calls to the sleep() intrinsic for
-intentionally introducing delays in progress of certain images.
-This enforces an increase in the likelihood of races in case of
-incorrect implementations of the constructs being tested.
+\subsubsection{Confidence Tests}
 
-To determine whether, given certain values of the configuration
-parameters, the tests are capable of correctly evaluating the
-configuration parameters or not, every tests has a CROSS TEST
-version. Such tests include the exact same code like the
-original version but with certain statement deleted / replaced
-with semantically incorrect sections of code. Most of the time,
-the modifications to the original code is in the form of the
-absence of the CAF statements which are being tested in that
-program. In order to reduce redundant code, we prefer to include
-the CROSS test version and the original version all in one file,
-using conditional `\#ifdef' definition of the macro - CROSS\_ .
+These tests can be found under \$ROOT/confidence\_tests. All tests in this
+category verify CAF constructs that aid in maintaining consistency and synchrnization among images. The tests intentional compute intensive loops and forced CPU - idling (using calls to the sleep() intrinsic) for simulating delays in progress of certain images.
+This enforces an increase in the likelihood of inconsistent states (and races) in case of incorrect implementations of the constructs being tested.
 
-\subsection{Fault Tests}
+Due to the nondetermistic nature of unsynchronized images, configuration parameters(as defined under \$ROOT/config/CONFIG*) can be modified to determine the level of confidence with which a test passes a given test case. This test-category uses \emph{cross}-tests to evaluate the confidence of the test-reports. Such \emph{cross}- tests include the exact same code like the
+original version but with certain statements deleted/replaced to identify the change in behavior of the tests. 
 
-These tests can be found under \$(VALIDATION\_PATH)/fault\_tests.
+
+{\small 
+\emph{Note on code design:} Most of the time,the modifications to the original code are in the form of the absence of the CAF statements which are being tested in that test case. In order to reduce redundant code, we chose to include the \emph{cross}-test version and the original version all in one file, using conditional `\#ifdef's and macros (e.g. CROSS\_) .
+
+\emph{Detecting/Reporting of errors}
+
+\begin{itemize}
+\item Every test includes a module called 'crosstest'.
+\item The module 'crosstest' (defined in file testmofule.f90)
+includes the declaration of an integer scalar coarray called
+'cross\_err' which is modified by image with rank 1 on detecting
+an error. It also contains two subroutines - calc\_ori and calc.
+The former returns the test result when the specific construct
+is being tested. The latter is called by the cross-test version
+and returns the confidence with which the original test passed.
+\end{itemize}
+}
+
+
+\subsubsection{Fault Tests}
+
+These tests can be found under \$ROOT/fault\_tests.
 These test the correctness of the implementation of specifiers
-used for handling normal and error termination. Here's an
-excerpt describing these 2 types [from Page 23, section 13 of
-`` ISO/IEC JTC1/SC22/WG5 N1824 ''\cite{Numrich:2005:CNF}]:
+used for handling normal and error termination. These tests include testing the support of statevariables that flag the execution state of other images. Here's an
+excerpt describing the 2 states of image execution-termination [from Page 23, sec. 13 of ``ISO/IEC JTC1/SC22/WG5 N1824 ''\cite{Numrich:2005:CNF}]:
 
-{\small  It seems natural to allow all images to continue
-executing until they have all executed a stop or end program
+{\small `` ... It seems natural to allow all images to continue executing until they have all executed a stop or end program
 statement, provided
   none of them encounters an error condition that may be
 expected to terminate its execution. This is called normal
@@ -69,8 +69,7 @@ all images have finished the initiation step. The
   synchronization step allows its data to remain accessible to
 the other images until they all reach the synchronization step.
   Normal termination may also be initiated during execution of a
-procedure defined by a C companion processor.
-}
+procedure defined by a C companion processor[a.k.a. C compiler]
 
 An image initiates error termination if it executes a
 statement that
@@ -80,184 +79,11 @@ not a stop or end program statement. This causes all other
 initiate error termination. Within the performance limits of
   the processor.s ability to send signals to other images, this
 propagation of error termination should be immediate. The
-  exact details are intentionally left processor dependent.
+  exact details are intentionally left processor dependent.... ''
+}
 
-
-\subsection{Detecting / Reporting of errors}
-
-\begin{itemize}
-\item Every test includes a module called 'crosstest'.
-\item The module 'crosstest' (defined in file testmofule.f90)
-includes the declaration of an integer scalar coarray called
-'cross\_err' which is modified by image with rank 1 on detecting
-an error. It also contains two subroutines - calc\_ori and calc.
-The former returns the test result when the specific construct
-is being tested. The latter is called by the cross-test version
-and returns the confidence with which the original test passed.
-\end{itemize}
-
-\subsection{Specific Tests}
+\subsubsection{Specific Tests}
 If the user wants to evaluate a CAF implementation in terms of
 the support to specific types of tests, the names of the tests
-can be specified in the file ``test\_file in the directory''
-validation\textbackslash~few\_tests.
-
-The results of the tests listed in latest\_results.log are all
-subdivided into the corresponding categories.
-
-
-\subsection{List of tests}
-
-The different types of tests are listed in 
-Tables~\ref{tab:feature_files}~\ref{tab:confidence_files}~\ref{tab:fault_files}:
-
-\begin{table}[h]
-\small
-\caption{Feature Test files in the UH - CAF Validation Tests suite}
-\label{tab:feature_files}
-\begin{tabular}{|l|p{8cm}|}
-\hline
-File & Description \\ \hline
-character\_test.f90 &   CHARACTER coarrays\\ \hline
-coarray\_2.4.7.6.f90 &   similar translation of co-subscripts and subscripts\\ \hline
-coarray\_4.8.R468.f90 &  reference of coarray without [ ] implies local object\\ \hline
-coarray\_5.3.6.1.f90 &   attribute CODIMENSION + remote accesses at single integer/real boundary\\ \hline
-dummyargs\_12.3.2.2c.f90 &   explicit shape, assumed size, assumed shape, allocatable dummy args\\ \hline
-intrin\_13.7.126.f90 &   NUM\_IMAGES() returns the number of images launched\\ \hline
-intrin\_13.7.165.f90 &   THIS\_IMAGE(), THIS\_IMAGE(coarray), THIS\_IMAGE(coarray, dim)\\ \hline
-intrin\_13.7.172.f90 &   LCOBOUND(coarray) and LCOBOUND(coarray,dim)\\ \hline
-intrin\_13.7.79.f90 &   IMAGE\_INDEX(coarray, subs)\\ \hline
-intrin\_13.7.91.f90 &   UCOBOUND(COARRAY[, DIM, KIND])\\ \hline
-intrin\_6.7.3.2.11.f90 &   ALLOCATE and DEALLOCATE act as barriers\\ \hline
-item\_4.8.a.f90 &   Subobjects of a coarray is also a coarray\\ \hline
-pointer\_4.5.4.6b.f90 &   association of pointer components of coarrays with local objects\\ \hline
-intrin\_8.5.7d.f90 &  STOP and LOCK construct with STAT=STAT\_LOCKED specifier\\ \hline
-intrin\_8.5.7e.f90 &  STOP and LOCK construct with STAT=STAT\_LOCKED\_OTHER\_IMAGE specifier\\ \hline
-intrin\_8.5.7f.f90 &  STOP and LOCK construct with STAT=STAT\_UNLOCKED specifier\\ \hline
-derived\_4.5.4.f90 &  (non-)coarray COMPONENTS of (non-)coarray derived types\\ \hline
-\end{tabular}
-\end{table}
-
-
-\begin{table}[h]
-\small
-\caption{Confidence Test files in the UH - CAF Validation Tests suite}
-\label{tab:confidence_files}
-\begin{tabular}{|l|p{8cm}|}
-\hline
-File & Description \\ \hline
-atomic\_8.5.2.f90 & Atomic subroutines\\ \hline
-critical\_8.1.5.f90 & CRITICAL - END CRITICAL sections\\ \hline
-intrin\_8.5.6.f90  & LOCK \& UNLOCK without STAT specifier\\ \hline
-sync\_8.5.3.f90  & SYNC ALL without STAT specifier\\ \hline
-sync\_8.5.4a.f90 & SYNC IMAGES(arr) paired with SYNC IMAGES(*)\\ \hline
-sync\_8.5.4b.f90 & call to SYNC IMAGES(arr), should not behave like SYNC ALL\\ \hline
-\hline
-\end{tabular}
-\end{table}
-
-\begin{table}[h]
-\small
-\caption{Fault (tolerance) Test files in the UH - CAF Validation Tests suite}
-\label{tab:fault_files}
-\begin{tabular}{|l|p{8cm}|}
-\hline
-File & Description \\ \hline
-sync\_8.5.7a.f90 & STOP and SYNC ALL with STAT=STAT\_STOPPED\_IMAGE specifier\\ \hline
-sync\_8.5.7b.f90 & STOP and SYNC IMAGES(arr) with STAT=STAT\_STOPPED\_IMAGE specifier\\ \hline
-sync\_8.5.7c.f90 &  STOP and SYNC IMAGES(*) with STAT=STAT\_STOPPED\_IMAGE specifier\\ \hline
-\end{tabular}
-\end{table}
-
-\subsection{Configuration Parameters}
-Table~\ref{tab:params} lists the different options that need to be
-set for the test-suite. These options can be initialized in the
-CONFIG file in the ``config'' directory. The make.def version of
-this file is auto-generated by running the script
-config2makedef.sh in the same directory.
-
-\begin{table}[tbh!]
-\small
-\caption{List of configuration parameters. Here \emph{test\_type}= CONF or FEATURE or FEW or FAULT }
-\label{tab:params}
-\begin{tabular}{|c|p{6cm}|p{2cm}|}
-\hline
-Parameter & Description &   Compiler specific(y/n)  \\ \hline
-BIN\_PATH   & The path to dump all the executables.  &  NO \\\hline
-NPROCS &  Number of images to launch  & NO \\\hline
-NITER &  Number of times the test is repeated & NO \\\hline
-SLEEP &  This is used to intentionally slow down certain images to cause race conditions while testing certain constructs & NO \\\hline
-TIMEOUT & This parameter is passed to the perl script call timedexec.pl which ends processes which exceed the given execution time. This is helpful for backing out while executing tests which deadlock due to incorrect implementation &  NO \\\hline
-COMPILER &  compiler name  &  YES \\\hline
-FC &  command to invoke the compiler &  YES \\\hline
-FFLAGS &  Flags passed to the compiler. The necessary flags include the options to enable the macro preprocessor and define the macros - NPROCS, NITER and SLEEP. &  YES \\\hline
-LAUNCHER &  command to launch multiple images  & YES \\\hline
-EXEC\_OPTIONS &   Flags passed to the launcher after the executable name. Not so common.  & YES \\\hline
-FFLAGS\_CROSS &  Flags passed to the compiler while executing the cross tests. Generally the value include all the options listed for FFLAGS, plus the flag to define the CROSS\_ macro in the tests.  & YES \\\hline
-\emph{test\_type}\_COMPILE\_PATH &  Path to dump the messages generated by the compiler.&  NO \\\hline
-\emph{test\_type}\_EXEC\_PATH &  Path to dump the output of the executables / the messages generated by the compiler or runtime.&  NO \\\hline
-\emph{test\_type}\_LOG\_PATH &  Path to dump the output of the test results.& NO \\\hline
-\end{tabular}
-\end{table}
-
-\subsection{APPENDIX}
-
-Tables~\ref{tab:feature}~\ref{tab:confidence}~\ref{tab:fault} list the extent of support of coarrays in different CAF compiler implementations as detected by the UH CAF validation test suite:
-
-\begin{table}[tbh!]
-\small
-\caption{Results of Feature tests}
-\label{tab:feature}
-\begin{tabular}{|p{7cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
-\hline
-DESCRIPTION  & OpenUH & Intel & G95 & Cray\\\hline
-CHARACTER coarrays & YES & YES & YES & YES\\\hline
-similar translation of co-subscripts and subscripts & YES & YES & YES & YES\\\hline
-reference of coarray without [ ] implies local object & YES & YES & YES & YES\\\hline
-attribute CODIMENSION + remote accesses at single integer/real boundary & YES & Exec times out & Exec fails & YES\\\hline
-(non-)coarray COMPONENTS of (non-)coarray derived types & YES & YES & YES & YES\\\hline
-explicit shape, assumed size, assumed shape, allocatable dummy arguments & YES & YES & comp fails& YES\\\hline
-NUM\_IMAGES() returns the number of images launched & YES & YES & YES & YES\\\hline
-THIS\_IMAGE(), THIS\_IMAGE(coarray), THIS\_IMAGE(coarray, dim) & YES & YES & YES &YES\\\hline
-LCOBOUND(coarray) and LCOBOUND(coarray,dim) & YES & YES & YES & YES\\\hline
-IMAGE\_INDEX(coarray, subs) & YES & YES & YES & YES\\\hline
-UCOBOUND(COARRAY[, DIM, KIND]) & YES & YES & YES& YES\\\hline
-ALLOCATE and DEALLOCATE act as barriers & YES & YES & YES & YES\\\hline
-STOP and LOCK construct with STAT=STAT\_LOCKED specifier & YES & YES & comp fails & Exec fails\\\hline
-STOP and LOCK construct with STAT=STAT\_LOCKED\_OTHER\_IMAGE specifier & Exec times out & Exec times out & comp fails & Exec times out\\\hline
-STOP and LOCK construct with STAT=STAT\_UNLOCKED specifier & YES & Exec times out & comp fails& Exec fails\\\hline
-subobjects if a coarray is also a coarray & YES & YES & YES& YES\\\hline
-association of pointer components of coarrays with local objects & YES & Exec times out & YES & YES\\\hline
-\end{tabular}
-\end{table}
-
-\begin{table}[tbh!]
-\small
-\caption{Results of Confidence tests}
-\label{tab:confidence}
-\begin{tabular}{|p{6cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
-\hline
-DESCRIPTION  & OpenUH & Intel & G95 & Cray\\\hline
-Atomic subroutines & Passes with 0\% confidence & Fails comp & comp fails & Passes with 4\% confidence\\\hline
-CRITICAL - END CRITICAL sections & YES & Passes with 0\% confidence & YES& Exec fails\\\hline
-LOCK \& UNLOCK without STAT specifier & YES & Fails comp & comp fails & YES\\\hline
-SYNC ALL without STAT specifier & YES & Passes with 0\% confidence & YES & YES\\\hline
-SYNC IMAGES(arr) paired with SYNC IMAGES(*) & YES & Exec fails& YES & YES\\\hline
-call to SYNC IMAGES(arr), should not behave like SYNC ALL & YES & Exec fails & YES & YES\\\hline
-\end{tabular}
-\end{table}
-
-
-\begin{table}[tbh!]
-\small
-\caption{Results of Fault tests}
-\label{tab:fault}
-\begin{tabular}{|p{6cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
-\hline
-DESCRIPTION  & OpenUH & Intel & G95 & Cray\\\hline
-STOP and SYNC ALL with STAT=STAT\_STOPPED\_IMAGE specifier & YES & Exec fails & Exec fails & Exec fails\\\hline
-STOP and SYNC IMAGES(arr) with STAT=STAT\_STOPPED\_IMAGE specifier & YES & YES & Exec fails & YES\\\hline
-STOP and SYNC IMAGES(*) with STAT=STAT\_STOPPED\_IMAGE specifier & YES & Exec fails & Exec fails & YES\\\hline
-\end{tabular}
-\end{table}
+can be specified in the file \emph{``test\_file''} in the directory -\$ROOT/few\_tests.
 

@@ -1,0 +1,59 @@
+Tables~\ref{tab:feature}~\ref{tab:confidence}~\ref{tab:fault} list the extent of support of coarrays in different CAF compiler implementations as detected by the UH CAF validation test suite:
+
+\begin{table}[tbh!]
+\small
+\caption{Results of Feature tests}
+\label{tab:feature}
+\begin{tabular}{|p{7cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\hline
+DESCRIPTION  & OpenUH & Intel & G95 & Cray\\\hline
+CHARACTER coarrays & YES & YES & YES & YES\\\hline
+similar translation of co-subscripts and subscripts & YES & YES & YES & YES\\\hline
+reference of coarray without [ ] implies local object & YES & YES & YES & YES\\\hline
+attribute CODIMENSION + remote accesses at single integer/real boundary & YES & Exec times out & Exec fails & YES\\\hline
+(non-)coarray COMPONENTS of (non-)coarray derived types & YES & YES & YES & YES\\\hline
+explicit shape, assumed size, assumed shape, allocatable dummy arguments & YES & YES & comp fails& YES\\\hline
+NUM\_IMAGES() returns the number of images launched & YES & YES & YES & YES\\\hline
+THIS\_IMAGE(), THIS\_IMAGE(coarray), THIS\_IMAGE(coarray, dim) & YES & YES & YES &YES\\\hline
+LCOBOUND(coarray) and LCOBOUND(coarray,dim) & YES & YES & YES & YES\\\hline
+IMAGE\_INDEX(coarray, subs) & YES & YES & YES & YES\\\hline
+UCOBOUND(COARRAY[, DIM, KIND]) & YES & YES & YES& YES\\\hline
+ALLOCATE and DEALLOCATE act as barriers & YES & YES & YES & YES\\\hline
+STOP and LOCK construct with STAT=STAT\_LOCKED specifier & YES & YES & comp fails & Exec fails\\\hline
+STOP and LOCK construct with STAT=STAT\_LOCKED\_OTHER\_IMAGE specifier & Exec times out & Exec times out & comp fails & Exec times out\\\hline
+STOP and LOCK construct with STAT=STAT\_UNLOCKED specifier & YES & Exec times out & comp fails& Exec fails\\\hline
+subobjects if a coarray is also a coarray & YES & YES & YES& YES\\\hline
+association of pointer components of coarrays with local objects & YES & Exec times out & YES & YES\\\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[tbh!]
+\small
+\caption{Results of Confidence tests}
+\label{tab:confidence}
+\begin{tabular}{|p{6cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+\hline
+DESCRIPTION  & OpenUH & Intel & G95 & Cray\\\hline
+Atomic subroutines & Passes with 0\% confidence & Fails comp & comp fails & Passes with 4\% confidence\\\hline
+CRITICAL - END CRITICAL sections & YES & Passes with 0\% confidence & YES& Exec fails\\\hline
+LOCK \& UNLOCK without STAT specifier & YES & Fails comp & comp fails & YES\\\hline
+SYNC ALL without STAT specifier & YES & Passes with 0\% confidence & YES & YES\\\hline
+SYNC IMAGES(arr) paired with SYNC IMAGES(*) & YES & Exec fails& YES & YES\\\hline
+call to SYNC IMAGES(arr), should not behave like SYNC ALL & YES & Exec fails & YES & YES\\\hline
+\end{tabular}
+\end{table}
+
+
+\begin{table}[tbh!]
+\small
+\caption{Results of Fault tests}
+\label{tab:fault}
+\begin{tabular}{|p{6cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+\hline
+DESCRIPTION  & OpenUH & Intel & G95 & Cray\\\hline
+STOP and SYNC ALL with STAT=STAT\_STOPPED\_IMAGE specifier & YES & Exec fails & Exec fails & Exec fails\\\hline
+STOP and SYNC IMAGES(arr) with STAT=STAT\_STOPPED\_IMAGE specifier & YES & YES & Exec fails & YES\\\hline
+STOP and SYNC IMAGES(*) with STAT=STAT\_STOPPED\_IMAGE specifier & YES & Exec fails & Exec fails & YES\\\hline
+\end{tabular}
+\end{table}
+

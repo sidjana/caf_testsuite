@@ -1,0 +1,61 @@
+The different types of tests are listed in 
+Tables~\ref{tab:feature_files}~\ref{tab:confidence_files}~\ref{tab:fault_files}:
+
+\begin{table}[h]
+\small
+\caption{Feature Test files in the UH - CAF Validation Tests suite}
+\label{tab:feature_files}
+\begin{tabular}{|l|p{8cm}|}
+\hline
+File & Description \\ \hline
+character\_test.f90 &   CHARACTER coarrays\\ \hline
+coarray\_2.4.7.6.f90 &   similar translation of co-subscripts and subscripts\\ \hline
+coarray\_4.8.R468.f90 &  reference of coarray without [ ] implies local object\\ \hline
+coarray\_5.3.6.1.f90 &   attribute CODIMENSION + remote accesses at single integer/real boundary\\ \hline
+dummyargs\_12.3.2.2c.f90 &   explicit shape, assumed size, assumed shape, allocatable dummy args\\ \hline
+intrin\_13.7.126.f90 &   NUM\_IMAGES() returns the number of images launched\\ \hline
+intrin\_13.7.165.f90 &   THIS\_IMAGE(), THIS\_IMAGE(coarray), THIS\_IMAGE(coarray, dim)\\ \hline
+intrin\_13.7.172.f90 &   LCOBOUND(coarray) and LCOBOUND(coarray,dim)\\ \hline
+intrin\_13.7.79.f90 &   IMAGE\_INDEX(coarray, subs)\\ \hline
+intrin\_13.7.91.f90 &   UCOBOUND(COARRAY[, DIM, KIND])\\ \hline
+intrin\_6.7.3.2.11.f90 &   ALLOCATE and DEALLOCATE act as barriers\\ \hline
+item\_4.8.a.f90 &   Subobjects of a coarray is also a coarray\\ \hline
+pointer\_4.5.4.6b.f90 &   association of pointer components of coarrays with local objects\\ \hline
+intrin\_8.5.7d.f90 &  STOP and LOCK construct with STAT=STAT\_LOCKED specifier\\ \hline
+intrin\_8.5.7e.f90 &  STOP and LOCK construct with STAT=STAT\_LOCKED\_OTHER\_IMAGE specifier\\ \hline
+intrin\_8.5.7f.f90 &  STOP and LOCK construct with STAT=STAT\_UNLOCKED specifier\\ \hline
+derived\_4.5.4.f90 &  (non-)coarray COMPONENTS of (non-)coarray derived types\\ \hline
+\end{tabular}
+\end{table}
+
+
+\begin{table}[h]
+\small
+\caption{Confidence Test files in the UH - CAF Validation Tests suite}
+\label{tab:confidence_files}
+\begin{tabular}{|l|p{8cm}|}
+\hline
+File & Description \\ \hline
+atomic\_8.5.2.f90 & Atomic subroutines\\ \hline
+critical\_8.1.5.f90 & CRITICAL - END CRITICAL sections\\ \hline
+intrin\_8.5.6.f90  & LOCK \& UNLOCK without STAT specifier\\ \hline
+sync\_8.5.3.f90  & SYNC ALL without STAT specifier\\ \hline
+sync\_8.5.4a.f90 & SYNC IMAGES(arr) paired with SYNC IMAGES(*)\\ \hline
+sync\_8.5.4b.f90 & call to SYNC IMAGES(arr), should not behave like SYNC ALL\\ \hline
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\small
+\caption{Fault (tolerance) Test files in the UH - CAF Validation Tests suite}
+\label{tab:fault_files}
+\begin{tabular}{|l|p{8cm}|}
+\hline
+File & Description \\ \hline
+sync\_8.5.7a.f90 & STOP and SYNC ALL with STAT=STAT\_STOPPED\_IMAGE specifier\\ \hline
+sync\_8.5.7b.f90 & STOP and SYNC IMAGES(arr) with STAT=STAT\_STOPPED\_IMAGE specifier\\ \hline
+sync\_8.5.7c.f90 &  STOP and SYNC IMAGES(*) with STAT=STAT\_STOPPED\_IMAGE specifier\\ \hline
+\end{tabular}
+\end{table}
+

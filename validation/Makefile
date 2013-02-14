@@ -1,8 +1,8 @@
 
 .PHONY: all feature non-conformance confidence few-tests help
 
-TEMP_1:=$(shell ./config/config2makedef.sh)
-include ./config/make.def
+TEMP_1:=$(shell ./config/config2makedef.sh)  # generate make.def from CONFIG
+include ./config/make.def   # auto-generated
 
 help : 
 	@echo "For testing: $(MAKE) [all | feature | non-conformance | confidence | fault | few-tests | help ] "

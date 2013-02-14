@@ -1,4 +1,4 @@
-include ../config/make.def
+include ../config/make.def    #auto-generated
 
 DATE:=$(shell echo "`date +"%m-%d-%y-%T"`")
 LOG_NAME:=$(DATE).log
