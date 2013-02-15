@@ -53,10 +53,5 @@ clean-history:
 	   @rm -rf ./HISTORY/*.log
 
 
-clean-all:  clean-output clean-exec clean-history
+clean:  clean-output clean-exec clean-history
 	   @rm -rf uhcaf.keep ./*.log ./*.o ./*.f90  $(SCRIPTS) description
-
-
-clean:
-	   @printf '%s\n%s\n' "Usage:" "$ $(MAKE) clean-<output | exec | history | all>"
-

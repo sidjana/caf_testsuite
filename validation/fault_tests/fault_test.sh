@@ -1,6 +1,10 @@
 #!/bin/bash
 
-source ../config/CONFIG
+config_file="../config/CONFIG"
+if [ ! -f $config_file ]; then
+    config_file="../config/CONFIG.sample"
+fi
+source $config_file
 EXEC_OUTPUT="${FAULT_EXEC_PATH}"
 COMPILE_OUTPUT="${FAULT_COMPILE_PATH}"
 
