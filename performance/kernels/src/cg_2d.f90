@@ -479,7 +479,8 @@
 !            close(1)
 !        end if 
 
-      stop
+! 'stop' in the next stmt has been commented since G95 does not exit images cleanly.
+      !stop
       
       contains
       !===================================================================
@@ -517,7 +518,7 @@
             write(6,*) 'Error ! Standard FD stencil : invalid order.'
             write(6,*) 'Notice that 2 <= order <= 14.'
             call flush(6)
-            stop
+            error stop
       end select
       return
       end subroutine second_derivative_coef

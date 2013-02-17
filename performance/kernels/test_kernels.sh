@@ -18,7 +18,7 @@ if [ $# == 2 ]; then
 else
   echo "USAGE: test_kernels.sh [mode] [compiler] where "
   echo "           mode     = compile|execute|complete"
-  echo "           compiler = uhcaf|ifort|g95"
+  echo "           compiler = uhcaf(default)|ifort|g95"
 
   exit 1
 fi

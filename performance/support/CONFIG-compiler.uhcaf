@@ -4,7 +4,7 @@
 #OpenUH CAF Compiler
 COMPILER="OpenUH"
 FC="uhcaf"
-FFLAGS="-ftpp -DNPROCS=${NPROCS}"
+FFLAGS="-ftpp -DNPROCS=${NPROCS} -DNITER=${NITER} "
 LAUNCHER="cafrun -n ${NPROCS} --image-heap=1G"
 EXEC_OPTIONS=""
 FFLAGS_CROSS=" $FFLAGS "

@@ -4,7 +4,7 @@ NPB_PATH=./npb
 COMPILER?=uhcaf
 
 help default:
-	@printf '%10s\n' " For CAF-performance test suite:"
+	@printf '\n%10s\n' " UH - CAF-performance test suite:"
 	@printf '\n%10s\n' " Usage: $(MAKE) [OPTIONS] [COMPILER=uhcaf|ifort|g95]"
 	@printf '%10s\n' " OPTIONS include:"
 	@printf '%-20s%-90s\n' " |_ compile_<suite>:" "compiles and generates logs for the codes"
@@ -12,9 +12,9 @@ help default:
 	@printf '%-20s%-90s\n' " |_ complete_<suite>:" "executes and generates logs for the codes"
 	@printf '%-20s%-90s\n' " |_ clean_<suite>:" "cleans up the logs, executables and all previous history of the regression runs"
 	@printf '%-20s%-90s\n' " |_ <suite>:" "[kernels | microbenchmarks | npb | all]"
-	@printf '%-20s%-90s\n\n' " |_ help:" " displays this message"
+	@printf '%-20s%-90s\n' " |_ help:" " displays this message"
 	@printf '%-20s%-90s\n\n' " |_ cleanall:" " Cleans up the entire performance test suite"
-	@printf '%-20s\n' "Note:  COMPILER set to uhcaf by default"
+	@printf '%-20s\n\n' "( Note:  COMPILER set to uhcaf by default )"
 
 
 compile_performance: compile_performance run_performance

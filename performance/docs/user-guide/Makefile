@@ -1,4 +1,4 @@
-ALL_FILES = $(wildcard *.tex)  $(wildcard *.bib)  $(wildcard */*.png)
+ALL_FILES = $(wildcard *.tex)  $(wildcard *.bib)  $(wildcard */*.png) $(wildcard */*.jpg)
 
 MAIN = main
 TARGET = $(MAIN).pdf
@@ -7,9 +7,16 @@ TARGET = $(MAIN).pdf
 
 all: clean $(TARGET)
 
+#$(TARGET):  $(ALL_FILES)
+#	pdflatex $(MAIN)
+#	bibtex $(MAIN)
+#	pdflatex $(MAIN)
+#	pdflatex $(MAIN)
+#	make tidy
+
+
 $(TARGET):  $(ALL_FILES)
 	pdflatex $(MAIN)
-	bibtex $(MAIN)
 	pdflatex $(MAIN)
 	pdflatex $(MAIN)
 	make tidy

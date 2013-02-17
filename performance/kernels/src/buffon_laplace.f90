@@ -170,7 +170,6 @@ implicit none
 
   !call MPI_Finalize ( ierr )
 
-  stop
 end
 function buffon_laplace_simulate ( a, b, l, trial_num )
 

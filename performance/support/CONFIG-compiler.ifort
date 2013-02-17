@@ -4,7 +4,7 @@
 ##Intel CAF Compiler
 COMPILER="Intel"
 FC="ifort"
-FFLAGS="-coarray -coarray-num-images=4 -fpp -DNPROCS=${NPROCS} "
+FFLAGS="-coarray -coarray-num-images=4 -fpp -DNPROCS=${NPROCS}  -DNITER=${NITER}"
 LAUNCHER=""
 EXEC_OPTIONS=""
 FFLAGS_CROSS=" $FFLAGS "

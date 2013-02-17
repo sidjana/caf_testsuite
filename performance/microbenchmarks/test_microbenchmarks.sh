@@ -43,7 +43,7 @@ for file in `ls *.f90`; do
        logfile=$DATE.log
        printf '%20s %5s ' "$type" "$NP"  | tee -a $LOG_DIR/$logfile
        if [ "$COMPILE_TESTS" == "1" -o "$BOTH"=="1" ]; then
-        COMPILE_OUT=`$COMPILE_CMD  $type rtc.o -o $BIN_DIR/$opfile -ftpp -DNITER=$NITER >>$COMP_OUT_DIR/$opfile.compile 2>&1 && echo 1 || echo -1`
+        COMPILE_OUT=`$COMPILE_CMD  $type rtc.o -o $BIN_DIR/$opfile >>$COMP_OUT_DIR/$opfile.compile 2>&1 && echo 1 || echo -1`
         if [ "$COMPILE_OUT" -eq "1" ]; then
           COMPILE_STATUS="PASS"
         else

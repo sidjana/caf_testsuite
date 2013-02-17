@@ -39,13 +39,13 @@ validation:
 	@cd $(VALID_PATH); $(MAKE) -s $(TEST) 
 
 
-clean: performance-clean validation-clean
+clean cleanall: performance-clean validation-clean
 
 
 performance-clean:
-	@cd $(PERFORMANCE_PATH); $(MAKE) -s clean-all
+	@cd $(PERFORMANCE_PATH); $(MAKE) -s cleanall
 
 
 validation-clean:
-	@cd $(VALID_PATH); $(MAKE) -s clean-all
+	@cd $(VALID_PATH); $(MAKE) -s cleanall
 

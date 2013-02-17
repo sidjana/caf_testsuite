@@ -113,7 +113,7 @@
 
         if (image_count/=num_images()) then
           print *,"Number of Images must be ",image_count
-          stop
+	  stop 
         end if
 
         print *, "labels(100:200, 10) = ", labels(100:200,10)

@@ -16,7 +16,7 @@ complete all: ./test_kernels.sh
 
 
 clean:
-	@rm -rf  bin
+	@rm -rf  bin ${TESTS_DIR}/*.mod 
 
 cleanall: clean
 	@rm -rf log regression_op
