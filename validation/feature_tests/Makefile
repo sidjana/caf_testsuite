@@ -1,3 +1,4 @@
+TEMP_1:=$(shell ../config/config2makedef.sh)  # generate make.def from CONFIG
 include ../config/make.def #auto-generated
 
 DATE:=$(shell echo "`date +"%m-%d-%y-%T"`")
@@ -13,7 +14,7 @@ EXES    = $(F_EXES)
 total_cnt:=0
 
 
-all:   clean-output header $(EXES) tail
+all:   clean_output header $(EXES) tail
 	   @cp $(LOGFILE) ./HISTORY/
 	   @mv $(LOGFILE) latest_results.log
 
@@ -41,22 +42,22 @@ tail:
 	   $(eval total_cnt=$(shell echo $(total_cnt)\+1 | bc))
 
 
-clean-output:
+clean_output:
 	    @rm -rf compile_output/*.out exec_output/*.out
 
 
-clean-exec:
+clean_exec:
 	    @rm  -rf  $(BIN_PATH)/*.x   ./*.mod
 
 
-clean-history:
+clean_history:
 	    @rm -rf ./HISTORY/*.log 
 
 
-clean-all:  clean-output clean-exec clean-history
+cleanall:  clean_output clean_exec clean_history
 	    @rm -rf uhcaf.keep ./*.log ./*.mod
 
 
 clean:
-	@printf '%s\n%s\n' "Usage:" "$ $(MAKE) -s clean-<output | exec | history | all>"
+	@printf '%s\n%s\n' "Usage:" "$ $(MAKE) -s clean<_output | _exec | _history | all>"
 

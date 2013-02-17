@@ -68,7 +68,7 @@ clean_output clean_exec clean_history cleanall:
 	@cd $(CONF_TEST_PATH); $(MAKE) -s $@; cd .. ;
 	@cd $(FEW_TEST_PATH); $(MAKE) -s $@; cd .. ;
 	@cd $(FAULT_TEST_PATH); $(MAKE) -s $@; cd .. ;
-	@if [ "$@" == "clean-all" ];  then \
+	@if [ "$@" == "cleanall" ];  then \
 		rm -rf ./bin/*.* , *.mod; rm -rf ./config/make.def ; \
 	 fi;
 

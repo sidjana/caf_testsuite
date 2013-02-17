@@ -8,24 +8,24 @@ source $config_file
 EXEC_OUTPUT="${CONF_EXEC_PATH}"
 COMPILE_OUTPUT="${CONF_COMPILE_PATH}"
 
-$FC $FFLAGS -o $1 testmodule.o $2 &>$COMPILE_OUTPUT/$2.out
+$FC $FFLAGS -o $BIN_PATH/$1 testmodule.o $2 &>$COMPILE_OUTPUT/$2.out
 ANS="$?"
 if [ "$ANS" == "0" ]; then
    # feature test passed compilation
    printf '%-15s\t' "PASS"  | tee -a $3
 
    #run the feature test
-   perl ../support/timedexec.pl $TIMEOUT $LAUNCHER $1 $EXEC_OPTIONS &>$EXEC_OUTPUT/$2.out
+   perl ../support/timedexec.pl $TIMEOUT $LAUNCHER $BIN_PATH/$1 $EXEC_OPTIONS &>$EXEC_OUTPUT/$2.out
   # check if the feature test passed execution
    if [ "$?" == "0" ]; then
        # feature test passed execution
        printf '%-15s\t' "PASS"  | tee -a $3
 
        # compile the cross test
-       $FC $FFLAGS_CROSS  -o  $1 testmodule.o $2 &>/dev/null
+       $FC $FFLAGS_CROSS  -o  $BIN_PATH/$1.cross testmodule.o $2 &>/dev/null
 
        # run the cross test
-       perl ../support/timedexec.pl $TIMEOUT $LAUNCHER $1 $EXEC_OPTIONS &>./tmp
+       perl ../support/timedexec.pl $TIMEOUT $LAUNCHER $BIN_PATH/$1.cross $EXEC_OPTIONS &>./tmp
        RETURN="$?"
 
        if [ "$FC" == "g95" ]; then 

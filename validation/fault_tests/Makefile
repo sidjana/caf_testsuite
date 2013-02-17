@@ -1,3 +1,4 @@
+TEMP_1:=$(shell ../config/config2makedef.sh)  # generate make.def from CONFIG
 include ../config/make.def    #auto-generated
 
 DATE:=$(shell echo "`date +"%m-%d-%y-%T"`")
@@ -12,7 +13,7 @@ total_cnt:=0
 
 .PHONY: all header
 
-all:   clean-output header   $(EXES)
+all:   clean_output header   $(EXES)
 	   @cp $(LOGFILE) ./HISTORY
 	   @mv $(LOGFILE) ./latest_results.log
 
@@ -40,22 +41,22 @@ $(BIN_PATH):
 	    @mkdir $(BIN_PATH)
 		@echo "making dir"
 
-clean-output:
+clean_output:
 	    @rm -rf compile_output/*.out exec_output/*.out
 
 
-clean-exec:
+clean_exec:
 	    @rm  -rf  $(BIN_PATH)/*.x   ./*.mod
 
 
-clean-history:
+clean_history:
 	    @rm -rf ./HISTORY/*.log
 
 
-clean-all:  clean-output clean-exec clean-history
+cleanall:  clean_output clean_exec clean_history
 	    @rm -rf uhcaf.keep ./*.log 
 
 
 clean:
-	@ printf '%s\n%s\n' "Usage:" "$ $(MAKE) clean-<output | exec | history | all>"
+	@ printf '%s\n%s\n' "Usage:" "$ $(MAKE) clean<_output | _exec | _history | all>"
 

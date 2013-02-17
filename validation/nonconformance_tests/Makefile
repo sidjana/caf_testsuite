@@ -1,3 +1,4 @@
+TEMP_1:=$(shell ../config/config2makedef.sh)  # generate make.def from CONFIG
 include ../config/make.def  # auto-generated
 
 DATE:=$(shell echo "`date +"%m-%d-%y-%T"`")

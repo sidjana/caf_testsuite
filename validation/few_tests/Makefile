@@ -1,3 +1,4 @@
+TEMP_1:=$(shell ../config/config2makedef.sh)  # generate make.def from CONFIG
 include ../config/make.def #auto-generated
 
 
@@ -11,7 +12,7 @@ LOGFILE:=$(FEW_LOG_PATH)/$(LOG_NAME)
 SCRIPTS = confidence_test.sh feature_test.sh fault_test.sh
 
 
-all: clean-output test_file  testmodule.o description $(SCRIPTS) header
+all: clean_output test_file  testmodule.o description $(SCRIPTS) header
 	   @sh few_test.sh  "$(LOGFILE)"
 	   @cp $(LOGFILE) ./HISTORY/
 	   @mv $(LOGFILE) ./latest_results.log
@@ -41,17 +42,17 @@ description:
 	   @cat $(FEATURE_TEST_PATH)/description >>./description
 
 
-clean-output:
+clean_output:
 	   @rm -rf compile_output/*.out exec_output/*.out
 
 
-clean-exec:
+clean_exec:
 	   @rm  -rf  $(BIN_PATH)/*.x   ./*.x  ./*.mod
 
 
-clean-history:
+clean_history:
 	   @rm -rf ./HISTORY/*.log
 
 
-clean:  clean-output clean-exec clean-history
+cleanall:  clean_output clean_exec clean_history
 	   @rm -rf uhcaf.keep ./*.log ./*.o ./*.f90  $(SCRIPTS) description
