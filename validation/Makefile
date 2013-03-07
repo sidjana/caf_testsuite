@@ -1,3 +1,4 @@
+SHELL := /bin/bash
 
 .PHONY: all feature non-conformance confidence few-tests help
 
@@ -60,7 +61,7 @@ few-tests:
 
 
 clean:
-	@ printf '%s\n' " $(MAKE) clean<_output | _exec | _history | _all>"
+	@ printf '%s\n' " $(MAKE) clean_output|clean_exec|clean_history|cleanall>"
 
 
 clean_output clean_exec clean_history clean_all:

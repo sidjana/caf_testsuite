@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+
 TEMP_1:=$(shell ../config/config2makedef.sh)  # generate make.def from CONFIG
 include ../config/make.def #auto-generated
 
@@ -13,7 +15,7 @@ SCRIPTS = confidence_test.sh feature_test.sh fault_test.sh
 
 
 all: clean_output test_file  testmodule.o description $(SCRIPTS) header
-	   @sh few_test.sh  "$(LOGFILE)"
+	   @source few_test.sh  "$(LOGFILE)"
 	   @cp $(LOGFILE) ./HISTORY/
 	   @mv $(LOGFILE) ./latest_results.log
 	   @rm $(SCRIPTS) description
