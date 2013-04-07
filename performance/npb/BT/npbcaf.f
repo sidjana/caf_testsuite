@@ -11,6 +11,7 @@ c      niter_default: default number of iterations for this problem size
 c---------------------------------------------------------------------
 
       include 'npbparams.h'
+      include 'mpif.h'
 
       integer, parameter :: maxcelldim = (problem_size/maxcells)+1,
      >      BUF_SIZE=maxcelldim*maxcelldim*(maxcells-1)*60+1,
@@ -18,6 +19,7 @@ c---------------------------------------------------------------------
 
       integer, allocatable :: team(:), sync_succ(:,:), sync_pred(:,:)
       integer :: node, no_nodes, total_nodes, root
+      integer :: comm_setup, comm_solve, comm_rhs, dp_type
       logical :: active
 
       double precision :: in_buffer(BUF_SIZE)
@@ -26,5 +28,9 @@ c---------------------------------------------------------------------
       double precision :: out_buffer(BUF_SIZE+BUF_SIZZ*3)[*]
       double precision :: sh_rbuf(2)[*]
       integer :: sh_ibuf(9)[*]
+
+
+      common /mpistuff/ node, no_nodes, total_nodes, root, comm_setup,
+     >                  comm_solve, comm_rhs, dp_type, active
 
       end module npbcaf

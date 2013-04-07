@@ -91,7 +91,6 @@ c      double precision sx, sy, tm
       !common/storage/ x(2*nk), q(0:nq-1), qq(10000)
       common/storage/  qq(10000)
       data             dum /1.d0, 1.d0, 1.d0/
-      print *, "hello"
       allocate(sx[0:*]) 
       allocate(sy[0:*])  
       allocate(tm[0:*])
