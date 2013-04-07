@@ -63,8 +63,7 @@ c      include 'mpinpb.h'
      >           0:cell_size(3, c)-1,
      >	         c), 
      >         cell_size(1,c)*cell_size(2,c)*cell_size(3,c)*5*8)
-            print *,"bytes written =", 
-     >      cell_size(1,c)*cell_size(2,c)*cell_size(3,c)*5*8
+
 
        end do
 
@@ -109,7 +108,7 @@ c      include 'mpinpb.h'
      >	         c), 
      >         cell_size(1,c)*cell_size(2,c)*cell_size(3,c)*5*8)
      
-
+	enddo
 
         if (node .eq. root) print *, 'Reading data set ', ii+ichunk
 
@@ -117,7 +116,6 @@ c      include 'mpinpb.h'
         do m = 1, 5
            xce_sub(m) = xce_sub(m) + xce_single(m)
         end do
-      enddo
       enddo
 
       return

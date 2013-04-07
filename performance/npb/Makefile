@@ -1,3 +1,6 @@
+
+TEMP_1:=$(shell mkdir -p ./bin) 
+
 SHELL=/bin/sh
 CLASS=U
 NPROCS=1

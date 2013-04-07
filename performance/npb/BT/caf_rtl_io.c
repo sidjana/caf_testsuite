@@ -1,5 +1,4 @@
 
-//	#include<mpi.h>
 	#include<caf_rtl_io.h>
 	#include<stdio.h>
 	#include<stdlib.h>
@@ -170,7 +169,6 @@
 			if(str[i] != 1)
 			{count++;
 			}
-			//printf("%d, disp:%d,off:%d,ext:%d,cnt:%d\n",i,disp, offset, extent,count);
 			
 			
 			MPI_Type_vector(count, 1, str[i], etype, &vtype);
