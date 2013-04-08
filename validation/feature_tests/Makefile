@@ -38,7 +38,7 @@ tail:
 	   $(eval SPEC_IDX:=$(shell echo "`echo "$^"|sed 's/.f90//'| sed 's/*_//'`"))
 	   $(eval DESCRIPTION:=$(shell echo "`cat description | grep "$^" | sed s/"$^"//`"))
 	   @printf '%-20s\t%-70s\t' "$(SPEC_IDX)" "$(DESCRIPTION)" | tee -a $(LOGFILE)
-	   @source feature_test.sh "$@" "$^" "$(LOGFILE)"
+	   @source ./feature_test.sh "$@" "$^" "$(LOGFILE)"
 	   $(eval total_cnt=$(shell echo $(total_cnt)\+1 | bc))
 
 
@@ -54,7 +54,7 @@ clean_history:
 	    @rm -rf ./HISTORY/*.log 
 
 
-cleanall:  clean_output clean_exec clean_history
+clean_all:  clean_output clean_exec clean_history
 	    @rm -rf uhcaf.keep ./*.log ./*.mod
 
 

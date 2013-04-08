@@ -60,10 +60,10 @@ few-tests:
 
 
 clean:
-	@ printf '%s\n' " $(MAKE) clean<_output | _exec | _history | all>"
+	@ printf '%s\n' " $(MAKE) clean<_output | _exec | _history | _all>"
 
 
-clean_output clean_exec clean_history cleanall:
+clean_output clean_exec clean_history clean_all:
 	@cd $(FEATURE_TEST_PATH); $(MAKE) -s $@; cd .. ;
 	@cd $(CONF_TEST_PATH); $(MAKE) -s $@; cd .. ;
 	@cd $(FEW_TEST_PATH); $(MAKE) -s $@; cd .. ;
