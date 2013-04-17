@@ -15,12 +15,12 @@ ROOT=${BENCH_PATH}
 
 
 #user-defined
-DATE=`date +"%m-%d-%y-%T"` 
+DATE=`date +"%m-%d-%y-%T"`
 TIMEOUT=120
 logfile=${DATE}.log
 TESTS_DIR=${ROOT}/src/              # directory for the test codes
-LOG_DIR=${ROOT}/log/                # directory for the output of the regression
-OUTPUT_DIR=${ROOT}/regression_op/   # directory for the output of the compiler/execution
+LOG_DIR=${ROOT}/logs/testsuite_results/                # directory for the output of the regression
+OUTPUT_DIR=${LOG_DIR}/test_output/   # directory for the output of the compiler/execution
 BIN_DIR=${ROOT}/bin/                # directory for the binaries
 EXEC_OUT_DIR=${OUTPUT_DIR}/latest_execute
 COMP_OUT_DIR=${OUTPUT_DIR}/latest_compile
