@@ -11,7 +11,6 @@ c      niter_default: default number of iterations for this problem size
 c---------------------------------------------------------------------
 
       include 'npbparams.h'
-      include 'mpif.h'
 
       integer, parameter :: maxcelldim = (problem_size/maxcells)+1,
      >      BUF_SIZE=maxcelldim*maxcelldim*(maxcells-1)*60+1,

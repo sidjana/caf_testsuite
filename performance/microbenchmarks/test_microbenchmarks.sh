@@ -24,18 +24,17 @@ else
 fi
 
 # delete past regression results and make folders if needed
-rm -rf $COMP_OUT_DIR $EXEC_OUT_DIR $BIN_DIR
+rm -rf $COMP_OUT_DIR $EXEC_OUT_DIR
 mkdir -p $COMP_OUT_DIR $EXEC_OUT_DIR  $HISTORY_OUT_DIR $BIN_DIR $LOG_DIR
 
 cd $TESTS_DIR
 
-$CC -c rtc.c -o rtc.o -D$TIMER_ARCH 
+$CC -c rtc.c -o rtc.o -D$TIMER_ARCH
 
 printf '%20s %5s %20s %20s\n' "<NAME>" "<NPROCS>" "<COMPILATION>" "<EXECUTION>"  | tee -a $LOG_DIR/$logfile
 
 for file in `ls *.f90`; do
-    for NP  in  2 4 8
-    do
+       NP=2
        NPROCS=$NP
        source ${BENCH_PATH}/../support/CONFIG-compiler.${compiler}
        type=`echo $file | awk -F"/" '{print $NF}'`
@@ -60,15 +59,14 @@ for file in `ls *.f90`; do
           	    FAILED_COUNT=$(($FAILED_COUNT+1))
                 else                                                      #execution completed cleanly
                     echo $EXEC_OUT>>$OUTPUT_DIR/latest_execute/$opfile.exec
-                    EXEC_STATUS="PASS" 
+                    EXEC_STATUS="PASS"
           	    PASSED_COUNT=$(($PASSED_COUNT+1))
                 fi
             else
                 EXEC_STATUS="NO BINARY"                                   #compilation passed
             fi
        fi
-       printf '%20s\n' "$EXEC_STATUS" | tee -a $LOG_DIR/$logfile 
-    done
+       printf '%20s\n' "$EXEC_STATUS" | tee -a $LOG_DIR/$logfile
 done
 
 echo "______________________________EXECUTION STATISTICS (not compilation)__________________________" | tee -a $LOG_DIR/$logfile

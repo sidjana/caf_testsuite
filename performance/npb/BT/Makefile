@@ -6,10 +6,10 @@ VEC=
 include ../config/make.def
 
 
-OBJS =  caf_rtl_io.o bt.o make_set.o initialize.o exact_solution.o exact_rhs.o \
+OBJS = bt.o make_set.o initialize.o exact_solution.o exact_rhs.o \
        set_constants.o adi.o define.o copy_faces.o rhs.o solve_subs.o \
        x_solve$(VEC).o y_solve$(VEC).o z_solve$(VEC).o add.o error.o \
-       verify.o setup_caf.o mco_reduce.o npbcaf.o  \
+       verify.o setup_caf.o mco_reduce.o npbcaf.o \
        ${COMMON}/print_results.o ${COMMON}/timers.o  ${COMMON}/wtime.o  # ${COMMON}/get_wtime.o
 
 include ../sys/make.common
@@ -17,10 +17,10 @@ include ../sys/make.common
 # npbparams.h is included by header.h
 # The following rule should do the trick but many make programs (not gmake)
 # will do the wrong thing and rebuild the world every time (because the
-# mod time on header.h is not changed. One solution would be to 
+# mod time on header.h is not changed. One solution would be to
 # touch header.h but this might cause confusion if someone has
 # accidentally deleted it. Instead, make the dependency on npbparams.h
-# explicit in all the lines below (even though dependence is indirect). 
+# explicit in all the lines below (even though dependence is indirect).
 
 # header.h: npbparams.h
 
@@ -34,9 +34,7 @@ ${PROGRAM}: config
 	fi
 
 exec: $(OBJS)
-	@if [ x$(SUBTYPE) = xfull ] ; then	\
-		${MAKE} bt-full;		\
-	elif [ x$(SUBTYPE) = xfortran ] ; then	\
+	@if [ x$(SUBTYPE) = xfortran ] ; then	\
 		${MAKE} bt-fortran;		\
 	elif [ x$(SUBTYPE) = xFORTRAN ] ; then	\
 		${MAKE} bt-fortran;		\
@@ -51,14 +49,11 @@ exec: $(OBJS)
 bt-bt: ${OBJS} btio.o
 	${FLINK} ${FLINKFLAGS} -o ${PROGRAM} ${OBJS} btio.o ${FMPI_LIB}
 
-bt-fortran : ${objs} fortran_io.o btio_common.o
-	${FLINK} ${FLINKFLAGS}  -o ${PROGRAM}.fortran_io ${OBJS} btio_common.o fortran_io.o  ${FMPI_LIB}
-	
-bt-full : ${objs} full_cafio.o btio_common.o
-	${FLINK} ${FLINKFLAGS}  -o ${PROGRAM}.full_cafio ${OBJS} btio_common.o full_cafio.o  ${FMPI_LIB}
+bt-fortran: ${OBJS} fortran_io.o btio_common.o
+	${FLINK} ${FLINKFLAGS} -o ${PROGRAM}.fortran_io ${OBJS} btio_common.o fortran_io.o ${FMPI_LIB}
 
 bt-epio: ${OBJS} epio.o btio_common.o
-	${FLINK} ${FLINKFLAGS} -o ${PROGRAM}.ep_io ${OBJS} btio_common.o epio.o  ${FMPI_LIB}
+	${FLINK} ${FLINKFLAGS} -o ${PROGRAM}.ep_io ${OBJS} btio_common.o epio.o ${FMPI_LIB}
 
 .f.o:
 	${FCOMPILE} $<
@@ -85,21 +80,14 @@ error.o:          error.f  header.h npbparams.h mco_reduce.mod
 verify.o:         verify.f  header.h npbparams.h
 setup_caf.o:      setup_caf.f npbparams.h npbcaf.mod
 btio.o:           btio.f
-btio_common.o:    btio_common.f header.h npbparams.h 
-fortran_io.o:     fortran_io.f header.h npbparams.h 
-epio.o:           epio.f header.h npbparams.h 
+btio_common.o:    btio_common.f header.h npbparams.h
+fortran_io.o:     fortran_io.f header.h npbparams.h
+epio.o:           epio.f header.h npbparams.h
 mco_reduce.mod:   mco_reduce.o
 mco_reduce.o:     mco_reduce.f
 header.h:         npbcaf.mod
 npbcaf.mod:	  npbcaf.o
 npbcaf.o:	  npbcaf.f npbparams.h
-
-
-fullcaf_io.o:	  full_cafio.c
-
-caf_rtl_io.o: caf_rtl_io.c caf_rtl_io.h
-	uhcc -g -c caf_rtl_io.c -I./ -I/opt/openmpi/gnu/1.6.3/include 
-
 
 clean:
 	- rm -f *.o *~ mputil* *.mod

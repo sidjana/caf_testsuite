@@ -1,7 +1,9 @@
 COMPILER ?= uhcaf
 
-help default: ./test_microbenchmarks.sh 
-	@echo "Usage: make [ compile|execute|complete|clean|cleanall ] [COMPILER=uhcaf|ifort|g95]"
+help default: ./test_microbenchmarks.sh
+	@echo "Usage: make [ compile|execute|complete|clean|cleanall ] [COMPILER=uhcaf(default)|ifort|g95]"
+	@echo "make clean : cleans all binaries"
+	@echo "make cleanall : cleans all compilation, execution, testsuite logs "
 
 compile: ./test_microbenchmarks.sh
 	@./test_microbenchmarks.sh compile $(COMPILER)
@@ -15,8 +17,8 @@ complete all: ./test_microbenchmarks.sh
 .PHONY: clean
 
 
-clean: 
+clean:
 	@rm -rf bin
 
 cleanall:  clean
-	@rm -rf log regression_op 
+	@rm -rf log regression_op
