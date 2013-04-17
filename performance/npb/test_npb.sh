@@ -28,17 +28,17 @@ fi
 rm -rf $COMP_OUT_DIR $EXEC_OUT_DIR $BIN_DIR
 mkdir -p $COMP_OUT_DIR $EXEC_OUT_DIR  $HISTORY_OUT_DIR $BIN_DIR $LOG_DIR
 
-printf '%8s %8s %8s %15s %15s %10s %15s \n' "<NAME>" "<CLASS>" "<NPROCS>" "<COMPILATION>" "<EXECUTION>" "<RESULT>" "<TIME(secs)>" | tee -a $LOG_DIR/$logfile  
+printf '%8s %8s %8s %15s %15s %10s %15s \n' "<NAME>" "<CLASS>" "<NPROCS>" "<COMPILATION>" "<EXECUTION>" "<RESULT>" "<TIME(secs)>" | tee -a $LOG_DIR/$logfile
 
 cp ./config/make.def.$compiler ./config/make.def
-for BM in ep cg sp bt 
+for BM in ep cg sp bt
 do
 	for CLASS in S A B C
 	do
   		  if [ "$BM" == "ep" -o "$BM" == "cg" ]; then
   		       NPROCS_LST="1 2 4 8 16";
   		  else
-  		       NPROCS_LST="1 4 9 16"    
+  		       NPROCS_LST="1 4 9 16"
   		  fi
 
   		  for NP in  $NPROCS_LST
@@ -47,9 +47,9 @@ do
 			source ${BENCH_PATH}/../support/CONFIG-compiler.$compiler
 			cp ./config/make.def.$compiler ./config/make.def
   		     	opfile=$BM.$CLASS.$NP
-			printf '%8s %8s %8s ' "$BM" "$NP" "$CLASS"  | tee -a $LOG_DIR/$logfile 
+			printf '%8s %8s %8s ' "$BM" "$CLASS" "$NP"  | tee -a $LOG_DIR/$logfile
   		     	if [ "$COMPILE_TESTS"=="1" -o "$BOTH"=="1" ]; then
-			
+
 			 	# adding make.def support for intel
 			 	#sed "s/-coarray-num-images=.* /-coarray-num-images=$NP /g" ./config/make.def > ./config/make.def.intel
 			 	make clean &>/dev/null
@@ -80,7 +80,7 @@ do
   		     	         EXEC_STATUS="NO BINARY"                                   #compilation failed
   		     	     fi
   		     	fi
-  		     	printf '%15s %18s %15s\n' "${EXEC_STATUS}" "${VERIFICATION}" "${TIME}" | tee -a $LOG_DIR/$logfile 
+  		     	printf '%15s %18s %15s\n' "${EXEC_STATUS}" "${VERIFICATION}" "${TIME}" | tee -a $LOG_DIR/$logfile
   		  done
 	done
 done
