@@ -37,7 +37,7 @@ else
 fi
 
 if [ -f ../support/CONFIG-compiler.${compiler} ]; then
-       source ${BENCH_PATH}/../support/CONFIG-compiler.${compiler}
+continue
 else
   echo "CONFIG-compiler.${compiler} file missing. Please ensure that CONFIG file is present under $ROOT/../support"
   exit 1
@@ -58,6 +58,7 @@ echo "The results of all the microbenchmarks are stored in plottable format in $
 for file in `ls *.f90`; do
        NP=2
        NPROCS=$NP
+       source ${BENCH_PATH}/../support/CONFIG-compiler.${compiler}
        type=`echo $file | awk -F"/" '{print $NF}'`
        opfile=$type.$NP
        logfile=$DATE.log

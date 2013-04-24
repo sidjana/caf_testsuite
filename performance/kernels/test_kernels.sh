@@ -37,7 +37,7 @@ else
 fi
 
 if [ -f ../support/CONFIG-compiler.${compiler} ]; then
-       source ${BENCH_PATH}/../support/CONFIG-compiler.${compiler}
+continue
 else
   echo "CONFIG-compiler.${compiler} file missing. Please ensure that this file is present under $ROOT/../support"
   exit 1
@@ -55,6 +55,7 @@ for file in `ls *.f90`; do
     for NP  in  2 4 8
     do
        NPROCS=$NP
+       source ${BENCH_PATH}/../support/CONFIG-compiler.${compiler}
        type=`echo $file | awk -F"/" '{print $NF}'`
        opfile=$type.$NP
        logfile=$DATE.log

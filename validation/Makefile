@@ -15,7 +15,8 @@ help :
 	@printf '%-20s%-90s\n' " |_ confidence:" "performs cross-testing to test support for non-determinism handling constructs"
 	@printf '%-20s%-90s\n' " |_ fault:" "tests for verification of fault handling constructs"
 	@printf '%-20s%-90s\n' " |_ clean<suite>:" "Cleans executables"
-	@printf '%-20s%-90s\n\n' " |_ cleanall:" "Cleans everything - results, tests-history, compiler-logs, runtime-logs"
+	@printf '%-20s%-90s\n' " |_ cleanall:" "Cleans everything - results, tests-history, compiler-logs, runtime-logs"
+	@printf '\n%-20s\n\n' "Before running the tests, ensure that the CONFIG file with the required parameters are set in validation/config directory."
 
 
 all:  feature confidence  fault
