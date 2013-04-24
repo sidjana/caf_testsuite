@@ -1,6 +1,17 @@
 #!/bin/sh
 
-source ../support/CONFIG
+
+if [ -f ../support/CONFIG ]; then
+  source ../support/CONFIG
+else
+  echo "CONFIG file missing. Please ensure that CONFIG file is present under $ROOT/../support"
+fi
+
+
+if [ "$1" == "cleanall" ]; then
+    rm -rf $LOG_DIR $BIN_DIR
+    exit 0
+fi
 
 if [ $# == 2 ]; then
   if [ "$1" == "compile" ]; then
@@ -13,15 +24,24 @@ if [ $# == 2 ]; then
     BOTH="1"
     compiler=$2
   else
-    echo "USAGE:  compile | execute | complete"
-  fi
-else
-  echo "USAGE: test_kernels.sh [mode] [compiler] where "
+  echo "USAGE: test_npb.sh [mode [compiler] ] where "
   echo "           mode     = compile|execute|complete"
   echo "           compiler = uhcaf|ifort|g95"
-  compiler=uhcaf
-  BOTH="1"
-  echo -e "Using defaults:  test_kernels.sh complete uhcaf \n\n"
+    exit 1
+  fi
+else
+  echo "USAGE: test_npb.sh [mode] [compiler] where "
+  echo "           mode     = compile|execute|complete"
+  echo "           compiler = uhcaf|ifort|g95"
+  echo -e "Please ensure:\n The test_suite specific parameters are set in ${BENCH_PATH}/../support/CONFIG \n The compiler specific parameters in ${BENCH_PATH}/../support/CONFIG-compiler.<compiler> \n"
+  exit 1
+fi
+
+if [ -f ./config/make.def.${compiler} ]; then
+  cp ./config/make.def.$compiler ./config/make.def
+else
+  echo "./config/make.def.${compiler} file missing. Please ensure that this file is present."
+  exit 1
 fi
 
 # delete past regression results and make folders if needed
@@ -30,10 +50,9 @@ mkdir -p $COMP_OUT_DIR $EXEC_OUT_DIR  $HISTORY_OUT_DIR $BIN_DIR $LOG_DIR
 
 printf '%8s %8s %8s %15s %15s %10s %15s \n' "<NAME>" "<CLASS>" "<NPROCS>" "<COMPILATION>" "<EXECUTION>" "<RESULT>" "<TIME(secs)>" | tee -a $LOG_DIR/$logfile
 
-cp ./config/make.def.$compiler ./config/make.def
 for BM in ep cg sp bt
 do
-	for CLASS in S A B C
+	for CLASS in S W A B C
 	do
   		  if [ "$BM" == "ep" -o "$BM" == "cg" ]; then
   		       NPROCS_LST="1 2 4 8 16";
@@ -50,8 +69,6 @@ do
 			printf '%8s %8s %8s ' "$BM" "$CLASS" "$NP"  | tee -a $LOG_DIR/$logfile
   		     	if [ "$COMPILE_TESTS"=="1" -o "$BOTH"=="1" ]; then
 
-			 	# adding make.def support for intel
-			 	#sed "s/-coarray-num-images=.* /-coarray-num-images=$NP /g" ./config/make.def > ./config/make.def.intel
 			 	make clean &>/dev/null
   		     	 	COMPILE_OUT=`make $BM NPROCS=$NP CLASS=$CLASS COMPILER=$compiler >>$COMP_OUT_DIR/$opfile.compile 2>&1 && echo 1 || echo -1`
   		     	 	if [ "$COMPILE_OUT" == "1" ]; then

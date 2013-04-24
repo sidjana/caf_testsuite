@@ -49,16 +49,16 @@ program partial_data
      call exit(0)
   end if
 
-  call getarg(1,path)
-  call getarg(2,layer)
-  call getarg(3,cluster)
-  call getarg(4,ncore)
-  call getarg(5,nproc)
-
-  suffix=trim(layer)//"_"//trim(cluster)//&
-       "_NC"//trim(ncore)//"_NP"//trim(nproc)//".dat"
-
-  output=trim(path)//"/partial_CAF_"//suffix
+!  call getarg(1,path)
+!  call getarg(2,layer)
+!  call getarg(3,cluster)
+!  call getarg(4,ncore)
+!  call getarg(5,nproc)
+!
+!  suffix=trim(layer)//"_"//trim(cluster)//&
+!       "_NC"//trim(ncore)//"_NP"//trim(nproc)//".dat"
+!
+!  output=trim(path)//"/partial_CAF_"//suffix
 
   if (me == 1) then
     ! open(unit=10,file=trim(output),form='formatted', &

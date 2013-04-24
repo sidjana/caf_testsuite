@@ -65,7 +65,7 @@ clean-history:
 	    @rm -rf ./HISTORY/*.log
 
 
-clean-all:  clean-output clean-exec clean-history
+cleanall:  clean-output clean-exec clean-history
 	    @rm -rf uhcaf.keep ./*.log
 
 

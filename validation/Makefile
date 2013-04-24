@@ -5,9 +5,17 @@ SHELL := /bin/bash
 TEMP_1:=$(shell ./config/config2makedef.sh)  # generate make.def from CONFIG
 include ./config/make.def   # auto-generated
 
-help : 
-	@echo "For testing: $(MAKE) [all | feature | non-conformance | confidence | fault | few-tests | help ] "
-	@echo -n "For cleanup:"; $(MAKE) -s clean
+help :
+	@echo -e "If test suite is run from within validation directory, then USAGE: $(MAKE) OPTIONS \n OPTIONS include:"
+	@printf '%-20s\n'      " |  (Note: <suite> = fewtests | feature | confidence | fault )"
+	@printf '%-20s\n'      " |  "
+	@printf '%-20s%-90s\n' " |_ all:" "tests for conformance, fault-tolerance and confidence tests"
+	@printf '%-20s%-90s\n' " |_ fewtests:" "tests only those listed in the file "test_file" under ./few directory"
+	@printf '%-20s%-90s\n' " |_ feature:" "tests the compiler's feature support (excludes tests that include verification)"
+	@printf '%-20s%-90s\n' " |_ confidence:" "performs cross-testing to test support for non-determinism handling constructs"
+	@printf '%-20s%-90s\n' " |_ fault:" "tests for verification of fault handling constructs"
+	@printf '%-20s%-90s\n' " |_ clean<suite>:" "Cleans executables"
+	@printf '%-20s%-90s\n\n' " |_ cleanall:" "Cleans everything - results, tests-history, compiler-logs, runtime-logs"
 
 
 all:  feature confidence  fault
@@ -34,11 +42,11 @@ confidence-header:
 
 
 
-non-conformance:
+nonconformance:
 	@cd $(NONCONF_TEST_PATH); $(MAKE) -s all
 
 
-non-conformance-header:
+nonconformance-header:
 	   @printf '\n%s\n%s\n' "---------------HPC Tools CAF NON-CONFORMANCE testsuite---------------"  \
 	   				"Evaluating $(COMPILER)"
 	   @printf '%-20s\t%-80s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"
@@ -55,7 +63,7 @@ fault-header:
 
 
 
-few-tests:
+fewtests:
 	@cd $(FEW_TEST_PATH); $(MAKE) -s  all
 
 
@@ -64,10 +72,23 @@ clean:
 	@ printf '%s\n' " $(MAKE) clean_output|clean_exec|clean_history|cleanall>"
 
 
-clean_output clean_exec clean_history clean_all:
+
+cleanfewtests:
+	@cd $(FEW_TEST_PATH); $(MAKE) -s clean_exec;
+
+cleanfeature:
+	@cd $(FEATURE_TEST_PATH); $(MAKE) -s clean_exec;
+
+cleanconfidence:
+	@cd $(CONF_TEST_PATH); $(MAKE) -s clean_exec;
+
+cleanfault:
+	@cd $(FAULT_TEST_PATH); $(MAKE) -s clean_exec;
+
+cleanall:
 	@cd $(FEATURE_TEST_PATH); $(MAKE) -s $@; cd .. ;
-	@cd $(CONF_TEST_PATH); $(MAKE) -s $@; cd .. ;
 	@cd $(FEW_TEST_PATH); $(MAKE) -s $@; cd .. ;
+	@cd $(CONF_TEST_PATH); $(MAKE) -s $@; cd .. ;
 	@cd $(FAULT_TEST_PATH); $(MAKE) -s $@; cd .. ;
 	@if [ "$@" == "cleanall" ];  then \
 		rm -rf ./bin/*.* , *.mod; rm -rf ./config/make.def ; \

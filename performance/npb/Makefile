@@ -1,5 +1,5 @@
 
-TEMP_1:=$(shell mkdir -p ./bin) 
+TEMP_1:=$(shell mkdir -p ./bin)
 
 SHELL=/bin/sh
 CLASS=U
@@ -12,7 +12,7 @@ default: header
 
 BT: bt
 bt: header
-	cd BT; $(MAKE) NPROCS=$(NPROCS) CLASS=$(CLASS) SUBTYPE=$(SUBTYPE) 
+	cd BT; $(MAKE) NPROCS=$(NPROCS) CLASS=$(CLASS) SUBTYPE=$(SUBTYPE)
 
 SP: sp
 sp: header
@@ -55,21 +55,21 @@ suite:
 # are defined) but on a really clean system this will won't work
 # because those makefiles need config/make.def
 
-.PHONY: clean 
+.PHONY: clean
 
 clean:
-	- rm -f core
-	- rm -f *~ */core */*~ */*.o */npbparams.h */*.obj */*.exe
-	- rm -f MPI_dummy/test MPI_dummy/libmpi.a
-	- rm -f sys/setparams sys/makesuite sys/setparams.h
-	- rm -f btio.*.out*
-	- rm -f */*.mod
-	
-cleanall: clean
-	- rm -f config/suite.def
-	- rm -f bin/sp.* bin/lu.* bin/mg.* bin/ft.* bin/bt.* bin/is.*
-	- rm -f bin/ep.* bin/cg.* bin/dt.*
-	- rm -rf log regression_op
+	@rm -f core
+	@rm -f *~ */core */*~ */*.o */npbparams.h */*.obj */*.exe
+	@rm -f MPI_dummy/test MPI_dummy/libmpi.a
+	@rm -f sys/setparams sys/makesuite sys/setparams.h
+	@rm -f btio.*.out*
+	@rm -f */*.mod
+
+cleanall: clean ./test_npb.sh
+	@rm -f config/suite.def config/make.def
+	@rm -rf bin
+	@./test_npb.sh cleanall
+
 
 header:
 	@ sys/print_header

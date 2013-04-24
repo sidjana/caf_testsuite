@@ -63,7 +63,7 @@ clean_history:
 	    @rm -rf ./HISTORY/*.log 
 
 
-clean_all:  clean_output clean_exec clean_history
+cleanall:  clean_output clean_exec clean_history
 	    @rm -rf uhcaf.keep ./*.log  testmodule.o ./*.mod ./tmp 
 
 
