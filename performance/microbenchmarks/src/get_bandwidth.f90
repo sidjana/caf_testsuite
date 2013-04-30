@@ -79,7 +79,7 @@ program get_bandwidth
 
      if (me == 2) then
 
-        write(*,'(I2)') i
+        write(*,'(I2)',advance='no') i
 
         call get_rtc(srtc)
 
@@ -97,7 +97,7 @@ program get_bandwidth
 
         !write(10,'(I10,A1,E20.8)') 4*msg_size,";",rtc*1000000.0/r_iterations
         !write(11,'(I10,A1,E20.8)') 4*msg_size,";",4.0*r_msgsize*r_iterations/rtc/1024.0 !!KB/sec
-        write(*,'(I10,A1,E20.8,A1,E20.8)') 4*msg_size,";",rtc*1000000.0/r_iterations,";",4.0*r_msgsize*r_iterations/rtc/1024.0
+        write(*,'(I10,E20.8,E20.8)') 4*msg_size,rtc*1000000.0/r_iterations,4.0*r_msgsize*r_iterations/rtc/1024.0
 
         i=i+1
 

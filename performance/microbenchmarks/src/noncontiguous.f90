@@ -77,7 +77,7 @@ program partial_data
 
      if (me == 1) then
 
-        write(*,'(I2, I10)') i, msg_size
+        write(*,'(I2, I10)',advance='no') i, msg_size
 
         call get_rtc(srtc)
 
@@ -90,7 +90,7 @@ program partial_data
         rtmp=res
         rtc=(ertc-srtc)/rtmp
 
-        write(*,'(I10,A1,E20.8,A1,E20.8)') 4*msg_size,";",rtc*1000000.0/iterations,";",4.0*msg_size*iterations/rtc/1024.0
+        write(*,'(I10,E20.8,E20.8)') 4*msg_size,rtc*1000000.0/iterations,4.0*msg_size*iterations/rtc/1024.0
 
         i=i+1
 

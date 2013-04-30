@@ -71,7 +71,7 @@ program get_latency
 
  if (me == 2) then
 
-    write(*,'(I2)') i
+    write(*,'(I2)',advance='no') i
 
     call get_rtc(srtc)
 
@@ -87,7 +87,7 @@ program get_latency
     r_msgsize=msg_size
     r_iterations=iterations
 
-    write(*,'(I10,A1,E20.8)') 4,";",rtc*1000000.0/r_iterations
+    write(*,'(I10,E20.8)') 4,rtc*1000000.0/r_iterations
 
  endif
 

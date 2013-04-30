@@ -80,7 +80,6 @@ for file in `ls *.f90`; do
                     EXEC_STATUS="RUNTIME ERROR"
           	    FAILED_COUNT=$(($FAILED_COUNT+1))
                 else                                                      #execution completed cleanly
-                    echo $EXEC_OUT>>$OUTPUT_DIR/latest_execute/$opfile.exec
                     EXEC_STATUS="PASS"
           	    PASSED_COUNT=$(($PASSED_COUNT+1))
                 fi

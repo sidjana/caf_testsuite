@@ -75,7 +75,7 @@ program reduce
 
      if (me == 1) then
 
-        write(*,'(I2)') i
+        write(*,'(I2)',advance='no') i
 
         call get_rtc(srtc)
 
@@ -93,7 +93,7 @@ program reduce
         r_msgsize=msg_size
         r_iterations=iterations
 
-        write(*,'(I10,A1,E20.8,A1,E20.8)') 4*msg_size,";",rtc*1000000.0/r_iterations,";",4.0*r_msgsize*r_iterations/rtc/1024.0 !!KB/sec
+        write(*,'(I10,E20.8,E20.8)') 4*msg_size,rtc*1000000.0/r_iterations,4.0*r_msgsize*r_iterations/rtc/1024.0 !!KB/sec
 
         do k=1,msg_size
            if (msg_sum(k) /= ne*iterations) then
