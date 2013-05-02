@@ -1,0 +1,170 @@
+------------------------------------------------HPC Tools CAF FEATURE testsuite---------------
+Evaluating OpenUH
+SPEC_IDX                DESCRIPTION                                                             COMPILATION     EXECUTION
+
+character_test          CHARACTER coarrays                                                      PASS            PASS
+coarray_2.4.7.6         similar translation of co-subscripts and subscripts                     PASS            PASS
+coarray_4.8.R468        reference of coarray without [] implies local object                    PASS            PASS
+coarray_5.3.6.1         attribute CODIMENSION + remote accesses at single integer/real boundary PASS            PASS
+derived_4.5.4           (non-)coarray COMPONENTS of (non-)coarray derived types                 PASS            PASS
+dummyargs_12.3.2.2c     explicit shape, assumed size, assumed shape, allocatable dummy args     PASS            PASS
+intrin_13.7.126         NUM_IMAGES() returns the number of images launched                      PASS            PASS
+intrin_13.7.165         THIS_IMAGE(), THIS_IMAGE(coarray), THIS_IMAGE(coarray, dim)             PASS            PASS
+intrin_13.7.172         LCOBOUND(coarray) and LCOBOUND(coarray,dim)                             PASS            PASS
+intrin_13.7.79          IMAGE_INDEX(coarray, subs)                                              PASS            PASS
+intrin_13.7.91          UCOBOUND(COARRAY[, DIM, KIND])                                          PASS            PASS
+intrin_6.7.3.2.11       ALLOCATE and DEALLOCATE act as barriers                                 PASS            PASS
+intrin_8.5.7d           STOP and LOCK construct with STAT=STAT_LOCKED specifier                 PASS            PASS 
+intrin_8.5.7e           STOP and LOCK construct with STAT=STAT_LOCKED_OTHER_IMAGE specifier     PASS            TIMEOUT
+intrin_8.5.7f           STOP and LOCK construct with STAT=STAT_UNLOCKED specifier               PASS            PASS
+item_4.8.a              Subobjects of a coarray is also a coarray                               PASS            PASS
+pointer_4.5.4.6b        association of pointer components of coarrays with local objects        PASS            PASS
+
+TOTAL TESTS=17
+
+
+---------------HPC Tools CAF CONFIDENCE testsuite---------------
+Evaluating OpenUH
+
+SPEC_IDX                DESCRIPTION                                                     COMPILATION     EXECUTION       CONFIDENCE
+
+atomic_8.5.2            Atomic subroutines                                              PASS            PASS            66%
+critical_8.1.5          CRITICAL - END CRITICAL sections                                PASS            PASS            100%
+intrin_8.5.6            LOCK & UNLOCK without STAT specifier                            PASS            PASS            100%
+sync_8.5.3              SYNC ALL without STAT specifier                                 PASS            PASS            100%
+sync_8.5.4a             SYNC IMAGES(arr) paired with SYNC IMAGES(*)                     PASS            PASS            100%
+sync_8.5.4b             call to SYNC IMAGES(arr), should not behave like SYNC ALL       PASS            PASS            100%
+
+---------------HPC Tools CAF FAULT testsuite---------------
+Evaluating OpenUH
+SPEC_IDX                DESCRIPTION                                                             COMPILATION     EXECUTION
+
+sync_8.5.7a             STOP and SYNC ALL with STAT=STAT_STOPPED_IMAGE specifier                PASS            PASS
+sync_8.5.7b             STOP and SYNC IMAGES(arr) with STAT=STAT_STOPPED_IMAGE specifier        PASS            PASS
+sync_8.5.7c             STOP and SYNC IMAGES(*) with STAT=STAT_STOPPED_IMAGE specifier          PASS            PASS
+
+---------------------------------Kernels---------------------------------------------------------------------------------
+                       <NAME>   <NPROCS>             <COMPILATION>          <EXECUTION>
+            buffon_laplace.f90          2                 PASS                 PASS
+            buffon_laplace.f90          4                 PASS                 PASS
+            buffon_laplace.f90          8                 PASS                 PASS
+                     cg_2d.f90          2                 PASS                 PASS
+                     cg_2d.f90          4                 PASS                 PASS
+                     cg_2d.f90          8                 PASS                 PASS
+           image_smoothing.f90          2                 PASS                 PASS
+           image_smoothing.f90          4                 PASS                 PASS
+           image_smoothing.f90          8                 PASS                 PASS
+      insertion_sort_dtype.f90          2                 PASS                 PASS
+      insertion_sort_dtype.f90          4                 PASS                 PASS
+      insertion_sort_dtype.f90          8                 PASS                 PASS
+            insertion_sort.f90          2                 PASS                 PASS
+            insertion_sort.f90          4                 PASS                 PASS
+            insertion_sort.f90          8                 PASS                 PASS
+                        mm.f90          2                 PASS                 PASS
+                        mm.f90          4                 PASS                 PASS
+                        mm.f90          8                 PASS                 PASS
+______________________________EXECUTION STATISTICS (not compilation)__________________________
+TOTAL PASSED = 18 TOTAL FAILED = 0
+---------------------------------------Microbenchmarks--------------------------------------------
+              <NAME> <NPROCS>        <COMPILATION>          <EXECUTION>
+The results of all the microbenchmarks are stored in plottable format in /hrtc/appli/softs/system/CAF/caf_testsuite/performance/microbenchmarks/logs//test_output//latest_execute
+   bidirectional.f90     2                 PASS                 PASS
+       broadcast.f90     2                 PASS                 PASS
+   get_bandwidth.f90     2                 PASS                 PASS
+     get_latency.f90     2                 PASS                 PASS
+   noncontiguous.f90     2                 PASS                 PASS
+    partial_data.f90     2                 PASS                 PASS
+       ping_pong.f90     2                 PASS                 PASS
+   put_bandwidth.f90     2                 PASS                 PASS
+     put_latency.f90     2                 PASS                 PASS
+          reduce.f90     2                 PASS                 PASS
+______________________________EXECUTION STATISTICS (not compilation)__________________________
+TOTAL PASSED = 10 TOTAL FAILED = 0
+-------------------------------------NAS PARALLEL BENCHMARKS-------------------------------------------------------------------
+  <NAME>  <CLASS> <NPROCS>   <COMPILATION>     <EXECUTION>   <RESULT>    <TIME(secs)>
+      cg        C        1            PASS            PASS         SUCCESSFUL          208.44
+      cg        C        2            PASS            PASS         SUCCESSFUL          107.92
+      cg        C        4            PASS            PASS         SUCCESSFUL           57.21
+      cg        C        8            PASS            PASS         SUCCESSFUL           28.13
+      cg        C       16            PASS            PASS         SUCCESSFUL           21.38
+      cg        C       32            PASS            PASS         SUCCESSFUL           10.11
+      cg        B        1            PASS            PASS         SUCCESSFUL           83.41
+      cg        B        2            PASS            PASS         SUCCESSFUL           38.85
+      cg        B        4            PASS            PASS         SUCCESSFUL           20.04
+      cg        B        8            PASS            PASS         SUCCESSFUL           11.14
+      cg        B       16            PASS            PASS         SUCCESSFUL            7.28
+      cg        B       32            PASS            PASS         SUCCESSFUL            4.27
+      cg        A        1            PASS            PASS         SUCCESSFUL            1.72
+      cg        A        2            PASS            PASS         SUCCESSFUL            0.85
+      cg        A        4            PASS            PASS         SUCCESSFUL            0.38
+      cg        A        8            PASS            PASS         SUCCESSFUL            0.22
+      cg        A       16            PASS            PASS         SUCCESSFUL            0.17
+      cg        A       32            PASS            PASS         SUCCESSFUL            0.14
+      cg        W        1            PASS            PASS         SUCCESSFUL            0.43
+      cg        W        2            PASS            PASS         SUCCESSFUL            0.23
+      cg        W        4            PASS            PASS         SUCCESSFUL            0.13
+      cg        W        8            PASS            PASS         SUCCESSFUL            0.09
+      cg        W       16            PASS            PASS         SUCCESSFUL            0.07
+      cg        W       32            PASS            PASS         SUCCESSFUL            0.09
+      cg        S        1            PASS            PASS         SUCCESSFUL            0.06
+      cg        S        2            PASS            PASS         SUCCESSFUL            0.05
+      cg        S        4            PASS            PASS         SUCCESSFUL            0.03
+      cg        S        8            PASS            PASS         SUCCESSFUL            0.03
+      cg        S       16            PASS            PASS         SUCCESSFUL            0.03
+      cg        S       32            PASS            PASS         SUCCESSFUL            0.08
+      sp        C        1            PASS            PASS         SUCCESSFUL          933.81
+      sp        C        4            PASS            PASS         SUCCESSFUL          238.00
+      sp        C        9            PASS            PASS         SUCCESSFUL          162.00
+      sp        C       16            PASS            PASS         SUCCESSFUL          106.68
+      sp        C       25            PASS            PASS         SUCCESSFUL           63.38
+      sp        B        1            PASS            PASS         SUCCESSFUL          237.00
+      sp        B        4            PASS            PASS         SUCCESSFUL           52.46
+      sp        B        9            PASS            PASS         SUCCESSFUL           35.54
+      sp        B       16            PASS            PASS         SUCCESSFUL           22.83
+      sp        B       25            PASS            PASS         SUCCESSFUL           12.54
+      sp        A        1            PASS            PASS         SUCCESSFUL           56.99
+      sp        A        4            PASS            PASS         SUCCESSFUL           11.99
+      sp        A        9            PASS            PASS         SUCCESSFUL            7.20
+      sp        A       16            PASS            PASS         SUCCESSFUL            4.87
+      sp        A       25            PASS            PASS         SUCCESSFUL            2.65
+      sp        W        1            PASS            PASS         SUCCESSFUL            7.82
+      sp        W        4            PASS            PASS         SUCCESSFUL            1.82
+      sp        W        4            PASS            PASS         SUCCESSFUL            1.82
+      sp        W        9            PASS            PASS         SUCCESSFUL            1.05
+      sp        W       16            PASS            PASS         SUCCESSFUL            0.72
+      sp        W       25            PASS            PASS         SUCCESSFUL            0.66
+      sp        S        1            PASS            PASS         SUCCESSFUL            0.05
+      sp        S        4            PASS            PASS         SUCCESSFUL            0.03
+      sp        S        9            PASS            PASS         SUCCESSFUL            0.03
+      sp        S       16            PASS            PASS         SUCCESSFUL            0.03
+      bt        C        1            PASS            PASS         SUCCESSFUL         1380.05
+      bt        C        4            PASS            PASS         SUCCESSFUL          402.32
+      bt        C        9            PASS            PASS         SUCCESSFUL          192.74
+      bt        C       16            PASS            PASS         SUCCESSFUL          101.06
+      ep        C        1            PASS            PASS         SUCCESSFUL          180.27 
+      ep        C        2            PASS            PASS         SUCCESSFUL           90.26
+      ep        C        4            PASS            PASS         SUCCESSFUL           45.13
+      ep        C        8            PASS            PASS         SUCCESSFUL           22.50
+      ep        C       16            PASS            PASS         SUCCESSFUL           11.09
+      ep        B        1            PASS            PASS         SUCCESSFUL           45.16
+      ep        B        2            PASS            PASS         SUCCESSFUL           22.59
+      ep        B        4            PASS            PASS         SUCCESSFUL           11.28
+      ep        B        8            PASS            PASS         SUCCESSFUL            5.64
+      ep        B       16            PASS            PASS         SUCCESSFUL            2.78
+      ep        A        1            PASS            PASS         SUCCESSFUL           11.16 
+      ep        A        2            PASS            PASS         SUCCESSFUL            5.64
+      ep        A        4            PASS            PASS         SUCCESSFUL            2.83
+      ep        A        8            PASS            PASS         SUCCESSFUL            1.41
+      ep        A       16            PASS            PASS         SUCCESSFUL            0.71
+      ep        W        1            PASS            PASS         SUCCESSFUL            1.41
+      ep        W        2            PASS            PASS         SUCCESSFUL            0.7
+      ep        W        4            PASS            PASS         SUCCESSFUL            0.35
+      ep        W        8            PASS            PASS         SUCCESSFUL            0.18
+      ep        W       16            PASS            PASS         SUCCESSFUL            0.10
+      ep        S        1            PASS            PASS         SUCCESSFUL            0.70
+      ep        S        2            PASS            PASS         SUCCESSFUL           90.52
+      ep        S        4            PASS            PASS         SUCCESSFUL            0.20
+      ep        S        8            PASS            PASS         SUCCESSFUL            0.09
+      ep        S       16            PASS            PASS         SUCCESSFUL            0.05
+
+

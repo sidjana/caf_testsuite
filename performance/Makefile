@@ -17,7 +17,7 @@ help default:
 
 compile_performance: compile_performance run_performance
 
-compile_performance: compile_kernels  compile_microbenchmarks compile_npb
+compile_performance compile_all: compile_kernels  compile_microbenchmarks compile_npb
 
 compile_kernels:
 	@cd $(KERNELS_PATH) ; ./test_kernels.sh compile $(COMPILER);
@@ -28,7 +28,7 @@ compile_microbenchmarks:
 compile_npb:
 	@cd $(NPB_PATH); ./test_npb.sh compile $(COMPILER);
 
-run_performance: run_kernels  run_microbenchmarks run_npb
+run_performance run_all: run_kernels  run_microbenchmarks run_npb
 
 run_kernels:
 	@cd $(KERNELS_PATH) ; ./test_kernels.sh execute $(COMPILER);
@@ -39,7 +39,7 @@ run_microbenchmarks:< _performance/all | _kernels | _microbenchmarks | _npb >
 run_npb:
 	@cd $(NPB_PATH) ; ./test_npb.sh execute $(COMPILER);
 
-complete_performance all: complete_kernels  complete_microbenchmarks complete_npb
+complete_performance complete_all: complete_kernels  complete_microbenchmarks complete_npb
 
 complete_kernels:
 	@cd $(KERNELS_PATH) ; ./test_kernels.sh complete $(COMPILER);

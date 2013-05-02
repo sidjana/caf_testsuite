@@ -4,7 +4,7 @@
 #G95 Compiler
 COMPILER="G95"
 FC="g95"
-FFLAGS="-cpp -DNPROCS=${NPROCS}  -DNITER=${NITER}"
+FFLAGS="-cpp -DNPROCS=${NPROCS}  -DNITER=${NITER} -fno-second-underscore "
 LAUNCHER=""
 EXEC_OPTIONS=" --g95 images=${NPROCS}"
 FFLAGS_CROSS=" $FFLAGS "

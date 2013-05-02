@@ -53,7 +53,6 @@ $CC -c rtc.c -o $BIN_DIR/rtc.o -D$TIMER_ARCH
 
 printf '%20s %5s %20s %20s\n' "<NAME>" "<NPROCS>" "<COMPILATION>" "<EXECUTION>"  | tee -a $LOG_DIR/$logfile
 
-echo "The results of all the microbenchmarks are stored in plottable format in $EXEC_OUT_DIR"
 
 for file in `ls *.f90`; do
        NP=2
@@ -93,6 +92,7 @@ done
 echo "______________________________EXECUTION STATISTICS (not compilation)__________________________" | tee -a $LOG_DIR/$logfile
 echo "TOTAL PASSED = $PASSED_COUNT TOTAL FAILED = $FAILED_COUNT"  | tee -a $LOG_DIR/$logfile
 echo "Results of this performance run can be found in: $LOG_DIR/$logfile"
+echo "The results of all the microbenchmarks are stored in plottable format in $EXEC_OUT_DIR"
 
 # backing up results to HISTORY folder
 cp -r  $COMP_OUT_DIR  $HISTORY_OUT_DIR/compile_$DATE

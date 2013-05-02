@@ -37,7 +37,7 @@ else
 fi
 
 if [ -f ../support/CONFIG-compiler.${compiler} ]; then
-continue
+  echo "" 
 else
   echo "CONFIG-compiler.${compiler} file missing. Please ensure that this file is present under $ROOT/../support"
   exit 1
