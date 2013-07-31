@@ -1,16 +1,18 @@
       program matrixmul
         implicit none
         integer,parameter :: N = 100
-        integer,parameter :: P = 2
         real,allocatable,dimension(:,:),codimension[:,:] :: a,b,c
+        integer :: P
         integer :: i,j,k,l,q,iAm, np
         integer :: myP, myQ
 
         np = num_images()
         iAm = this_image()
+
+        P = INT(sqrt(REAL(np)))
         if (P*P /= np)  then
           if (iAm == 1)   &
-            write(*,"('num_images must be square: p=',i5)") np
+            write(*,"('num_images must be square: p = ',i5)") np
           stop
         end if
 
