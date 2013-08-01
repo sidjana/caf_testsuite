@@ -29,7 +29,7 @@
 #---------------------------------------------------------------------------
 # This is the fortran compiler used for CAF programs
 #---------------------------------------------------------------------------
-CAF = uhcaf --layer=gasnet
+CAF = uhcaf
 
 #---------------------------------------------------------------------------
 # This links fortran programs; usually the same as ${F90}
@@ -92,18 +92,18 @@ FMPI_LIB  =
 #---------------------------------------------------------------------------
 # These macros are passed to the compiler to help find 'mpif.h'
 #---------------------------------------------------------------------------
-FMPI_INC =
+FMPI_INC = -I/usr/include/openmpi
 
 #---------------------------------------------------------------------------
 # Global *compile time* flags for Fortran programs
 #---------------------------------------------------------------------------
-FFLAGS	= -O3 -I./
+FFLAGS	= -O3 -I./ -ftpp
 
 #---------------------------------------------------------------------------
 # Global *link time* flags. Flags for increasing maximum executable 
 # size usually go here. 
 #---------------------------------------------------------------------------
-FLINKFLAGS = -O3
+FLINKFLAGS = -O3 -lmpi_f77
 
 #---------------------------------------------------------------------------
 # Parallel C:
@@ -137,7 +137,7 @@ CMPI_LIB  =
 #---------------------------------------------------------------------------
 # These macros are passed to the compiler to help find 'mpi.h'
 #---------------------------------------------------------------------------
-CMPI_INC = 
+CMPI_INC =  -I/usr/include/openmpi
 
 #---------------------------------------------------------------------------
 # Global *compile time* flags for C programs
