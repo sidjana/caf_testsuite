@@ -92,7 +92,7 @@ FMPI_LIB  =
 #---------------------------------------------------------------------------
 # These macros are passed to the compiler to help find 'mpif.h'
 #---------------------------------------------------------------------------
-FMPI_INC = -I/usr/include/openmpi
+FMPI_INC = -I$(MPI_INLCUDE)
 
 #---------------------------------------------------------------------------
 # Global *compile time* flags for Fortran programs
