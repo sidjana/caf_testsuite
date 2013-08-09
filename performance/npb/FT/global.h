@@ -104,8 +104,8 @@ c the array dimensions are stored in dims(coord, phase)
 
       external timer_read
       double precision timer_read
-      external ilog2
-      integer ilog2
+c     external ilog2
+c     integer ilog2
 
       external randlc
       double precision randlc

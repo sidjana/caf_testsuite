@@ -6,18 +6,23 @@ include ../config/make.def
 
 include ../sys/make.common
 
-OBJS = ft_caf.o ft.o ${COMMON}/${RAND}.o ${COMMON}/print_results.o ${COMMON}/timers.o \
+OBJS = ft.o mco_reduce.o ${COMMON}/${RAND}.o ${COMMON}/print_results.o ${COMMON}/timers.o \
 	   ${COMMON}/wtime.o
 
 ${PROGRAM}: config ${OBJS}
-	${FLINK} ${FLINKFLAGS} -o ${PROGRAM} ${OBJS} ${FMPI_LIB}
+	${CAFLINK} ${CAFLINKFLAGS} -o ${PROGRAM} ${OBJS} ${FMPI_LIB}
 
 
 
 .f.o:
-	${FCOMPILE} $<
+	${CAFCOMPILE} $<
 
-ft.o:  ft_caf.f ft.f  global.h mpinpb.h npbparams.h
+.F.o:
+	${CAFCOMPILE} $<
+
+ft.o:  ft.F mco_reduce.mod  global.h mpinpb.h npbparams.h
+mco_reduce.mod:   mco_reduce.o
+mco_reduce.o:     mco_reduce.f
 
 clean:
 	- rm -f *.o *~ mputil*

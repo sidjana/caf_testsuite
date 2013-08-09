@@ -26,12 +26,12 @@ include ../sys/make.common
 .SUFFIXES: .f .o .h .mod
 
 ${PROGRAM}: config ${OBJS}
-	${FLINK} ${FLINKFLAGS} -o ${PROGRAM} ${OBJS} ${FMPI_LIB}
+	${CAFLINK} ${CAFLINKFLAGS} -o ${PROGRAM} ${OBJS} ${FMPI_LIB}
 
 .f.o:
-	${FCOMPILE} $<
+	${CAFCOMPILE} $<
 .F.o:
-	${FCOMPILE} $<
+	${CAFCOMPILE} $<
 
 sp.o:             sp.f  header.h npbparams.h mco_reduce.mod
 make_set.o:       make_set.f  header.h npbparams.h

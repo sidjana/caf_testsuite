@@ -29,7 +29,7 @@
 #---------------------------------------------------------------------------
 # This is the fortran compiler used for CAF programs
 #---------------------------------------------------------------------------
-CAF = uhcaf
+CAF = crayftn
 
 #---------------------------------------------------------------------------
 # This links fortran programs; usually the same as ${F90}
@@ -49,7 +49,7 @@ CAF_INC =
 #---------------------------------------------------------------------------
 # Global *compile time* flags for Coarray Fortran programs
 #---------------------------------------------------------------------------
-CAFFLAGS	= -O3
+CAFFLAGS	= -O3 -DCRAY_CAF
 
 #---------------------------------------------------------------------------
 # Global *link time* flags. Flags for increasing maximum executable 
@@ -92,12 +92,12 @@ FMPI_LIB  =
 #---------------------------------------------------------------------------
 # These macros are passed to the compiler to help find 'mpif.h'
 #---------------------------------------------------------------------------
-FMPI_INC = -I$(MPI_INCLUDE)/
+FMPI_INC =
 
 #---------------------------------------------------------------------------
 # Global *compile time* flags for Fortran programs
 #---------------------------------------------------------------------------
-FFLAGS	= -O3 -I./
+FFLAGS	= -O3 -I./ -F
 
 #---------------------------------------------------------------------------
 # Global *link time* flags. Flags for increasing maximum executable 
@@ -137,7 +137,7 @@ CMPI_LIB  =
 #---------------------------------------------------------------------------
 # These macros are passed to the compiler to help find 'mpi.h'
 #---------------------------------------------------------------------------
-CMPI_INC =  -I$(MPI_INCLUDE)/
+CMPI_INC =
 
 #---------------------------------------------------------------------------
 # Global *compile time* flags for C programs
