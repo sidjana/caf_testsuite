@@ -48,7 +48,7 @@ fi
 rm -rf $COMP_OUT_DIR $EXEC_OUT_DIR $BIN_DIR
 mkdir -p $COMP_OUT_DIR $EXEC_OUT_DIR  $HISTORY_OUT_DIR $BIN_DIR $LOG_DIR
 
-printf '%8s %8s %8s %15s %15s %10s %15s \n' "<NAME>" "<CLASS>" "<NPROCS>" "<COMPILATION>" "<EXECUTION>" "<RESULT>" "<TIME(secs)>" | tee -a $LOG_DIR/$logfile
+printf '%8s %8s %8s %15s %15s %10s %25s \n' "<NAME>" "<CLASS>" "<NPROCS>" "<COMPILATION>" "<EXECUTION>" "<RESULT>" "<TIME(secs)>" | tee -a $LOG_DIR/$logfile
 
 for BM in ep cg sp bt
 do

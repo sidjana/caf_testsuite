@@ -30,6 +30,7 @@ header:
 
 tail:
 	@ printf '\n%s%d\n\n' "TOTAL TESTS=" "`echo $(total_cnt)`" | tee -a $(LOGFILE)
+# Experimental : email notifications
 #	@ if [ "$(EMAIL)" == "yes" ]; then \
 #		 mutt -s "$(SUBJ)" -a $(LOGFILE) $(EMAIL_LIST) < $(EMAIL_BODY);\
 #	  fi

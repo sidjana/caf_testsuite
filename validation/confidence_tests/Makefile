@@ -43,6 +43,7 @@ header:
 testmodule.o: ../testmodule.f90
 	@$(FC) $(FFLAGS) -c  ../testmodule.f90  2>/dev/null;\
 	  if [ "$$?" -ne "0" ]; then \
+	        echo "$(FC) $(FFLAGS) -c  ../testmodule.f90  2>/dev/null;" \
 	  	echo "NOTE***Error while compiling testmodule.f90" ;\
 	  fi
 

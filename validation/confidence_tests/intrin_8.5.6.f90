@@ -51,7 +51,7 @@
 #ifndef CROSS_
           call calc_ori(cross_err)
 #else
-          call calc(cross_err)
+           call calc(cross_err,NITER)
 #endif
 
         else

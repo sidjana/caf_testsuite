@@ -6,7 +6,7 @@
 
         integer(atomic_int_kind) :: i_obj[*]
         logical(atomic_logical_kind) :: l_obj[*] = .true.
-        integer :: sz, rank
+        integer :: sz, rank,tot_NITER=NITER*10000
         integer :: i,k,j
         logical :: l_val
         integer(atomic_int_kind) :: num,i_val
@@ -20,7 +20,7 @@
           call EXIT(1)
         end if
 
-        do k = 1,NITER*10000
+        do k = 1,tot_NITER
             i_val=-1
             i_obj = -1
             sync all
@@ -83,7 +83,7 @@
 #ifndef CROSS_
            call calc_ori(cross_err)
 #else
-           call calc(cross_err)
+           call calc(cross_err,tot_NITER)
 #endif
 
       end program

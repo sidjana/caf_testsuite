@@ -38,7 +38,7 @@
            call calc_ori(cross_err)
            print *, "call after", rank
 #else
-           call calc(cross_err)
+           call calc(cross_err,NITER)
 #endif
 
         else
