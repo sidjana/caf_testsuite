@@ -1,80 +1,97 @@
-Last modified: 1st October, 2013
-Authors: Siddhartha Jana, Deepak Eachempati
+CAF Performance Test Suite Instructions
 
-Abstract:
-This document describes the method for using the
-performance test suite, list of (micro-)benchmarks used 
-within the suite and the directory structure.
-Details about the configuration parameters, and  
-initial performance results of some CAF compiler 
-implementations can all be found in the file - 
+Last modified: 1st October, 2013
+HPCTools Group, University of Houston
+
+This document describes the method for using the performance test suite, list
+of (micro-)benchmarks used within the suite and the directory structure.
+Details about the configuration parameters, and  initial performance results
+of some CAF compiler implementations can all be found in the file -
 instructional_guide.pdf
 
-Contents:
+===============================================================================
+
+Contents
+
+I.  Using the Performance Test Suite
+I.a  Configuring
+I.b  Running
+
+II. CAF Benchmarks
+II.a  Microbenchmarks
+II.b  NAS Parallel Benchmarks
+II.c  Misc. Kernels
+
+===============================================================================
+
 I. Using the performance test suite
-II. List of microbenchmarks
 
-=================== I. USING TEST SUITE ===================
+-------------------------------------------------------------------------------
 
-Step 1: Configuration of the suite
+I.a Configuring
 
 The performance suite comes bundled along with the validation test suite. The
 performance suite is located under: PERFORMANCE_PATH = $SUITE_ROOT/performance
 
 The installation requires the setup of a few configuration parameters. These
 parameters can be divided into two types:
+
 1. Generic parameters: These are testsuite specific parameters which can be
 used to specify the location of the compilation, execution result-dumps.
 These are located in $PERFORMANCE PATH/support/CONFIG
+
 2. Compiler-specific: These are compiler dependent parameters and can be used
 to adjust the compiler/execution commands, flags and launcher options.
 These are located in $PEFORMANCE PATH/support/CONFIG-compiler.<compiler>
 
-For certain tests, the number of images may be varied for each test-category 
+For certain tests, the number of images may be varied for each test-category
 from the corresponding test_*.sh script within the tests-folder.
 
-Note: The configuration parameters are mainly self-explanatory. For the sake of
-completeness, we provide a detailed descrition of the same in the file -
+Note: The configuration parameters are mainly self-explanatory. For the sake
+of completeness, we provide a detailed descrition of the same in the file -
 instructional_guide.pdf within this docs folder.
 
+-------------------------------------------------------------------------------
 
-Step 2: Using the suite to gauge the performance with different CAF implementations
+I.b Running
 
-The performance test suite can be run either from the root of the entire testsuite
-or from within the folder - $SUITE_ROOT/performance.
-If run from $SUITE_ROOT, 
+The performance test suite can be run either from the root of the entire
+testsuite or from within the folder - $SUITE_ROOT/performance.
+
+If run from $SUITE_ROOT: 
+
 USAGE: make performance PARAMS=<OPTIONS>
-If run form $SUITE_ROOT/performance
+
+If run form $SUITE_ROOT/performance:
+
 USAGE: make [ <OPTIONS> [COMPILER=uhcaf(default)|ifort|g95] ]
+
 Where OPTIONS can be one of:
 |                                                                                                                  
 |_ compile_<suite>:      compiles and generates logs for the codes                                                 
 |_ run_<suite>:          executes and generates logs for the codes                                                 
 |_ complete_<suite>:     executes and generates logs for the codes                                                 
-|_ clean<suite>:         cleans up the logs, executables and all previous history of the regression runs 
+|_ clean<suite>:         cleans up the logs, executables and all previous
+                         history of the regression runs 
 
 ( Note: <suite>: [kernels | microbenchmarks | npb | all] )
 
-=================== II. LIST OF MICROBENCHMARKS ===================
+===============================================================================
+
+II. CAF Benchmarks
 
 There are three main categories of tests in the test suite. Each category is
-located in a different subdirectory within $PEFORMANCE PATH, and all the
-tests within the same category can be executed using either the single Make-
-file in $PEFORMANCE PATH or individual Maefiles within the corresponding
+located in a different subdirectory within $PEFORMANCE PATH, and all the tests
+within the same category can be executed using either the single Make- file in
+$PEFORMANCE PATH or individual Maefiles within the corresponding
 subdirectories.
 
-A. Kernels: These includes some standalone CAF applications. 
-The list includes:
-- CG (2D)
-- Buffon Laplace
-- Image Smoothing
-- Insertion sort
-- Insertion sort (D-type)
-- Matrix Multiplication
-These are located under: $SUITE_ROOT/kernels
+-------------------------------------------------------------------------------
 
-B. Microbenchmarks: These includes simple CAF codes with point to point com-
-munications. 
+II.a Microbenchmarks
+
+These includes simple CAF codes with point to point communications. 
+
 The list of test includes:
 - bidirectional
 - get bandwidth
@@ -86,12 +103,33 @@ The list of test includes:
 - partial data
 - put bandwidth
 - Reductions using remote ’get’ ops
+
 These are located under: $SUITE_ROOT/performance/microbenchmarks
 
-C. NAS-PB: These include the CAF versions of the NAS 3.3.1 (alpha).
-The current tests include EP, CG, SP, BT, and FT. The EP and CG have been 
-developed at the University of Houston. The SP and BT have been developed 
-by the NAS team (thanks are due to Haoqiang Jin, NASA).
+-------------------------------------------------------------------------------
+
+II.b NAS Parallel Benchmarks
+
+These include the CAF versions of the NAS 3.3.1.
+
+The currently supported tests include EP, CG, SP, BT, and FT. The EP and CG
+have been developed at the University of Houston. The SP and BT have been
+developed by the NAS team (thanks are due to Haoqiang Jin, NASA).
+
 These are located under: $SUITE_ROOT/performance/npb
 
+-------------------------------------------------------------------------------
+
+II.c Misc. Kernels
+
+These includes some standalone CAF kernels.
+
+The list includes:
+- CG (2D)
+- Buffon Laplace
+- Image Smoothing
+- Insertion sort
+- Insertion sort (D-type)
+- Matrix Multiplication
+These are located under: $SUITE_ROOT/kernels
 
