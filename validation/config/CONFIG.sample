@@ -1,6 +1,8 @@
 #############################################################################
 # DO NOT directly edit CONFIG.sample. Instead, make a copy (CONFIG) and edit
-# that.
+# that. 
+# DO NOT directly edit make.def. Use the script - config2makedef.sh to generate
+# the file.
 #############################################################################
 
 # path vals

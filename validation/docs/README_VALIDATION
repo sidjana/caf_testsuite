@@ -1,63 +1,59 @@
+Last modified: 1st October, 2013
+Authors: Siddhartha Jana, Deepak Eachempati
+
 Abstract:
 This document describes the purpose and the rationale behind
 each of the tests in the testsuite.
 
 Contents:
-I. Introduction
-II. Feature tests
-III. Confidence tests
-IV. Specific tests
+I. Using the validation test suite
+II. Classification of tests
+	(a). Feature tests
+	(b). Confidence tests
+	(c). Fault (or status) tests
+	(d). Specific tests
+III. Directory tree
 
+=================== I. USING TEST SUITE ===================
+The validation test suite can be run either from the root of the entire testsuite
+or from within the folder - $SUITE_ROOT/validation.
+If run from $SUITE_ROOT, 
+USAGE: make validation PARAMS=<OPTIONS>
+If run form $SUITE_ROOT/validation
+USAGE: make <OPTIONS>
 
-################### I. INTRODUCTION ###################
+ Where OPTIONS is one of the following:
+  |                  
+  |_ all:            tests for conformance, fault-tolerance and confidence tests                               
+  |_ fewtests:       tests only those listed in the file test_file under ./few directory                       
+  |_ feature:        tests the compiler's feature support (excludes tests that include verification)           
+  |_ confidence:     performs cross-testing to test support for non-determinism handling constructs            
+  |_ fault:          tests for verification of fault handling constructs                                       
+  |_ clean<suite>:   Cleans executables                                                                        
+  |_ cleanall:       Cleans everything - results, tests-history, compiler-logs, runtime-logs 
 
-The primary folders:
+And <suite> = fewtests | feature | confidence | fault )
 
-1. bin -- contains all the binaries of all the tests
+The suite can be configured to be used with different compilers, optimization 
+flags, number of iterations, number of processes (images), time-out intervals, etc.
+All of these can be configured by modifying the file $SUITE_ROOT/validation/config/CONFIG
+A template of this file - CONFIG.sample, can be used to create a new CONFIG file.
+This file has predefined parameters set for some of the CAF compilers - 
+OpenUH, Cray, Intel and G95
+The user can uncomment or add the corresponding options of existing or new compilers respectively.
+The suite also requires a make.def in $SUITE_ROOT/validation/config/ . This can be auto-
+gernerated by running the script : config2makedef.sh
+ 
 
-2. confidence_tests -- these include CROSS_tests to verify the
-correctness of the tests
-
-3. config -- these contain CONFIGs with for all the compiler/
-delay/iteration-count specific info. Remember to run the
-config2makedef.sh to autogenerate the make.def for each of the
-compilers from the corresponding CONFIGs.
-
-4. docs -- contains this file and other explanations
-
-5. feature_tests -- contains tests which verify the implementation
-of the compiler/runtime in accordance with the CAF FORTRAN 2008
-standard.
-
-6. few_tests -- this allows user to compiler specific tests in
-all the other forders and listed in a file called 'test_file'
-(present in this folder)
-
-7. nonconformance_tests -- contains tests which contain codes that DO NOT
-adhere to the CAF FORTRAN 2008 standard. The expectation is that
-the errors should be detected by the compiler / CAF-runtime
-
-
-Support files include:
-
-1. timedexec.pl  : perl script that is used to launching the
-binaries and avoiding deadlocks by timing-out after a certains
-threshold(value configurable via the TIMEOUT param in
-config/CONFIG)
-
-2. testmodule.f90 : this is useful for confidence tests where
-the calculations for HIGH v/s LOW confidence reside. All
-confidence tests are linked with the module in this file before
-loading.
-
-
-################### II. FEATURE - TESTS ###################
--- can be found under validation/feature_tests
-
--- The detailed description of each of the tests are as follows:
+=================== II(a). FEATURE - TESTS ===================
+-- These can be found under validation/feature_tests
+-- These tests verify the support of compiler implementations of the 
+major coarray features
+-- Format of test-file name: <feature-name-section_number_in_std>.f90
+-- The detailed descriptions of each of the tests (arranged alphabetically) 
+follow:
 
 ** atomic_8.5.2.f90:
-
 This test validates the implementation of
 the atomic subroutine - atomic_define. It must be noted that
 atomic operations are defined on an ATOM element - only a scalar
@@ -78,9 +74,7 @@ same location - say ,0010 and 0100 the number might read 0110.
 As a test, we check whether the 'obj' maintains it property of
 being a perfect power of '2'. If not, the write was not atomic.
 
-
 ** character_test.f90:
-
 This test tests for the support of character coarrays. The
 following subtle differnce must be noted between strings in
 FORTRAN and C:
@@ -92,16 +86,16 @@ character*2 :: a    ! string of size 2
 -- In C:
 char* a;
 /* a pointer to a character which can potentially expand to a
- * large buffer of consecutive characters*/
+   large buffer of consecutive characters
+*/
 char a[4];
 /* a string/array of 4 characters The manner in which remote
- * data transfers are handled within the compiler will be
- * slightly different when the coarrays are of CHARACTER data
- * type. */
-
+   data transfers are handled within the compiler will be
+   slightly different when the coarrays are of CHARACTER data
+   type. 
+*/
 
 ** coarray_2.4.7.6.f90:
-
 This test checks the use of cosubscripts within square brackets
 translate to data transfer from the correct image or not. The
 cosubscripts notation follows the rules for the
@@ -111,75 +105,62 @@ being equal to 1
 
 
 ** coarray_4.8.R468.f90:
-
 reference of coarray without [] implies local object
 
 
 ** coarray_5.3.6.1.f90:
-
 use of attribute CODIMENSION to declare coarrays
 
 ** derived_4.5.4.f90:
-
 Ultimate components of a derived type that are of intrinsic type or ALLOCATABLE or POINTER attribute + ultimate components that are of derived type and have neither the ALLOCATABLE nor the POINTER components
 
 
 **dummyargs_12.3.2.2c.f90:
-
 explicit shape, assumed size, assumed shape, allocatable dummy
 arguments
 
 
 ** intrin_13.007.126.f90:
-
 NUM_IMAGES() returns the number of images launched
 
 
 ** intrin_13.7.165.f90:
-
 THIS_IMAGE(), THIS_IMAGE(coarray), THIS_IMAGE(coarray, dim)
 
 
 ** intrin_13.7.172.f90:
-
 LCOBOUND(coarray) and LCOBOUND(coarray,dim)
 
 
 ** intrin_13.7.79.f90
-
 IMAGE_INDEX(coarray, subs)
 
 
 ** intrin_13.7.91.f90
-
 UCOBOUND(COARRAY[, DIM, KIND])
 
 
 ** intrin_6.7.3.2.11.f90
-
 ALLOCATE and DEALLOCATE act as barriers
 
 
 ** item_4.8.a.f90
-
 subobjects if a coarray is also a coarray
 
 
 ** pointer_4.5.4.6b.f90:
-
 association of pointer components of coarrays with local objects
 
 
-
-
-################### III. CONFIDENCE - TESTS ###################
-
--- can be found under validation/confidence_tests
-
-
+=================== II(b). CONFIDENCE - TESTS ===================
+-- These can be found under validation/confidence_tests
+-- These tests verify the support of compiler implementations of the 
+synchronization constructs to ensure memory consistency for
+CAF programs
+the major coarray features
 -- All tests in this category verify CAF constructs that avoid
 race conditions. The tests include calls to the sleep()
-intrinsic for introducing delays in some images so enforce a
+intrinsic for introducing delays in some images to enforce a
 certain level of determinism. This is essential for testing the
 different features as listed below,
 
@@ -188,9 +169,7 @@ different features as listed below,
   the introduction of sleep() calls introduces the races. The
 tests DO NOT include the CAF contruct / statement being tested.
 (The macro CROSS_ is used to exclude these contructs)
-
 - Every test includes a module called 'crosstest'.
-
 - The module 'crosstest' (defined in file testmofule.f90)
   includes the declaration of an integer coscalar called
 'cross_err' which is modified by every image that detects an
@@ -200,23 +179,24 @@ returns the test result of the feature being tested. The latter
 returns the result based on the confidence of the cross-test.
 confidence of the actual tests.
 
-- The original tests (with the CAF constructs) are compiled as:
-  $(FTN COMPILER) $(PREPROCESSOR_FLAG) testmodule.f90 <file_name.f90>
+	Note for suite-developers:
+		- The original tests (with the CAF constructs) are compiled as:
+		  $(FTN COMPILER) $(PREPROCESSOR_FLAG) testmodule.f90 <file_name.f90>
+		
+		- The cross tests (without the CAF constructs) are compiled as:
+		  $(FTN COMPILER) $(PREPROCESSOR_FLAG) -DCROSS_ testmodule.f90
+		<file_name.f90>
+		
+		- Image-1 is chosen as the one whose coarray is accessesed by
+	  	different images for testing the feature under consideration.
 
-- The cross tests (without the CAF constructs) are compiled as:
-  $(FTN COMPILER) $(PREPROCESSOR_FLAG) -DCROSS_ testmodule.f90
-<file_name.f90>
+-- Format of test-file name: <feature-name-section_number_in_std>.f90
 
-- Image-1 is chosen as the one whose coarray is accessesed by
-  different images for testing the feature under consideration.
-
--- The description of the different feature tests are as
-follows:
-
+-- The detailed descriptions of each of the tests (arranged alphabetically) 
+follow:
 
 
 ** critical_8.1.5.f90:
-
 This tests the CRITICAL constructs. The aim of the test is to
 determine whether the CRITICAL stmt blocks other images from
 entering the CRITICAL section. For this purpose, image 1 is
@@ -227,9 +207,7 @@ implementation of the CRITICAL statement. If other images enter
 the section, they read the unchanged value of 'num' on image1
 and records the error in 'cross_err'.
 
-
 ** intrin_8.5.6.f90:
-
 This tests the LOCK - UNLOCK constructs. The aim is to test
 whether the LOCK stmt blocks other imags when already acquired.
 Image-1 is given a head-start and acquires the lock. on
@@ -241,7 +219,6 @@ its 'num' is untouched or not. If not, it records the error in
 
 
 ** sync_8.5.3.f90:
-
 This tests for SYNC ALL image control stmt. The aim of the test
 is to verify the barrier-like behavior by the SYNC ALL contruct.
 Before writing to its 'num' coarray, image1 sleeps. If the SYNC
@@ -253,9 +230,7 @@ before joining others at the snchronization contruct.
 
 
 ** The test case for SYNC IMAGES is subdivided into 2 parts:
-
 **a. sync_8.5.4a.f90:
-
 This tests for the correct working of SYNC IMAGES(*) executed by
 image1. The aim is to determine whether other images block till
 the images being waited on call SYNC IMAGES(*). Image-1 sleeps
@@ -264,9 +239,7 @@ images expect to see the modified 'num[1]' after executing SYNC
 IMAGES(ARR). If the modified data object on image1 is still not
 accessible, then the other images record the error in
 'cross_err'.
-
 **b. sync_8.5.4b.f90:
-
 In this case, image-2 executes SYNC IMAGES(*). All other images
 execute SYNC IMAGES(ARR), where ARR in a rank-one array with 1
 element - 2.The aim of the test is to verify whether images
@@ -279,10 +252,25 @@ inconsistent behavior with the standard and the images will
 record this error in 'cross_err'.
 
 
-################### IV. SPECIFIC - TESTS ###################
+=================== II(c). FAULT (or status) - TESTS ===================
 
--- can be found under validation/few_tests
+-- These can be found under validation/fault_tests
+-- These tests verify the support of compiler implementations of the 
+status-querying contructs.
+-- Format of test-file name: <feature-name-section_number_in_std>.f90
+-- The detailed descriptions of each of the tests (arranged alphabetically) 
+follows:
 
+** sync_8.5.7a.f90
+
+** sync_8.5.7b.f90
+
+** sync_8.5.7c.f90
+
+
+=================== II(d). SPECIFIC - TESTS ===================
+
+-- These can be found under validation/few_tests
 -- The primary file, 'test_file' contains a list of all the
 programs that the user wants to run. The fils is divided into
 three sections:
@@ -290,7 +278,7 @@ three sections:
 2. FEATURE tests
 3. NON_CONFORMANCE tests
 
--- If one wants to test specific programs that fall under one of
+-- If one wishes to test specific programs that fall under one of
 these categories, one must ensure that those files must exist
 under the respective folders and must be mentioned in the
 correct section in the file './test_file'.
@@ -299,4 +287,47 @@ correct section in the file './test_file'.
 subdivided into the corresponding categories
 
 -- NOTE: DO NOT list any tests below the "END-TESTS" line.
+
+
+
+=================== III. Directory Structure ===============
+The top level folders are:
+
+1. bin -- contains all the binaries of all the tests
+
+2. confidence_tests -- these include CROSS_tests to verify the
+correctness of the tests
+
+3. config -- these contain CONFIGs with for all the compiler/
+delay/iteration-count specific info. Remember to run the
+config2makedef.sh to autogenerate the make.def for each of the
+compilers from the corresponding CONFIGs.
+
+4. docs -- contains this file and:
+4.1 docs/sample_results/results.* -- snapshots of validation tests of 
+the OpenUH, Cray, Intel and G95 compilers
+4.2 docs/instructional_guide.pdf -- The purpose of this guide is to help the reader be familiar with the list of configuration parameters, test files, method of verification of the tests, and  results of the some of the different CAF compilers (OpenUH, Intel, G95, and Cray).
+
+5. feature_tests -- contains tests which verify the implementation
+of the compiler/runtime in accordance with the CAF FORTRAN 2008
+standard.
+
+6. few_tests -- this allows user to compiler specific tests in
+all the other forders and listed in a file called 'test_file'
+(present in this folder)
+
+7. nonconformance_tests -- contains tests which contain codes that DO NOT
+adhere to the CAF FORTRAN 2008 standard. The expectation is that
+the errors should be detected by the compiler / CAF-runtime
+
+
+Support files include:
+1. support/timedexec.pl  : perl script that is used to launching the
+binaries and avoiding deadlocks by timing-out after a certains
+threshold(value configurable via the TIMEOUT param in
+config/CONFIG)
+2. testmodule.f90 : this is useful for confidence tests where
+the calculations for HIGH v/s LOW confidence reside. All
+confidence tests are linked with the module in this file before
+loading.
 
