@@ -1,0 +1,54 @@
+
+Instructions on running the tests, explanation of the 
+directory structures, list of configuration parameters, 
+snapshots of performance and validation results of some 
+CAF compilers (UHCAF, Cray, Intel, and G95) are all 
+located under:
+<performance|validation>/docs/README_<PERFORMANCE|VALIDATION>
+
+A quick summary of the options on using the test suite:
+(this listing can be obtained by typing 'make' in this parent directory)
+
+============================================================
+HPCTools CAF - test suite
+
+If the tests are executed from this parent directory of the test-suite, then
+USAGE: make <performance | validation | clean> PARAMS=<OPTIONS>
+
+---------OPTIONS for VALIDATION TEST SUITE-------------
+
+If test suite is run from within validation directory, then USAGE: make OPTIONS 
+ OPTIONS include:
+ |  (Note: <suite> = fewtests | feature | confidence | fault )
+ |                  
+ |_ all:            tests for conformance, fault-tolerance and confidence tests                               
+ |_ fewtests:       tests only those listed in the file test_file under ./few directory                       
+ |_ feature:        tests the compiler's feature support (excludes tests that include verification)           
+ |_ confidence:     performs cross-testing to test support for non-determinism handling constructs            
+ |_ fault:          tests for verification of fault handling constructs                                       
+ |_ clean<suite>:   Cleans executables                                                                        
+ |_ cleanall:       Cleans everything - results, tests-history, compiler-logs, runtime-logs                   
+
+Before running the tests, ensure that the CONFIG file with the required parameters are set in validation/config 
+directory.
+
+---------OPTIONS for PERFORMANCE TEST SUITE-------------
+
+If test suite is run from within performance directory, then USAGE: make [OPTIONS [COMPILER=uhcaf(default)|ifort|g95] ]
+OPTIONS include:
+| ( Note: <suite>: [kernels | microbenchmarks | npb | all] )
+|                                                                                                                  
+|_ compile_<suite>:      compiles and generates logs for the codes                                                 
+|_ run_<suite>:          executes and generates logs for the codes                                                 
+|_ complete_<suite>:     executes and generates logs for the codes                                                 
+|_ clean<suite>:         cleans up the logs, executables and all previous history of the regression runs           
+
+Before running the Performance tests, please ensure:
+ The test_suite specific parameters are set in /../support/CONFIG 
+ The compiler specific parameters in /../support/CONFIG-compiler.<compiler> 
+
+
+The number of images may be varied for each test-category from the corresponding test_*.sh script
+
+============================================================
+
