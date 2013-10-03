@@ -3,11 +3,10 @@ CAF Performance Test Suite Instructions
 Last modified: 1st October, 2013
 HPCTools Group, University of Houston
 
-This document describes the method for using the performance test suite, list
-of (micro-)benchmarks used within the suite and the directory structure.
-Details about the configuration parameters, and  initial performance results
+This document describes the method for using the performance test suite and the list
+of (micro-)benchmarks used within the suite.  Some initial performance results
 of some CAF compiler implementations can all be found in the file -
-instructional_guide.pdf
+performance_report.pdf
 
 ===============================================================================
 
@@ -24,39 +23,70 @@ II.c  Misc. Kernels
 
 ===============================================================================
 
-I. Using the performance test suite
+I. Using the Performance Test Suite
 
 -------------------------------------------------------------------------------
 
 I.a Configuring
 
-The performance suite comes bundled along with the validation test suite. The
-performance suite is located under: PERFORMANCE_PATH = $SUITE_ROOT/performance
+The performance suite comes bundled along with the validation test
+suite. It is located under: PERFORMANCE_PATH =
+$SUITE_ROOT/performance where, SUITE_ROOT is the parent directory
+of the entire suite.
 
-The installation requires the setup of a few configuration parameters. These
+The test suite requires the setup of a few configuration parameters. These
 parameters can be divided into two types:
 
 1. Generic parameters: These are testsuite specific parameters which can be
 used to specify the location of the compilation, execution result-dumps.
-These are located in $PERFORMANCE PATH/support/CONFIG
+These are located in $PERFORMANCE PATH/support/CONFIG (default values pre-set)
+The list includes:
+-----------------------------------
+Parameter       | Description 
+----------------|------------------
+DATE            | Format of date. This format is used for naming the result logs 
+TIMEOUT         | Timeperiod in seconds for timing-out on executions. Any execution which crosses this limit will be denoted as having 'timed-out' in the test-results and log files. 
+logfile         | name-format of the log file. These files store the testsuite results. 
+TESTS_DIR       | Location of the tests 
+LOG_DIR         | location of the log dump 
+OUTPUT_DIR      | Location of the  results of compilation and execution of all the tests. All the stdout and stderr are stored in subdirectories  in this path. 
+BIN_DIR         | Location of all the executables.  
+EXEC_OUT_DIR    | location of stdout and stderr obtained while execution of the test-binaries. 
+COMP_OUT_DIR    | location of stdout and stderr obtained during compilation of the test-files. 
+HISTORY_OUT_DIR | location of all the past compilation/execution results. 
+NITER           | Number of iterations for microbenchmark tests that perform repeated runs of the paricular communication patterns. 
+------------------------------------
+
 
 2. Compiler-specific: These are compiler dependent parameters and can be used
 to adjust the compiler/execution commands, flags and launcher options.
 These are located in $PEFORMANCE PATH/support/CONFIG-compiler.<compiler>
+-----------------------------------
+Parameter       | Description 
+----------------|------------------
+Parameter       | Description 
+COMPILER        | Name of the compiler
+FC              | Executable name of the compiler to launch the compilation
+FFLAGS          | Commands to be passed to the compiler at command line
+LAUNCHER        | Command for launching multiple CAF images.
+EXEC_OPTIONS    | Command-line options to be passed after the executable name during execution.
+COMPILE_CMD     | Command format for compilation
+EXEC_CMD        | Command format for execution
+------------------------------------
 
-For certain tests, the number of images may be varied for each test-category
-from the corresponding test_*.sh script within the tests-folder.
+For certain tests, the number of images may be varied for the NPB and kernel tests, 
+by changing the corresponding test_*.sh script within the respective directories.
 
 Note: The configuration parameters are mainly self-explanatory. For the sake
 of completeness, we provide a detailed descrition of the same in the file -
-instructional_guide.pdf within this docs folder.
+performance_report.pdf within this 'docs' directory.
 
 -------------------------------------------------------------------------------
 
 I.b Running
 
 The performance test suite can be run either from the root of the entire
-testsuite or from within the folder - $SUITE_ROOT/performance.
+testsuite or from within the directory - $SUITE_ROOT/performance.
 
 If run from $SUITE_ROOT: 
 
@@ -133,3 +163,4 @@ The list includes:
 - Matrix Multiplication
 These are located under: $SUITE_ROOT/kernels
 
+==============================================================================

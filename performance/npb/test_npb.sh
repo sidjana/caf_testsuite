@@ -50,15 +50,11 @@ mkdir -p $COMP_OUT_DIR $EXEC_OUT_DIR  $HISTORY_OUT_DIR $BIN_DIR $LOG_DIR
 
 printf '%8s %8s %8s %15s %15s %15s %25s \n' "<NAME>" "<CLASS>" "<NPROCS>" "<COMPILATION>" "<EXECUTION>" "<RESULT>" "<TIME(secs)>" | tee -a $LOG_DIR/$logfile
 
-EXEC_STATUS="N/A"
-VERIFICATION="N/A"
-TIME="N/A"
-
-for BM in ft #ep cg sp bt ft
+for BM in ep cg sp bt ft
 do
 	for CLASS in S W A B C 
 	do
-  		  if [ "$BM" == "ep" -o "$BM" == "cg" ]; then
+  		  if [ "$BM" == "ep" -o "$BM" == "cg" -o "$BM" == "ft" ]; then
   		       NPROCS_LST="1 2 4 8 16";
   		  else
   		       NPROCS_LST="1 4 9 16"
@@ -67,13 +63,15 @@ do
   		  for NP in  $NPROCS_LST
   		  do
 		  	NPROCS=$NP
+			COMPILE_STATUS="N/A"
+			EXEC_STATUS="N/A"
+			VERIFICATION="N/A"
+			TIME="N/A"
+
 			source ${BENCH_PATH}/../support/CONFIG-compiler.$compiler
 			cp ./config/make.def.$compiler ./config/make.def
   		     	opfile=$BM.$CLASS.$NP
 			printf '%8s %8s %8s ' "$BM" "$CLASS" "$NP"  | tee -a $LOG_DIR/$logfile
-			if [ "$BM" == "ft" -a $NP -eq 9 ]; then
-			        COMPILE_STATUS="N/A"
-			else
   		     	if [ "$COMPILE_TESTS"=="1" -o "$BOTH"=="1" ]; then
 
 			 	make clean &>/dev/null
@@ -84,13 +82,7 @@ do
   		     	 	  	 COMPILE_STATUS="FAIL"
   		     	 	fi
   		     	fi
-			fi
 			printf '%15s ' "$COMPILE_STATUS"  | tee -a $LOG_DIR/$logfile
-			if [ "$BM" == "ft" -a $NP -eq 9 ]; then
-			     EXEC_STATUS="N/A"
-			     VERIFICATION="N/A"
-			     TIME="N/A"
-			else
   		     	if [ "$EXECUTE_TESTS" -eq "1" -o "$BOTH" -eq "1" ]; then           #execution enabled
 			      VERIFICATION="N/A"
 			      TIME="--"
@@ -110,7 +102,6 @@ do
   		     	         EXEC_STATUS="NO BINARY"                                   #compilation failed
   		     	     fi
   		     	fi
-			fi
   		     	printf '%15s %18s %15s\n' "${EXEC_STATUS}" "${VERIFICATION}" "${TIME}" | tee -a $LOG_DIR/$logfile
   		  done
 	done
