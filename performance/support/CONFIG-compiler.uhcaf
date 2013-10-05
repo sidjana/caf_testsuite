@@ -2,7 +2,7 @@
 ## Please set these variables to their appropiate values.
 
 #OpenUH CAF Compiler
-COMPILER="OpenUH"
+COMPILER="uhcaf"
 FC="uhcaf"
 FFLAGS="-ftpp -DNPROCS=${NPROCS} -DNITER=${NITER} "
 LAUNCHER="cafrun -n ${NPROCS} --image-heap=1G"
