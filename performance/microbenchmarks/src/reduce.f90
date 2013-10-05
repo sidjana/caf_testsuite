@@ -15,6 +15,7 @@
 !  Name                Date            Notes
 !  --------------      ----------      --------------------
 !  Asma Farjallah      July 2010       Init
+!  Siddhartha Jana     October 2013    Minor changes - Ready for test suite, removed file I/O 
 !
 !---------------------------------------------------------------------
 
@@ -55,9 +56,6 @@ program reduce
   output=trim(path)//"/reduce_CAF_"//suffix
 
   if (me == 1) then
-     !open(unit=10,file=trim(output),form='formatted', &
-     !     status='replace',access='sequential',       &
-     !     action='write',iostat=ierr                  )
      write(*,'(A1,A10,A21,A20)') "#","[Bytes]","[Microsec]","[KB/sec]"
   endif
 
@@ -110,10 +108,6 @@ program reduce
      msg_size=2*msg_size
 
   enddo
-
-  !if (me == 1) then
-  !   close(unit=10,iostat=ierr)
-  !endif
 
   deallocate(msg_sum)
 

@@ -16,6 +16,7 @@
 !  --------------      ----------      --------------------
 !  Asma Farjallah      July 2010       Init
 !  Debjyoti Majumder   July 2011       Minor modifications
+!  Siddhartha Jana     October 2013    Minor changes - Ready for test suite, removed file I/O 
 !
 !---------------------------------------------------------------------
 
@@ -44,21 +45,12 @@ program get_latency
 
   me=this_image()
 
-  call getarg(1,path)
-  call getarg(2,layer)
-  call getarg(3,cluster)
-  call getarg(4,ncore)
-  call getarg(5,nproc)
-
   suffix=trim(layer)//"_"//trim(cluster)//&
        "_NC"//trim(ncore)//"_NP"//trim(nproc)//".dat"
 
   output=trim(path)//"/get-latency_CAF_"//suffix
 
   if (me == 2) then
-     !open(unit=10,file=trim(output),form='formatted',&
-     !     status='replace',access='sequential',          &
-     !     action='write',iostat=ierr                     )
      write(*,'(A1,A10,A20)') "#","[Bytes]","[Microsec]"
 
   endif
@@ -103,9 +95,5 @@ program get_latency
  endif
 
  deallocate(msg)
-
- !if (me == 2) then
- !   close(unit=10,iostat=ierr)
- !endif
 
 end program GET_latency

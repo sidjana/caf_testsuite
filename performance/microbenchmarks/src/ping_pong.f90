@@ -15,6 +15,7 @@
 !  --------------      ----------      --------------------
 !  Asma Farjallah      July 2010       Init
 !  Debjyoti Majumder   July 2011       Minor change
+!  Siddhartha Jana     October 2013    Minor changes - Ready for test suite, removed file I/O 
 !
 !---------------------------------------------------------------------
 
@@ -60,9 +61,6 @@ program ping_pong
   output=trim(path)//"/pingpong_CAF_"//suffix
 
   if (me == 1) then
-    ! open(unit=10,file=trim(output),form='formatted', &
-    !      status='replace',access='sequential',       &
-    !      action='write',iostat=ierr                  )
      write(*,'(A1,A10,A21,A20)') "#","[Bytes]","[Microsec]","[KB/sec]"
   endif
 
@@ -105,10 +103,6 @@ program ping_pong
   enddo
 
   deallocate (msg1, msg2)
-
-  !if (me == 1) then
-  !   close(unit=10,iostat=ierr)
-  !endif
 
   stop
 

@@ -11,7 +11,7 @@ if [ "$1" == "cleanall" ]; then
     rm -rf $TESTS_DIR/*.mod
     exit 0
 fi
-cd $TESTS_DIR ; FILE_LIST="`ls *.f90`" ; cd -
+cd $TESTS_DIR ; 
 
 if [ $# == 3 ]; then
   if [ "$1" == "compile" ]; then
@@ -26,31 +26,37 @@ if [ $# == 3 ]; then
     BOTH="1"
     compiler=$2
   else
-    echo "USAGE: ./test_microbenchmarks.sh [mode [compiler] ] where "
+    echo "USAGE: ./test_microbenchmarks.sh <mode> <compiler> <file> "
     echo "           mode     = compile|execute|complete"
     echo "           compiler = uhcaf|ifort|g95"
+    echo "           file = <file-name>|ALL"
+    echo -e "Please ensure:\n The test_suite specific parameters are set in ${BENCH_PATH}/../support/CONFIG \n The compiler specific parameters in ${BENCH_PATH}/../support/CONFIG-compiler.<compiler> \n"
     echo "The results of all the microbenchmarks are stored in a plottable format in $EXEC_OUT_DIR"
     exit 1
   fi
-  if [ "$3" != "" ]; then
-  	if [ -f $TESTS_DIR/$3.f90 ]; then
+  if [ "$3" != "ALL" ]; then
+  	if [ -f $3.f90 ]; then
 		FILE_LIST="$3.f90"
 		echo "file found"
 	else
 	        echo "File  $3.f90 not found !"
 		exit 1
 	fi
+  else
+  	FILE_LIST="`ls *.f90`"
   fi
 else
-    echo "USAGE: ./test_microbenchmarks.sh [mode] [compiler] where "
+    echo "USAGE: ./test_microbenchmarks.sh <mode> <compiler> <file> "
     echo "           mode     = compile|execute|complete"
     echo "           compiler = uhcaf|ifort|g95"
+    echo "           file = <file-name>|ALL"
     echo -e "Please ensure:\n The test_suite specific parameters are set in ${BENCH_PATH}/../support/CONFIG \n The compiler specific parameters in ${BENCH_PATH}/../support/CONFIG-compiler.<compiler> \n"
+    echo "The results of all the microbenchmarks are stored in a plottable format in $EXEC_OUT_DIR"
     exit 1
 fi
 
-if [ ! -f ../support/CONFIG-compiler.${compiler} ]; then
-  echo "CONFIG-compiler.${compiler} file missing. Please ensure that CONFIG file is present under $ROOT/../support"
+if [ ! -f ../../support/CONFIG-compiler.${compiler} ]; then
+  echo "../../support/CONFIG-compiler.${compiler} file missing. Please ensure that CONFIG file is present under $ROOT/../support"
   exit 1
 fi
 
@@ -58,7 +64,6 @@ fi
 rm -rf $COMP_OUT_DIR $EXEC_OUT_DIR 
 mkdir -p $COMP_OUT_DIR $EXEC_OUT_DIR  $HISTORY_OUT_DIR $BIN_DIR $LOG_DIR
 
-cd $TESTS_DIR
 $CC -c rtc.c -o $BIN_DIR/rtc.o -D$TIMER_ARCH
 
 if [ "$COMPILE_TESTS" -eq "1" -o "$BOTH" -eq "1" ]; then

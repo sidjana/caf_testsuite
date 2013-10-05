@@ -16,6 +16,7 @@
 !  Name                Date            Notes
 !  --------------      ----------      --------------------
 !  Asma Farjallah      July 2010       Init
+
 !
 !---------------------------------------------------------------------
 
@@ -49,21 +50,8 @@ program partial_data
      call exit(0)
   end if
 
-!  call getarg(1,path)
-!  call getarg(2,layer)
-!  call getarg(3,cluster)
-!  call getarg(4,ncore)
-!  call getarg(5,nproc)
-!
-!  suffix=trim(layer)//"_"//trim(cluster)//&
-!       "_NC"//trim(ncore)//"_NP"//trim(nproc)//".dat"
-!
-!  output=trim(path)//"/partial_CAF_"//suffix
 
   if (me == 1) then
-    ! open(unit=10,file=trim(output),form='formatted', &
-    !      status='replace',access='sequential',       &
-    !      action='write',iostat=ierr                  )
      write(*,'(A1,A10,A21,A20)') "#","[Bytes]","[Microsec]","[KB/sec]"
   endif
 
@@ -117,9 +105,5 @@ program partial_data
   enddo
 
   deallocate(msg)
-
-  !if (me == 1) then
-  !   close(unit=10,iostat=ierr)
-  !endif
 
 end program partial_data

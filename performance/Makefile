@@ -25,7 +25,7 @@ compile_kernels:
 	@cd $(KERNELS_PATH) ; make -s compile COMPILER=$(COMPILER);
 
 compile_microbenchmarks:
-	@cd $(MICROBENCH_PATH) ; ./test_microbenchmarks.sh compile  COMPILER=$(COMPILER);
+	@cd $(MICROBENCH_PATH) ; make -s compile  COMPILER=$(COMPILER);
 
 compile_npb:
 	@cd $(NPB_PATH); ./test_npb.sh compile COMPILER=$(COMPILER);
@@ -36,7 +36,7 @@ execute_kernels:
 	@cd $(KERNELS_PATH) ; make -s execute COMPILER=$(COMPILER);
 
 execute_microbenchmarks:
-	@cd $(MICROBENCH_PATH) ; ./test_microbenchmarks.sh execute  COMPILER=$(COMPILER);
+	@cd $(MICROBENCH_PATH) ; make -s execute  COMPILER=$(COMPILER);
 
 execute_npb:
 	@cd $(NPB_PATH) ; ./test_npb.sh execute COMPILER=$(COMPILER);
@@ -47,7 +47,7 @@ complete_kernels:
 	@cd $(KERNELS_PATH) ; make -s complete COMPILER=$(COMPILER);
 
 complete_microbenchmarks:
-	@cd $(MICROBENCH_PATH) ; ./test_microbenchmarks.sh complete  COMPILER=$(COMPILER);
+	@cd $(MICROBENCH_PATH) ; make -s complete  COMPILER=$(COMPILER);
 
 complete_npb:
 	@cd $(NPB_PATH) ; ./test_npb.sh complete COMPILER=$(COMPILER);

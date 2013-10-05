@@ -16,6 +16,7 @@
 !  --------------      ----------      --------------------
 !  Asma Farjallah      July 2010       Init
 !  Debjyoti Majumder   July 2011       Minor modifications
+!  Siddhartha Jana     October 2013    Minor changes - Ready for test suite, removed file I/O 
 !
 !---------------------------------------------------------------------
 
@@ -60,9 +61,6 @@ program put_latency
   output=trim(path)//"/put-latency_CAF_"//suffix
 
   if (me == 1) then
-     !open(unit=10,file=trim(output),form='formatted',&
-     !     status='replace',access='sequential',          &
-     !     action='write',iostat=ierr                     )
      write(*,'(A1,A10,A20)') "#","[Bytes]","[Microsec]"
 
   endif
@@ -109,9 +107,5 @@ program put_latency
  endif
 
  deallocate(msg)
-
- !if (me == 1) then
- !   close(unit=10,iostat=ierr)
- !endif
 
 end program put_latency

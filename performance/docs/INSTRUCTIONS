@@ -135,6 +135,11 @@ The list of test includes:
 - Reductions using remote ’get’ ops
 
 These are located under: $SUITE_ROOT/performance/microbenchmarks
+In order to compile and execute a specific microbenchmark:
+1. cd $SUITE_ROOT/microbenchmarks
+2. make [ compile|execute|complete|clean|cleanall [COMPILER=uhcaf(default)|ifort|g95] [TYPE=<test-name>] ]
+
+Where, <test-name> :=  bidirectional|broadcastget_bandwidth|get_latency||noncontiguous|partial_data|ping_pong|put_bandwidth|put_latency|reduce"
 
 -------------------------------------------------------------------------------
 
@@ -163,7 +168,7 @@ The list includes:
 - Matrix Multiplication
 These are located under: $SUITE_ROOT/kernels
 In order to compile and execute a specific kernel:
-1. cd $$SUITE_ROOT/kernels
+1. cd $SUITE_ROOT/kernels
 2. make [ compile[_KERNEL]|execute[_KERNEL]|complete[_KERNEL]|cleanall [COMPILER=uhcaf(default)|ifort|g95] ] 
 Where, KERNEL is one of: buffon_laplace, cg_2d, image_smoothing, insertion_sort, insertion_sort_dt, jacobi, mm
 Please ensure:

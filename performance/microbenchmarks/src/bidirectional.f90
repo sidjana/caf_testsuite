@@ -15,6 +15,7 @@
 !  --------------      ----------      --------------------
 !  Asma Farjallah      July 2010       Init
 !  Debjyoti Majumder   July 2011       Minor change
+!  Siddhartha Jana     October 2013    Minor changes - Ready for test suite, removed file I/O 
 !
 !---------------------------------------------------------------------
 
@@ -48,22 +49,8 @@ program bidirectional
      call exit(0)
   end if
 
-!  call getarg(1,path)
-!  call getarg(2,layer)
-!  call getarg(3,cluster)
-!  call getarg(4,ncore)
-!  call getarg(5,nproc)
-
-  !suffix=trim(layer)//"_"//trim(cluster)//&
-  !     "_NC"//trim(ncore)//"_NP"//trim(nproc)//".dat"
-
-  !output=trim(path)//"/bidirectional_CAF_"//suffix
 
   if (me == 1) then
-     !open(unit=10,file=trim(output),form='formatted', &
-     !     status='replace',access='sequential',       &
-     !     action='write',iostat=ierr                  )
-     !write(10,'(A1,A10,A21,A20)') "#","[Bytes]","[Microsec]","[KB/sec]"
      write(* ,'(A1,A10,A21,A20)') "#","[Bytes]","[Microsec]","[KB/sec]"
   endif
 
@@ -101,7 +88,6 @@ program bidirectional
         r_msgsize=msg_size*2
         r_iterations=iterations
 
-        !write(10,'(I10,A1,E20.8,A1,E20.8)') 4*msg_size,";",rtc*1000000.0/r_iterations,";",4.0*r_msgsize*r_iterations/rtc/1024.0
         write(*,'(I10,E20.8,E20.8)') 4*msg_size,rtc*1000000.0/r_iterations,4.0*r_msgsize*r_iterations/rtc/1024.0
 
         i=i+1
@@ -113,9 +99,5 @@ program bidirectional
   enddo
 
   deallocate (msg1, msg2)
-
-  !if (me == 1) then
-  !   close(unit=10,iostat=ierr)
-  !endif
 
 end program bidirectional
