@@ -7,6 +7,14 @@
 
       program customerdb
         implicit none
+
+        interface 
+          subroutine sort(customerList,t,startIndex,endIndex)
+            integer, intent(in) :: startIndex, endIndex, t
+            integer, dimension(t), intent(inout) :: customerList[*]
+          end subroutine sort 
+        end interface
+
         integer :: totalCount = 100000
         integer :: customers(100000)[*]
         integer, allocatable :: work1(:), work2(:)
@@ -19,7 +27,6 @@
         integer :: ticks, start_time, end_time, rate
 
 
-        !allocate(customers(totalCount)[*])
         me = this_image()
         if (me == 1) then
             ! create random set of data for test sort
@@ -117,7 +124,7 @@
             end do
         end if
 
-	sync all
+        sync all
         call system_clock(end_time)
 
 
@@ -127,7 +134,7 @@
         write(*, '(//A20,I8,A)')   "clock rate = ", rate, " ticks/s"
         write(*, '(A20,I8)')           "ticks  = ", ticks
         write(*, '(A20,F8.2,A)') "elapsed time = ", ticks/(1.0*rate), &
-	& "seconds"
+	& " seconds"
         end if
       end program customerdb
 
