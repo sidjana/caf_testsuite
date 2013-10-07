@@ -3,10 +3,10 @@ CAF Performance Test Suite Instructions
 Last modified: 1st October, 2013
 HPCTools Group, University of Houston
 
-This document describes the method for using the performance test suite and the list
-of (micro-)benchmarks used within the suite.  Some initial performance results
-of some CAF compiler implementations can all be found in the file -
-performance_report.pdf
+This document describes the method for using the performance test suite and
+the list of (micro-)benchmarks used within the suite.  Some initial
+performance results of some CAF compiler implementations can all be found in
+the file - performance_report.pdf
 
 ===============================================================================
 
@@ -38,41 +38,72 @@ The test suite requires the setup of a few configuration parameters. These
 parameters can be divided into two types:
 
 1. Generic parameters: These are testsuite specific parameters which can be
-used to specify the location of the compilation, execution result-dumps.
-These are located in $PERFORMANCE PATH/support/CONFIG (default values pre-set)
-The list includes:
------------------------------------
-Parameter       | Description 
-----------------|------------------
-DATE            | Format of date. This format is used for naming the result logs 
-TIMEOUT         | Timeperiod in seconds for timing-out on executions. Any execution which crosses this limit will be denoted as having 'timed-out' in the test-results and log files. 
-logfile         | name-format of the log file. These files store the testsuite results. 
+used to specify the location of the compilation and execution result dumps.
+These are located in $PERFORMANCE PATH/support/CONFIG (default values
+pre-set).
+
+The list of parameters are:
+
+------------------------------------------------------------------------------
+Parameter       | Description
+----------------|-------------------------------------------------------------
+DATE            | Format of date. This format is used for naming the result
+                | logs 
+                |
+TIMEOUT         | Timeperiod in seconds for timing-out on executions. Any
+                | execution which crosses this limit will be denoted as having
+                | 'timed-out' in the test-results and log files. 
+                |
+logfile         | name-format of the log file. These files store the testsuite
+                | results. 
+                |
 TESTS_DIR       | Location of the tests 
+                |
 LOG_DIR         | location of the log dump 
-OUTPUT_DIR      | Location of the  results of compilation and execution of all the tests. All the stdout and stderr are stored in subdirectories  in this path. 
+                |
+OUTPUT_DIR      | Location of the  results of compilation and execution of all
+                | the tests. All the stdout and stderr are stored in
+                | subdirectories in this path. 
+                |
 BIN_DIR         | Location of all the executables.  
-EXEC_OUT_DIR    | location of stdout and stderr obtained while execution of the test-binaries. 
-COMP_OUT_DIR    | location of stdout and stderr obtained during compilation of the test-files. 
+                |
+EXEC_OUT_DIR    | location of stdout and stderr obtained while execution of
+                | the test-binaries. 
+                |
+COMP_OUT_DIR    | location of stdout and stderr obtained during compilation of
+                | the test-files. 
+                |
 HISTORY_OUT_DIR | location of all the past compilation/execution results. 
-NITER           | Number of iterations for microbenchmark tests that perform repeated runs of the paricular communication patterns. 
-------------------------------------
+                |
+NITER           | Number of iterations for microbenchmark tests that perform
+                | repeated runs of the paricular communication patterns. 
+------------------------------------------------------------------------------
 
 
 2. Compiler-specific: These are compiler dependent parameters and can be used
 to adjust the compiler/execution commands, flags and launcher options.
-These are located in $PEFORMANCE PATH/support/CONFIG-compiler.<compiler>
------------------------------------
+These are located in $PEFORMANCE PATH/support/CONFIG-compiler.<compiler>.
+
+The  name of the parameters are:
+
+------------------------------------------------------------------------------
 Parameter       | Description 
-----------------|------------------
-Parameter       | Description 
+------------------------------------------------------------------------------
 COMPILER        | Name of the compiler
+                |
 FC              | Executable name of the compiler to launch the compilation
+                |
 FFLAGS          | Commands to be passed to the compiler at command line
+                |
 LAUNCHER        | Command for launching multiple CAF images.
-EXEC_OPTIONS    | Command-line options to be passed after the executable name during execution.
+                |
+EXEC_OPTIONS    | Command-line options to be passed after the executable name
+                | during execution.
+                |
 COMPILE_CMD     | Command format for compilation
+                |
 EXEC_CMD        | Command format for execution
-------------------------------------
+------------------------------------------------------------------------------
 
 For certain tests, the number of images may be varied for the NPB and kernel tests, 
 by changing the corresponding test_*.sh script within the respective directories.
@@ -135,11 +166,17 @@ The list of test includes:
 - Reductions using remote ’get’ ops
 
 These are located under: $SUITE_ROOT/performance/microbenchmarks
-In order to compile and execute a specific microbenchmark:
-1. cd $SUITE_ROOT/microbenchmarks
-2. make [ compile|execute|complete|clean|cleanall [COMPILER=uhcaf(default)|ifort|g95] [TYPE=<test-name>] ]
 
-Where, <test-name> :=  bidirectional|broadcastget_bandwidth|get_latency||noncontiguous|partial_data|ping_pong|put_bandwidth|put_latency|reduce"
+In order to compile and execute a specific microbenchmark:
+
+1. cd $SUITE_ROOT/microbenchmarks
+
+2. make [ compile|execute|complete|clean|cleanall \
+         [COMPILER=uhcaf(default)|ifort|g95] [TYPE=<test-name>] ]
+
+Where, <test-name> :=  bidirectional|broadcastget_bandwidth|get_latency|
+                       noncontiguous|partial_data|ping_pong|put_bandwidth|
+                       put_latency|reduce
 
 -------------------------------------------------------------------------------
 
@@ -159,22 +196,33 @@ II.c Misc. Kernels
 
 These includes some standalone CAF kernels.
 
-The list includes:
-- CG (2D)
+The current list includes:
 - Buffon Laplace
+- CG (2D)
 - Image Smoothing
 - Insertion sort
-- Insertion sort (D-type)
-- Matrix Multiplication
+- Insertion sort (using derived types)
+- Matrix Multiplication (naive)
+
 These are located under: $SUITE_ROOT/kernels
+
 In order to compile and execute a specific kernel:
 1. cd $SUITE_ROOT/kernels
-2. make [ compile[_KERNEL]|execute[_KERNEL]|complete[_KERNEL]|cleanall [COMPILER=uhcaf(default)|ifort|g95] ] 
-Where, KERNEL is one of: buffon_laplace, cg_2d, image_smoothing, insertion_sort, insertion_sort_dt, jacobi, mm
+2. make [ compile[_KERNEL]|execute[_KERNEL]|complete[_KERNEL]|cleanall \
+         [COMPILER=uhcaf(default)|ifort|g95] ] 
+2. make [KERNEL|run_KERNEL|runtests|clean] [COMPILER=uhcaf(default)|ifort|g95] 
+
+Where KERNEL is one of: buffon_laplace, cg_2d, image_smoothing,
+                        insertion_sort, insertion_sort_dtype, jacobi, mm
+
 Please ensure:
- The test_suite specific parameters are set in ../support/CONFIG 
- The compiler specific parameters in ../support/CONFIG-compiler.<compiler> 
- The number of images to be used for a specific kernel is set in KERNEL.def within $SUITE_ROOT/kernels/src/KERNEL
- There is no need to set the make.def* within  ../support/CONFIG. They are auto-generated by the Makefiles.
+
+- The test_suite specific parameters are set in ../support/CONFIG 
+- The compiler specific parameters in ../support/CONFIG-compiler.<compiler> 
+- The number of images to be used for a specific kernel is set in KERNEL.def
+  within $SUITE_ROOT/kernels/src/KERNEL
+
+Note: There is no need to set the make.def* within  ../support/CONFIG. They
+are auto-generated by the Makefiles.
 
 ==============================================================================
