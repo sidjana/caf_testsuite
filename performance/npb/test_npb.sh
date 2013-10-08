@@ -52,7 +52,7 @@ printf '%8s %8s %8s %15s %15s %15s %25s \n' "<NAME>" "<CLASS>" "<NPROCS>" "<COMP
 
 for BM in ep cg sp bt ft
 do
-	for CLASS in S #W A B C 
+	for CLASS in S W A B C 
 	do
   		  if [ "$BM" == "ep" -o "$BM" == "cg" -o "$BM" == "ft" ]; then
   		       NPROCS_LST="1 2 4 8 16";

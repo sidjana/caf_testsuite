@@ -109,23 +109,19 @@ FLINKFLAGS = -O3
 #
 # For IS, which is in C, the following must be defined:
 #
-# MPICC      - C compiler 
 # CFLAGS     - C compilation arguments
 # CMPI_INC   - any -I arguments required for compiling MPI/C 
 # CLINK      - C linker
 # CLINKFLAGS - C linker flags
 # CMPI_LIB   - any -L and -l arguments required for linking MPI/C 
 #
-# compilations are done with $(MPICC) $(CMPI_INC) $(CFLAGS) or
-#                            $(MPICC) $(CFLAGS)
 # linking is done with       $(CLINK) $(CMPI_LIB) $(CLINKFLAGS)
 #---------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------
 # This is the C compiler used for MPI programs
 #---------------------------------------------------------------------------
-CCOMPILER = uhcc
-# This links MPI C programs; usually the same as ${MPICC}
+CCOMPILER = gcc
 CLINK	= $(CCOMPILER)
 
 

@@ -22,7 +22,7 @@ compile_performance: compile_performance execute_performance
 compile_performance compile_all: compile_kernels  compile_microbenchmarks compile_npb
 
 compile_kernels:
-	@cd $(KERNELS_PATH) ; make -s compile COMPILER=$(COMPILER);
+	@cd $(KERNELS_PATH) ; make -s COMPILER=$(COMPILER);
 
 compile_microbenchmarks:
 	@cd $(MICROBENCH_PATH) ; make -s compile  COMPILER=$(COMPILER);
@@ -33,7 +33,7 @@ compile_npb:
 execute_performance execute_all: execute_kernels  execute_microbenchmarks execute_npb
 
 execute_kernels:
-	@cd $(KERNELS_PATH) ; make -s execute COMPILER=$(COMPILER);
+	@cd $(KERNELS_PATH) ; make -s runtests COMPILER=$(COMPILER);
 
 execute_microbenchmarks:
 	@cd $(MICROBENCH_PATH) ; make -s execute  COMPILER=$(COMPILER);
@@ -44,7 +44,7 @@ execute_npb:
 complete_performance complete_all: complete_kernels  complete_microbenchmarks complete_npb
 
 complete_kernels:
-	@cd $(KERNELS_PATH) ; make -s complete COMPILER=$(COMPILER);
+	@cd $(KERNELS_PATH) ; make -s runtests COMPILER=$(COMPILER);
 
 complete_microbenchmarks:
 	@cd $(MICROBENCH_PATH) ; make -s complete  COMPILER=$(COMPILER);

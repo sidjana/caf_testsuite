@@ -25,6 +25,7 @@ $(TESTS):
 ##################### EXECUTION ###################
 $(RUN_TESTS): run_%:
 	@cd src/$*; make -s execute TEST=$* COMPILER=$(COMPILER)
+	@echo -e "\n--------------------------------------\n"
 
 clean: 
 	@for d in $(TESTS); do if [ -d src/$$d ]; then cd src/$$d ; make TEST=$$d clean ; cd ../.. ; fi;  done 
