@@ -29,10 +29,9 @@ I. Using the Performance Test Suite
 
 I.a Configuring
 
-The performance suite comes bundled along with the validation test
-suite. It is located under: PERFORMANCE_PATH =
-$SUITE_ROOT/performance where, SUITE_ROOT is the parent directory
-of the entire suite.
+The performance suite comes bundled along with the validation test suite. It
+is located under: PERFORMANCE_PATH = $SUITE_ROOT/performance where, SUITE_ROOT
+is the parent directory of the entire suite.
 
 The test suite requires the setup of a few configuration parameters. These
 parameters can be divided into two types:
