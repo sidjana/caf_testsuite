@@ -18,9 +18,8 @@ compile $(TEST).x: $(TEST).f90
 
 execute: $(TEST).x 
 	@ echo -e "\nExecuting ... $(TEST).x ... with $(NPROCS) images "
-	@ perl ../../../../support/timedexec.pl $(TIMEOUT) "$(LAUNCHER) $(TEST).x $(EXEC_OPTIONS)"  &> $(TEST).exec.out ;  if [ "$?" == "1" ]; then echo "(Failed)" ; else  echo "(Passed)"; fi 
-	@if [ -f $(TEST).exec.out ]; then grep 'clock rate\|elapsed time\|ticks' $(TEST).exec.out  | tee /dev/null ; fi 
-
+	@ perl ../../../../support/timedexec.pl $(TIMEOUT) "$(LAUNCHER) ./$(TEST).x $(EXEC_OPTIONS)"  | tee $(TEST).exec.out
+	#@if [ -f $(TEST).exec.out ]; then grep 'clock rate\|elapsed time\|ticks' $(TEST).exec.out  | tee /dev/null ; fi 
 
 clean:
 	rm -rf *.x *.out *.mod *.compile

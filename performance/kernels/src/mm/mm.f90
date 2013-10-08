@@ -2,7 +2,7 @@
         implicit none
         integer,parameter :: N = 500
         integer :: P
-        real,allocatable,dimension(:,:),codimension[:,:] :: a,b,c
+        double precision,allocatable,dimension(:,:),codimension[:,:] :: a,b,c
         integer :: i,j,k,l,q,iAm, np
         integer :: myP, myQ
         integer :: ticks, start_time, end_time, rate
@@ -47,10 +47,10 @@
           call system_clock(end_time)
 
 
-          if (any(c /= N*P)) write(*,"('error on image: ',2i5,e20.10)") &
-                 myP,myQ,c(1,1)
-          write(*,"('check sum[',i5',',i5,']',e20.10)") &
-                  myP,myQ, sum(c) - P*N**3
+          if (any(c /= N*P)) write(*,"('error on image: ',2i5,2i5)") &
+                 myP,myQ
+          write(*,"('check sum[',i5',',i5,']',f10.3)") &
+            myP,myQ, abs(sum(c) - P*N**3)/(P*N**3)
 
     if (iAm == 1) then
         ticks = end_time - start_time

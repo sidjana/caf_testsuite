@@ -3,6 +3,13 @@ implicit none
 
 !*****************************************************************************80
 !
+! Note: This code, originally written in MPI, has been modified to use Fortran
+! coarrays instead.
+!
+!*******************************************************************************
+
+!*****************************************************************************80
+!
 !! MAIN is the main program for BUFFON_LAPLACE.
 !
 !  Discussion:
@@ -131,8 +138,6 @@ implicit none
          hit_total = hit_total + hit_num[p]
       end do
    end if
-  ! or we could do:
-  ! call co_sum(hit_num, hit_total)
 
 !
 !  The master process can now estimate PI.
@@ -494,4 +499,5 @@ subroutine random_initialize ( seed_input )
   end do
 
   return
+
 end
