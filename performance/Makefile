@@ -28,7 +28,7 @@ compile_microbenchmarks:
 	@cd $(MICROBENCH_PATH) ; make -s compile  COMPILER=$(COMPILER);
 
 compile_npb:
-	@cd $(NPB_PATH); ./test_npb.sh compile COMPILER=$(COMPILER);
+	@cd $(NPB_PATH); ./test_npb.sh compile $(COMPILER);
 
 execute_performance execute_all: execute_kernels  execute_microbenchmarks execute_npb
 
@@ -39,7 +39,7 @@ execute_microbenchmarks:
 	@cd $(MICROBENCH_PATH) ; make -s execute  COMPILER=$(COMPILER);
 
 execute_npb:
-	@cd $(NPB_PATH) ; ./test_npb.sh execute COMPILER=$(COMPILER);
+	@cd $(NPB_PATH) ; ./test_npb.sh execute $(COMPILER);
 
 complete_performance complete_all: complete_kernels  complete_microbenchmarks complete_npb
 
@@ -50,7 +50,7 @@ complete_microbenchmarks:
 	@cd $(MICROBENCH_PATH) ; make -s complete  COMPILER=$(COMPILER);
 
 complete_npb:
-	@cd $(NPB_PATH) ; ./test_npb.sh complete COMPILER=$(COMPILER);
+	@cd $(NPB_PATH) ; ./test_npb.sh complete $(COMPILER);
 
 
 # CLEAN-UP

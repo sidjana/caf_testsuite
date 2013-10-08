@@ -2,8 +2,8 @@
 
 #Cray CAF Compiler
 COMPILER="crayftn"
-FC="crayftn"
-FFLAGS="-f -DNPROCS=${NPROCS} -DNITER=${NITER} "
+FC="ftn"
+FFLAGS=" -F -DNPROCS=${NPROCS} -DNITER=${NITER} "
 LAUNCHER="aprun -n ${NPROCS} --image-heap=1G"
 EXEC_OPTIONS=""
 FFLAGS_CROSS=" $FFLAGS "

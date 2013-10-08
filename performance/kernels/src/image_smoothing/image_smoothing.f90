@@ -1,4 +1,6 @@
 
+      
+
       SUBROUTINE gray_erode(img, height, filterheight, filterwidth, &
             & iterations, pixrange, wLbound, wUbound, localWidth)
         IMPLICIT NONE
@@ -96,6 +98,19 @@
 
     PROGRAM smoothing_main
         IMPLICIT NONE
+
+      INTERFACE 
+      SUBROUTINE gray_erode(img, height, filterheight, filterwidth, &
+            & iterations, pixrange, wLbound, wUbound, localWidth)
+        IMPLICIT NONE
+        integer, intent(in) :: height, filterheight, filterwidth
+        integer, intent(in) :: wLbound, wUbound, localWidth
+        integer, intent(in) :: pixrange, iterations
+        integer, intent(inout) :: img(height,512)[*]
+
+      END SUBROUTINE gray_erode
+      END INTERFACE
+
 
         integer, parameter :: height=2048, width=2048
         integer, parameter :: filterheight=5, filterwidth=5

@@ -19,7 +19,7 @@ TIMEOUT="30"
 
 
 #OpenUH CAF Compiler
-COMPILER="OpenUH"
+COMPILER="uhcaf"
 FC="uhcaf"
 FFLAGS="-ftpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
 LAUNCHER="cafrun -n ${NPROCS}"
@@ -28,8 +28,8 @@ FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
 
 
 ##Cray CAF Compiler
-#COMPILER="Cray"
-#FC="ftn"
+#COMPILER="crayftn"
+#FC="crayftn"
 #FFLAGS="-h caf -F -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
 #LAUNCHER="aprun -n ${NPROCS} -N 1 "
 #EXEC_OPTIONS=""
@@ -37,7 +37,7 @@ FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
 
 
 ##Intel CAF Compiler
-#COMPILER="Intel"
+#COMPILER="ifort"
 #FC="ifort"
 #FFLAGS="-coarray -coarray-num-images=4 -fpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
 #LAUNCHER=
@@ -46,8 +46,8 @@ FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
 
 
 ##GNU CAF Compiler
-#COMPILER="GNU"
-#FC="mpif90"
+#COMPILER="gfortran"
+#FC="gfortran"
 #FFLAGS="-fcoarray=lib  -lcaf_mpi  -fpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
 #LAUNCHER="mpiexec -n ${NPROCS}"
 #EXEC_OPTIONS=""
@@ -55,7 +55,7 @@ FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
 
 
 ##G95 CAF Compiler
-#COMPILER="G95"
+#COMPILER="g95"
 #FC="g95"
 #FFLAGS="-cpp -DNPROCS=${NPROCS} -DNITER=${NITER} -DSLEEP=${SLEEP}"
 #LAUNCHER=

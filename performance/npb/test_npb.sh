@@ -33,14 +33,14 @@ else
   echo "USAGE: test_npb.sh [mode] [compiler] where "
   echo "           mode     = compile|execute|complete"
   echo "           compiler = uhcaf|ifort|g95|crayftn"
-  echo -e "Please ensure:\n The test_suite specific parameters are set in ${BENCH_PATH}/../support/CONFIG \n The compiler specific parameters in ${BENCH_PATH}/../support/CONFIG-compiler.<compiler> \n"
+  echo -e "Please ensure:\n The test_suite specific parameters are set in ${BENCH_PATH}/../support/CONFIG \n The compiler specific parameters in ${BENCH_PATH}/../support/CONFIG-compiler.<compiler> \n For NPB tests, also ensure that npb/config/make.def.${compiler} is present"
   exit 1
 fi
 
 if [ -f ./config/make.def.${compiler} ]; then
   cp ./config/make.def.$compiler ./config/make.def
 else
-  echo "./config/make.def.${compiler} file missing. Please ensure that this file is present."
+  echo "./config/make.def.${compiler} file missing. Please ensure that this file is present inside npb/config"
   exit 1
 fi
 
