@@ -9,13 +9,12 @@ OBJS = ep.o ${COMMON}/print_results.o ${COMMON}/${RAND}.o ${COMMON}/timers.o ${C
 include ../sys/make.common
 
 ${PROGRAM}: config ${OBJS}
-	${FLINK}  ${FLINKFLAGS} -o ${PROGRAM}  ${OBJS}   ${FMPI_LIB}  
+	${FLINK}  ${FLINKFLAGS} -o ${PROGRAM}  ${OBJS} 
 
 
 ep.o:		ep.f 
-	${UHCAF} -c  ${FFLAGS} ep.f  
+	$(CAFCOMPILE) -c  ${FFLAGS} ep.f  
 
-#${UHCAF} -c  ${FFLAGS} ep.f # npbparams.h # mpinpb.h 
 
 clean:
 	- rm -f *.o *~ 

@@ -28,8 +28,4 @@ c---------------------------------------------------------------------
       double precision :: sh_rbuf(2)[*]
       integer :: sh_ibuf(9)[*]
 
-
-      common /mpistuff/ node, no_nodes, total_nodes, root, comm_setup,
-     >                  comm_solve, comm_rhs, dp_type, active
-
       end module npbcaf

@@ -33,7 +33,11 @@ ${PROGRAM}: config
 		${MAKE} exec;			\
 	fi
 
-exec: $(OBJS)
+# N1830 does not specifically permit collectively OPENing the same unit across 
+#       multiple images.
+# Default: We set I/O phases to no-op (btio.f) in bt-bt
+# N12-136 proposes relaxing the above constraint.
+exec: $(OBJS)  
 	@if [ x$(SUBTYPE) = xfortran ] ; then	\
 		${MAKE} bt-fortran;		\
 	elif [ x$(SUBTYPE) = xFORTRAN ] ; then	\
@@ -47,13 +51,13 @@ exec: $(OBJS)
 	fi
 
 bt-bt: ${OBJS} btio.o
-	${FLINK} ${FLINKFLAGS} -o ${PROGRAM} ${OBJS} btio.o ${FMPI_LIB}
+	${FLINK} ${FLINKFLAGS} -o ${PROGRAM} ${OBJS} btio.o
 
 bt-fortran: ${OBJS} fortran_io.o btio_common.o
-	${FLINK} ${FLINKFLAGS} -o ${PROGRAM}.fortran_io ${OBJS} btio_common.o fortran_io.o ${FMPI_LIB}
+	${FLINK} ${FLINKFLAGS} -o ${PROGRAM}.fortran_io ${OBJS} btio_common.o fortran_io.o
 
 bt-epio: ${OBJS} epio.o btio_common.o
-	${FLINK} ${FLINKFLAGS} -o ${PROGRAM}.ep_io ${OBJS} btio_common.o epio.o ${FMPI_LIB}
+	${FLINK} ${FLINKFLAGS} -o ${PROGRAM}.ep_io ${OBJS} btio_common.o epio.o
 
 .f.o:
 	${FCOMPILE} $<

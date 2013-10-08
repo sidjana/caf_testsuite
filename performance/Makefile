@@ -62,7 +62,7 @@ cleanperformance cleanall: cleankernels cleanmicrobenchmarks cleannpb
 	@rm -rf  support/make.def*
 
 cleankernels:
-	@cd $(KERNELS_PATH) ;   $(MAKE) -s cleanall
+	@cd $(KERNELS_PATH) ;   $(MAKE) -s clean
 
 cleanmicrobenchmarks:
 	@cd $(MICROBENCH_PATH) ;  $(MAKE) -s cleanall

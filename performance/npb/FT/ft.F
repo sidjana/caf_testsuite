@@ -832,8 +832,6 @@ c---------------------------------------------------------------------
       integer :: i, q
       integer :: start_send, end_send, start_recv, end_recv
 
-!      if (timers_enabled) call synchup()
-
 c---------------------------------------------------------------------
 c do transpose among all  processes with same 1-coord (me1)
 c---------------------------------------------------------------------

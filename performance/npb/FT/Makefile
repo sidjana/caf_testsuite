@@ -10,7 +10,7 @@ OBJS = ft.o mco_reduce.o ${COMMON}/${RAND}.o ${COMMON}/print_results.o ${COMMON}
 	   ${COMMON}/wtime.o
 
 ${PROGRAM}: config ${OBJS}
-	${CAFLINK} ${CAFLINKFLAGS} -o ${PROGRAM} ${OBJS} ${FMPI_LIB}
+	${CAFLINK} ${CAFLINKFLAGS} -o ${PROGRAM} ${OBJS}
 
 
 
@@ -20,10 +20,12 @@ ${PROGRAM}: config ${OBJS}
 .F.o:
 	${CAFCOMPILE} $<
 
-ft.o:  ft.F mco_reduce.mod  global.h mpinpb.h npbparams.h
+ft.o:  ft.F mco_reduce.mod  global.h npbparams.h
+
 mco_reduce.mod:   mco_reduce.o
+
 mco_reduce.o:     mco_reduce.f
 
 clean:
-	- rm -f *.o *~ mputil*
+	- rm -f *.o *~ mputil* *.mod
 	- rm -f ft npbparams.h core

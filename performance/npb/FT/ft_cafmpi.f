@@ -644,8 +644,6 @@ c---------------------------------------------------------------------
       integer :: i, q
       integer :: start_send, end_send, start_recv, end_recv
 
-!      if (timers_enabled) call synchup()
-
       if (timers_enabled) call timer_start(T_transxzglo)
 
 #ifndef CAF_ALLTOALL
@@ -822,8 +820,6 @@ c---------------------------------------------------------------------
       integer ierr
       integer :: i, q
       integer :: start_send, end_send, start_recv, end_recv
-
-!      if (timers_enabled) call synchup()
 
 c---------------------------------------------------------------------
 c do transpose among all  processes with same 1-coord (me1)
@@ -1150,7 +1146,6 @@ c---------------------------------------------------------------------
      >                                dims(3,1))
       call fft_init (dims(1,1))
 
-!      if (timers_enabled) call synchup()
       if (timers_enabled) call timer_stop(T_setup)
 
       if (timers_enabled) call timer_start(T_fft)
@@ -1164,7 +1159,6 @@ c---------------------------------------------------------------------
          if (timers_enabled) call timer_start(T_fft)
          call fft(-1, u1, u2)
          if (timers_enabled) call timer_stop(T_fft)
-!         if (timers_enabled) call synchup()
          if (timers_enabled) call timer_start(T_checksum)
          call checksum(iter, u2, dims(1,1), dims(2,1), dims(3,1))
          if (timers_enabled) call timer_stop(T_checksum)

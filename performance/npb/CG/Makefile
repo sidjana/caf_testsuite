@@ -18,9 +18,6 @@ cg.o: cg_coarrays.o cg.f
 cg_coarrays.o:	cg_coarrays.f
 	${CAFCOMPILE} cg_coarrays.f
 
-#  cg_params.o:		cg_params.f mpinpb.h npbparams.h timing.h
-#  	${CAFCOMPILE} cg_params.f
-
 clean:
 	- rm -f *.o *~  *.mod *.B *.I *.s
 	- rm -f npbparams.h core

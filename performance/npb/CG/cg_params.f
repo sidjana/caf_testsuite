@@ -6,7 +6,6 @@ c---------------------------------------------------------------------
 
           implicit none
 
-          include 'mpinpb.h'
           include 'timing.h'
           include 'npbparams.h'
 

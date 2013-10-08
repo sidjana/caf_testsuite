@@ -26,7 +26,7 @@ include ../sys/make.common
 .SUFFIXES: .f .o .h .mod
 
 ${PROGRAM}: config ${OBJS}
-	${CAFLINK} ${CAFLINKFLAGS} -o ${PROGRAM} ${OBJS} ${FMPI_LIB}
+	${CAFLINK} ${CAFLINKFLAGS} -o ${PROGRAM} ${OBJS}
 
 .f.o:
 	${CAFCOMPILE} $<

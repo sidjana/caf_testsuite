@@ -131,8 +131,6 @@ c             set default to No-File-Hints with a value of 0
      >        write(*, 1005) maxcells*maxcells
           write(*, 1003) no_nodes
 
-          if (iotype .eq. 1) write(*, 1006) 'FULL MPI-IO', wr_interval
-          if (iotype .eq. 2) write(*, 1006) 'SIMPLE MPI-IO', wr_interval
           if (iotype .eq. 3) write(*, 1006) 'EPIO', wr_interval
           if (iotype .eq. 4) write(*, 1006) 'FORTRAN IO', wr_interval
 

@@ -63,7 +63,7 @@ clean:
 	@rm -f MPI_dummy/test MPI_dummy/libmpi.a
 	@rm -f sys/setparams sys/makesuite sys/setparams.h
 	@rm -f btio.*.out*
-	@rm -f */*.mod
+	@rm -f */*.mod ./bin/*.*.*
 
 cleanall: clean ./test_npb.sh
 	@rm -f config/suite.def config/make.def

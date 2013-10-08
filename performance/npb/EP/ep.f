@@ -46,29 +46,18 @@ c---------------------------------------------------------------------
       program EMBAR
 c---------------------------------------------------------------------
 C
-c   This is the MPI version of the APP Benchmark 1,
-c   the "embarassingly parallel" benchmark.
-c
-c
 c   M is the Log_2 of the number of complex pairs of uniform (0, 1) random
 c   numbers.  MK is the Log_2 of the size of each batch of uniform random
 c   numbers.  MK can be set for convenience on a given system, since it does
 c   not affect the results.
-      !use caf_reductions
-      !use caf_reductions_1d
+
       implicit none
       
       include 'npbparams.h'
-      !include 'mpinpb.h'
-      !include 'mpp/shmem.fh'
 
       double precision Mops, epsilon, a, s, t1, t2, t3, t4, x1, 
      >                 x2,   an, tt, t, gc, dum(3),
      >                 timer_read
-c      double precision sx, sy, tm
-      !double precision, save::sx
-      !double precision, save::sy 
-      !double precision, save::tm 
       double precision, allocatable::sx[:] 
       double precision, allocatable::sy[:] 
       double precision, allocatable::tm[:]
@@ -88,35 +77,17 @@ c      double precision sx, sy, tm
      >           a = 1220703125.d0, s = 271828183.d0)
       double precision::x(2*nk)
       double precision::xsca   
-      !common/storage/ x(2*nk), q(0:nq-1), qq(10000)
       common/storage/  qq(10000)
       data             dum /1.d0, 1.d0, 1.d0/
       allocate(sx[0:*]) 
       allocate(sy[0:*])  
       allocate(tm[0:*])
       allocate(q(0:nq-1)[0:*])
-      !integer, dimension(SHMEM_BCAST_SYNC_SIZE), save :: psync
-      !double precision, dimension(SHMEM_REDUCE_MIN_WRKDATA_SIZE),
-     >! save :: pwrk
 
-c      call mpi_init(ierr)
-c      call mpi_comm_rank(MPI_COMM_WORLD,node,ierr)
-c      call mpi_comm_size(MPI_COMM_WORLD,no_nodes,ierr)
-      !call start_pes(0)
-      !no_nodes = num_pes()
       no_nodes = num_images()
-      !node = my_pe()
       node = this_image() - 1 
-      !psync = SHMEM_SYNC_VALUE
-      ! call shmem_barrier_all
       sync all
       root =  0  
-
-      !if (.not. convertdouble) then
-      !   dp_type = MPI_DOUBLE_PRECISION
-      !else
-      !   dp_type = MPI_REAL
-      !endif
 
       if (node.eq.root)  then
 
@@ -157,7 +128,6 @@ c   divide the total number
       if (np .eq. 0) then
          write (6, 1) no_nodes, nn
  1       format ('Too many nodes:',2i6)
-c         call mpi_abort(MPI_COMM_WORLD,ierrcode,ierr)
          stop
       endif
 
@@ -176,8 +146,6 @@ c   sure these initializations cannot be eliminated as dead code.
 c---------------------------------------------------------------------
 c      Synchronize before placing time stamp
 c---------------------------------------------------------------------
-c      call mpi_barrier(MPI_COMM_WORLD, ierr)
-      !call shmem_barrier_all
       sync all
       call timer_clear(1)
       call timer_clear(2)
@@ -263,12 +231,12 @@ c        vectorizable.
  150  continue
 
       sync all
-      !call shmem_barrier_all();
-c      call mpi_allreduce(sx, x, 1, dp_type,
-c     >                   MPI_SUM, MPI_COMM_WORLD, ierr)
-      ! call shmem_real8_sum_to_all(x,sx,1,0,0,no_nodes,pwrk,psync)
-      !call caf_real8_sum_to_all_1d(x, sx)
-      !call caf_real8_sum_to_all_root(xsca, sx, 1)
+
+
+
+
+
+
       xsca = 0.0
       do i=0,num_images()-1
        xsca  = xsca + sx[i]
@@ -277,29 +245,17 @@ c     >                   MPI_SUM, MPI_COMM_WORLD, ierr)
       sx = xsca
       sync all
 
-c     call mpi_allreduce(sy, x, 1, dp_type,
-c     >                   MPI_SUM, MPI_COMM_WORLD, ierr)
-      !call shmem_real8_sum_to_all(x,sy,1,0,0,no_nodes,pwrk,psync)
-      !call caf_real8_sum_to_all_1d(x, sy)
       xsca = 0.0
        do i=0,num_images()-1
         xsca  = xsca + sy[i]
        end do
       sync all
-      !call caf_real8_sum_to_all_root(xsca, sy, 1)
       sy = xsca
-      !sync all
-c      call mpi_allreduce(q, x, nq, dp_type,
-c     >                   MPI_SUM, MPI_COMM_WORLD, ierr)
-      !call shmem_real8_sum_to_all(x,q,nq,0,0,no_nodes,pwrk,psync)
-      !call caf_real8_sum_to_all_1d(x, q)
-!       sync all
        x = 0.0
        do i=0,num_images()-1
          x(1:nq) = x(1:nq)+ q(0:nq-1)[i]
        end do
        sync all
-      !call caf_real8_sum_to_all_root_1d(x, q, 1)
       q(:)= x(1:nq)
   
       do 160 i = 0, nq - 1
@@ -309,8 +265,6 @@ c     >                   MPI_SUM, MPI_COMM_WORLD, ierr)
       call timer_stop(1)
       tm  = timer_read(1)
 
-c      call mpi_allreduce(tm, x, 1, dp_type,
-c     >                   MPI_MAX, MPI_COMM_WORLD, ierr)
       sync all
       xsca = 0.0
       t = 0.0
@@ -371,7 +325,5 @@ c     >                   MPI_MAX, MPI_COMM_WORLD, ierr)
           print *, 'Gaussian pairs: ', timer_read(2)
           print *, 'Random numbers: ', timer_read(3)
       endif
-
-c      call mpi_finalize(ierr)
 
       end
