@@ -1,6 +1,6 @@
 PROGRAM  = $(BINDIR)/$(BENCHMARK).$(CLASS).$(NPROCS)
-FCOMPILE = $(CAF) -c $(FMPI_INC) $(FFLAGS)
-CCOMPILE = $(CCOMPILER)  -c $(CMPI_INC) $(CFLAGS)
+FCOMPILE = $(FCOMPILER) -c  $(FFLAGS)
+CCOMPILE = $(CCOMPILER)  -c $(CFLAGS)
 CAFCOMPILE = $(CAF) -c $(CAF_INC) $(CAFFLAGS)
 
 # Class "U" is used internally by the setparams program to mean

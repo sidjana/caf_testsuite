@@ -79,10 +79,9 @@ CAFLINKFLAGS = $(CAFFLAGS)
 #---------------------------------------------------------------------------
 # This is the fortran compiler used for MPI programs
 #---------------------------------------------------------------------------
-UHCAF = $(CAF)
-MPIF77 = $(UHCAF)
+FCOMPILER = $(CAF)
 # This links MPI fortran programs; usually the same as ${MPIF77}
-FLINK = $(UHCAF)
+FLINK = $(CAF)
 
 #---------------------------------------------------------------------------
 # These macros are passed to the linker to help link with MPI correctly
@@ -125,19 +124,10 @@ FLINKFLAGS = -O3
 #---------------------------------------------------------------------------
 # This is the C compiler used for MPI programs
 #---------------------------------------------------------------------------
-MPICC = uhcc
+CCOMPILER = uhcc
 # This links MPI C programs; usually the same as ${MPICC}
-CLINK	= $(MPICC)
+CLINK	= $(CCOMPILER)
 
-#---------------------------------------------------------------------------
-# These macros are passed to the linker to help link with MPI correctly
-#---------------------------------------------------------------------------
-CMPI_LIB  =
-
-#---------------------------------------------------------------------------
-# These macros are passed to the compiler to help find 'mpi.h'
-#---------------------------------------------------------------------------
-CMPI_INC =
 
 #---------------------------------------------------------------------------
 # Global *compile time* flags for C programs
