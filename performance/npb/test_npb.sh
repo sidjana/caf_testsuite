@@ -26,13 +26,13 @@ if [ $# == 2 ]; then
   else
   echo "USAGE: test_npb.sh [mode [compiler] ] where "
   echo "           mode     = compile|execute|complete"
-  echo "           compiler = uhcaf|ifort|g95"
+  echo "           compiler = uhcaf|ifort|g95|crayftn"
     exit 1
   fi
 else
   echo "USAGE: test_npb.sh [mode] [compiler] where "
   echo "           mode     = compile|execute|complete"
-  echo "           compiler = uhcaf|ifort|g95"
+  echo "           compiler = uhcaf|ifort|g95|crayftn"
   echo -e "Please ensure:\n The test_suite specific parameters are set in ${BENCH_PATH}/../support/CONFIG \n The compiler specific parameters in ${BENCH_PATH}/../support/CONFIG-compiler.<compiler> \n"
   exit 1
 fi

@@ -15,6 +15,7 @@ help:
 	@echo "Usage: make [KERNEL|run_KERNEL|runtests|clean] [COMPILER=uhcaf(default)|ifort|g95] "
 	@echo -e "Where KERNEL is one of:\n\t $(TESTS)"
 	@echo -e "Please ensure:\n The test_suite specific parameters are set in ../support/CONFIG \n The compiler specific parameters in ../support/CONFIG-compiler.<compiler> \n"
+	@ echo -e "To set the number of images used while launching a kernel, modify the make.def within the corresponding directory  at kernels/src/KERNEL "
 
 runtests: $(RUN_TESTS)
 

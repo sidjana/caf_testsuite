@@ -208,17 +208,20 @@ These are located under: $SUITE_ROOT/kernels
 
 In order to compile and execute a specific kernel:
 1. cd $SUITE_ROOT/kernels
-2. make [ compile[_KERNEL]|execute[_KERNEL]|complete[_KERNEL]|cleanall \
-         [COMPILER=uhcaf(default)|ifort|g95] ] 
-2. make [KERNEL|run_KERNEL|runtests|clean] [COMPILER=uhcaf(default)|ifort|g95] 
+2. Usage: make [KERNEL|run_KERNEL|runtests|clean] [COMPILER=uhcaf(default)|ifort|g95] 
+Where KERNEL is one of:
+	 buffon_laplace cg_2d image_smoothing insertion_sort insertion_sort_dtype jacobi mm
+run_KERNEL : compiles and executes KERNEL
+runtests   : compiles and executes all the kernels
+Just make  : compiles all the kernels and terminates
 
-Where KERNEL is one of: buffon_laplace, cg_2d, image_smoothing,
-                        insertion_sort, insertion_sort_dtype, jacobi, mm
 
 Please ensure:
-
-- The test_suite specific parameters are set in ../support/CONFIG 
-- The compiler specific parameters in ../support/CONFIG-compiler.<compiler> 
+- In order the set the number of images to launch while executing a kernel,
+  modify the make.def within the corresponding directory -
+  $SUITE_ROOT/kernels/src/$KERNEL
+- Other test_suite specific parameters are set in ../support/CONFIG 
+- The compiler specific parameters are set in ../support/CONFIG-compiler.<compiler> 
 - The number of images to be used for a specific kernel is set in KERNEL.def
   within $SUITE_ROOT/kernels/src/KERNEL
 

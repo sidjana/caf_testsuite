@@ -2,7 +2,7 @@
 ## Please set these variables to their appropiate values.
 
 #G95 Compiler
-COMPILER="G95"
+COMPILER="g95"
 FC="g95"
 FFLAGS="-cpp -DNPROCS=${NPROCS}  -DNITER=${NITER} "
 LAUNCHER=""

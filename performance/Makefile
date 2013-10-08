@@ -4,7 +4,7 @@ NPB_PATH=./npb
 COMPILER?=uhcaf
 
 help default:
-	@printf '\n%10s\n' "If test suite is run from within performance directory, then USAGE: $(MAKE) [OPTIONS [COMPILER=uhcaf(default)|ifort|g95] ]"
+	@printf '\n%10s\n' "If test suite is run from within performance directory, then USAGE: $(MAKE) [OPTIONS [COMPILER=uhcaf(default)|ifort|g95|crayftn] ]"
 	@printf '%10s\n' "OPTIONS include:"
 	@printf '%-25s\n' "| ( Note: <suite>: [kernels | microbenchmarks | npb | all] )"
 	@printf '%-25s%-90s\n' "| "

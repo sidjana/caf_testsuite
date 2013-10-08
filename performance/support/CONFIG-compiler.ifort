@@ -2,7 +2,7 @@
 ## Please set these variables to their appropiate values.
 
 ##Intel CAF Compiler
-COMPILER="Intel"
+COMPILER="ifort"
 FC="ifort"
 FFLAGS="-coarray -coarray-num-images=4 -fpp -DNPROCS=${NPROCS}  -DNITER=${NITER}"
 LAUNCHER=""
