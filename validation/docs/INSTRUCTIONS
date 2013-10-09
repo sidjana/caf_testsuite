@@ -238,12 +238,12 @@ II.b    Cross-checked Feature tests
       is used to exclude these contructs)
     - Every test includes a module called 'crosstest'.
     - The module 'crosstest' (defined in file testmofule.f90) includes the
-      declaration of an integer coscalar called 'cross_err' which is
-      modified by every image that detects an error(the usage differs for
-      different tests as explained below).  It also contains two
-      subroutines - calc_ori and calc.The former returns the test result of
-      the feature being tested. The latter returns the result based on the
-      confidence of the cross-test.  confidence of the actual tests.
+      declaration of an integer coscalar called 'cross_err' which is modified
+      by every image that detects an error(the usage differs for different
+      tests as explained below).  It also contains two subroutines - calc_ori
+      and calc. The former returns the test result of the feature being tested.
+      The latter determines the number of times the CAF construct
+      implementation passes the cross-check tests.
 
 - Note for suite-developers:
     - The original tests (with the CAF constructs) are compiled as: 
@@ -355,8 +355,8 @@ The top level folders are:
 1. bin : contains all the binaries of all the tests
 
 2. crosschecked_feature_tests : these are feature tests which use additional
-cross tests to provide a confidence measure for the implementation's
-conformance
+cross tests to verify determine the number of times the CAF construct passes
+the cross-check tests.
 
 3. config : these contain multiple versions of CONFIG files for different
 compilers, and other defauls parameters including the time-out delay, number
@@ -389,8 +389,8 @@ status returned by various CAF statements, and respond accordingly.
     - support/timedexec.pl : script used to ensure that images do not run
       more that a pre-configured time limit (As set by the TIMEOUT
       configuration parameter) 
-    - testmodule.f90 : this is useful for cross-checked tests where the
-      calculations for HIGH vs LOW confidence reside.  All cross-checked
-      tests are linked with the module in this file before loading.
+    - testmodule.f90 : this is useful for cross-checked tests. All
+      cross-checked tests are linked with the module in this file before
+      loading.
 
 ==============================================================================

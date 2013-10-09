@@ -100,4 +100,5 @@ do
 
         fi
     fi
+    rm -rf conf.temp tmp 
 done

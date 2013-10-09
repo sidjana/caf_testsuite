@@ -11,7 +11,7 @@ COMPILE_OUTPUT:=$(FEW_COMPILE_PATH)
 
 LOG_NAME:=$(DATE).log
 LOGFILE:=$(FEW_LOG_PATH)/$(LOG_NAME)
-SCRIPTS = confidence_test.sh feature_test.sh status_test.sh
+SCRIPTS = crosschecked_feature_test.sh feature_test.sh status_test.sh
 
 
 all: clean_output clean_exec test_file  testmodule.o description $(SCRIPTS) header
