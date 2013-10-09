@@ -1,7 +1,6 @@
+SHELL:=/bin/bash
 
 TEMP_1:=$(shell mkdir -p ./bin)
-
-SHELL=/bin/sh
 CLASS=U
 NPROCS=1
 SFILE=config/suite.def

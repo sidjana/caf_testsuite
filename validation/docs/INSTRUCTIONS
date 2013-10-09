@@ -49,7 +49,7 @@ I.a Configuring
 - The user can uncomment/modify/add the set of options (listed below) for existing/new
   compilers. 
 - The suite also requires a make.def in $SUITE_ROOT/validation/config. This is
-  auto- gernerated by the test-suite and shouldn't be manually modified.
+  auto- gernerated by the test suite and shouldn't be manually modified.
 
 - The list of configuration parameters, their description follow. The table
   also depicts whether the values of the parameters are specific to CAF

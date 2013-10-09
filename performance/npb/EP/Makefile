@@ -1,4 +1,4 @@
-SHELL=/bin/sh
+SHELL=/bin/bash
 BENCHMARK=ep
 BENCHMARKU=EP
 

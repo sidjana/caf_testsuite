@@ -153,16 +153,21 @@ II.a Microbenchmarks
 These includes simple CAF codes with point to point communications. 
 
 The list of test includes:
-- bidirectional
-- get bandwidth
-- noncontiguous
-- ping pong
-- put latency
-- broadcast
-- get latency
-- partial data
-- put bandwidth
-- Reductions using remote ’get’ ops
+
+------------------------------------------------------------------------------
+Test       	| Explanation 
+------------------------------------------------------------------------------
+bidirectional   |  Round-Trip benchmark with CAF PUT and GET stmts
+get_bandwidth   |  Bandwidth benchmarks with CAF remote PUT operations 
+noncontiguous   |  Latency benchmark with CAF PUT over non-contiguous memory.
+ping_pong       |  Round-Trip benchmark with CAF PUT and GET  
+put_latency     |  Latency of CAF PUT operation for 4 bytes
+broadcast       |  Bandwidth test for PUT opertions used for Broadcast
+get latency     |  Latency of CAF GET operation for 4 bytes 
+partial_data    |  Latency of CAF PUT operation for noncontiguous local and remote memory  
+put_bandwidth   |  Bandwidth benchmarks with CAF remote PUT operations 
+reduce          |  SUM Reduction using GET operations.
+------------------------------------------------------------------------------
 
 These are located under: $SUITE_ROOT/performance/microbenchmarks
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # plot styles
 style[0]=" lc rgb \"\#0000CD\" pt 1 "
