@@ -23,14 +23,14 @@ all: clean_output clean_exec test_file  testmodule.o description $(SCRIPTS) head
 
 #copying scripts from other folders to this one (after modifying the var names).
 $(SCRIPTS):
-	   @sed 's/CONF_/FEW_/g'  $(CONF_TEST_PATH)/confidence_test.sh >  ./confidence_test.sh
+	   @sed 's/CC_FEATURE_/FEW_/g'  $(CC_FEATURE_TEST_PATH)/crosschecked_feature_test.sh > ./crosschecked_feature_test.sh
 	   @sed 's/STATUS_/FEW_/g'  $(STATUS_TEST_PATH)/status_test.sh > ./status_test.sh
 	   @sed 's/FEATURE_/FEW_/g'  $(FEATURE_TEST_PATH)/feature_test.sh > ./feature_test.sh
 
 
 
 header:
-	   @printf '\n%s\n\n%s\n\n' "---------------HPC Tools CAF SPECIFIC testsuite---------------" \
+	   @printf '\n%s\n\n%s\n\n' "--------------- CAF SPECIFIC testsuite ---------------" \
 			                      "Evaluating $(COMPILER)" | tee -a $(LOGFILE)
 
 
@@ -39,7 +39,7 @@ testmodule.o: $(ROOT)/testmodule.f90
 
 
 description:
-	   @cat $(CONF_TEST_PATH)/description >>./description
+	   @cat $(CC_FEATURE_TEST_PATH)/description >>./description
 	   @cat $(STATUS_TEST_PATH)/description >>./description
 	   @cat $(FEATURE_TEST_PATH)/description >>./description
 
