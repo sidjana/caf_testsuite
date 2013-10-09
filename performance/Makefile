@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+
 KERNELS_PATH=./kernels
 MICROBENCH_PATH=./microbenchmarks
 NPB_PATH=./npb
