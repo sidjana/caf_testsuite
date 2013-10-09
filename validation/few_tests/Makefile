@@ -49,7 +49,7 @@ clean_output:
 
 
 clean_exec:
-	   @rm  -rf  $(BIN_PATH)/*.x   ./*.x  ./*.mod
+	   @rm  -rf  $(BIN_PATH)/*.x   ./*.x  ./*.mod ./*.o
 
 
 clean_history:

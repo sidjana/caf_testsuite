@@ -62,7 +62,7 @@ do
             print_file_descriptor $file $1
             if [ -f $CC_FEATURE_TEST_PATH/$file ]; then
                 cp $CC_FEATURE_TEST_PATH/$file .
-                sh crosschecked_feature_test.sh "$file_exec" "$file" "$1"
+                bash crosschecked_feature_test.sh "$file_exec" "$file" "$1"
                 rm ./$file
             else
                 echo "ABSENT"
@@ -74,7 +74,7 @@ do
             print_file_descriptor $file $1
             if [ -f $FEATURE_TEST_PATH/$file ]; then
                 cp $FEATURE_TEST_PATH/$file .
-                sh feature_test.sh "$file_exec" "$file" "$1"
+                bash feature_test.sh "$file_exec" "$file" "$1"
                 rm ./$file
             else
                 echo "ABSENT"
@@ -86,7 +86,7 @@ do
             print_file_descriptor $file $1
             if [ -f $STATUS_TEST_PATH/$file ]; then
                 cp $STATUS_TEST_PATH/$file .
-                sh status_test.sh "$file_exec" "$file" "$1"
+                bash status_test.sh "$file_exec" "$file" "$1"
                 rm ./$file
             else
                 echo "ABSENT"
