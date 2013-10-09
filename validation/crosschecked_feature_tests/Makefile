@@ -5,7 +5,7 @@ include ../config/make.def  # auto-generated
 
 DATE:=$(shell echo "`date +"%m-%d-%y-%T"`")
 LOG_NAME:=$(DATE).log
-LOGFILE:=$(CONF_LOG_PATH)/$(LOG_NAME)
+LOGFILE:=$(CC_FEATURE_LOG_PATH)/$(LOG_NAME)
 
 
 F_TESTS = $(wildcard *.f90)
@@ -16,7 +16,7 @@ total_cnt:=0
 
 .PHONY: all header 
 
-all:  clean_output header testmodule.o  $(EXES)
+all:  clean_output clean_exec header testmodule.o  $(EXES)
 	   @cp $(LOGFILE) ./HISTORY/
 	   @mv $(LOGFILE) ./latest_results.log
 
@@ -28,7 +28,7 @@ all:  clean_output header testmodule.o  $(EXES)
 
 
 header:
-	   @cd ../ ; $(MAKE) -s  confidence-header | tee -a $(LOGFILE)
+	   @cd ../ ; $(MAKE) -s  crosschecked_feature-header | tee -a $(LOGFILE)
 
 
 #$(BIN_PATH)/%.x: %.f90
@@ -36,7 +36,7 @@ header:
 	   $(eval SPEC_IDX:=$(shell echo "`echo "$^"|sed 's/.f90//'| sed 's/*_//'`"))
 	   $(eval DESCRIPTION:=$(shell echo "`cat description | grep "$^" | sed s/"$^"//`"))
 	   @printf '%-18s\t%-60s\t' "$(SPEC_IDX)" "$(DESCRIPTION)" | tee -a $(LOGFILE)
-	   @./confidence_test.sh "$@"  "$^" "$(LOGFILE)"
+	   @./crosschecked_feature_test.sh "$@"  "$^" "$(LOGFILE)"
 	   $(eval total_cnt=$(shell echo $(total_cnt)\+1 | bc))
 
 

@@ -16,7 +16,7 @@ EXES    = $(F_EXES)
 total_cnt:=0
 
 
-all:   clean_output header $(EXES) tail
+all:   clean_output clean_exec header $(EXES) tail
 	   @cp $(LOGFILE) ./HISTORY/
 	   @mv $(LOGFILE) latest_results.log
 

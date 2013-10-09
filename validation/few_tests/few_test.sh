@@ -27,17 +27,17 @@ do
     fi
 
     if [ "$file" == "FEATURE-TESTS" -o \
-         "$file" == "CONFIDENCE-TESTS"  -o \
-         "$file" == "FAULT-TESTS"       -o \
+         "$file" == "CROSSCHECKED-FEATURE-TESTS"  -o \
+         "$file" == "STATUS-TESTS"       -o \
          "$file" == "NON-CONFORMANCE-TESTS"   -o \
          "$file" == "END-TESTS" ]; then
 
 	  if [ "$file" == "FEATURE-TESTS" ]; then
 	        type="feature"
-    	  elif [ "$file" == "CONFIDENCE-TESTS" ]; then
-               	type="confidence"
-          elif [ "$file" == "FAULT-TESTS"  ]; then
-                type="fault"
+    	  elif [ "$file" == "CROSSCHECKED-FEATURE-TESTS" ]; then
+               	type="crosschecked_feature"
+          elif [ "$file" == "STATUS-TESTS"  ]; then
+                type="status"
     	  elif [ "$file" == "NON-CONFORMANCE" ]; then
 	        	type="non-conformance"
     	  elif [ "$file" == "END-TESTS" ]; then
@@ -56,13 +56,13 @@ do
 #         printf '%-70s\t' "`cat description | grep "$file" | \
 #         sed "s/$file//" | sed 's/^[ ]*//g'`"| tee -a $1
 
-        if [ "$type" == "confidence" ]; then
+        if [ "$type" == "crosschecked_feature" ]; then
 
-            cd ../; $MAKE_CMD confidence-header; cd $CURRENT;
+            cd ../; $MAKE_CMD crosschecked_feature-header; cd $CURRENT;
             print_file_descriptor $file $1
-            if [ -f $CONF_TEST_PATH/$file ]; then
-                cp $CONF_TEST_PATH/$file .
-                sh confidence_test.sh "$file_exec" "$file" "$1"
+            if [ -f $CC_FEATURE_TEST_PATH/$file ]; then
+                cp $CC_FEATURE_TEST_PATH/$file .
+                sh crosschecked_feature_test.sh "$file_exec" "$file" "$1"
                 rm ./$file
             else
                 echo "ABSENT"
@@ -80,13 +80,13 @@ do
                 echo "ABSENT"
             fi
 
-        elif [ "$type" == "fault" ]; then
+        elif [ "$type" == "status" ]; then
 
-            cd ../; $MAKE_CMD fault-header; cd $CURRENT;
+            cd ../; $MAKE_CMD status-header; cd $CURRENT;
             print_file_descriptor $file $1
-            if [ -f $FAULT_TEST_PATH/$file ]; then
-                cp $FAULT_TEST_PATH/$file .
-                sh fault_test.sh "$file_exec" "$file" "$1"
+            if [ -f $STATUS_TEST_PATH/$file ]; then
+                cp $STATUS_TEST_PATH/$file .
+                sh status_test.sh "$file_exec" "$file" "$1"
                 rm ./$file
             else
                 echo "ABSENT"

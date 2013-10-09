@@ -20,8 +20,8 @@ I.b  Running
 
 II.  Classification of tests
 II.a    Feature tests
-II.b    Confidence tests
-II.c    Fault (or status) tests
+II.b    Cross-checked Feature tests
+II.c    Status tests
 II.d    Specific tests
 
 III. Directory structure
@@ -96,15 +96,15 @@ I.b  Running
 
 Where OPTIONS is one of the following:
 |                  
-|_ all:          tests for conformance, fault-tolerance and confidence tests                               
-|_ fewtests:     tests only those listed in the file test_file under ./few directory                       
-|_ feature:      tests the compiler's feature support (excludes tests that include verification)           
-|_ confidence:   performs cross-testing to test support for non-determinism handling constructs            
-|_ fault:        tests for verification of fault handling constructs                                       
-|_ clean<suite>: Cleans executables                                                                        
-|_ cleanall:     Cleans everything - results, tests-history, compiler-logs, runtime-logs 
+|_ all:                     all validation tests
+|_ fewtests:                tests only those listed in the file test_file under ./few directory                       
+|_ feature:                 tests the compiler's feature support (excludes tests that include verification)           
+|_ crosschecked_feature:    performs cross-testing to test support for non-determinism handling constructs            
+|_ status:                  tests for verifying handling of status returned by certain statemnets
+|_ clean<suite>:            Cleans executables                                                                        
+|_ cleanall:                Cleans everything - results, tests-history, compiler-logs, runtime-logs 
 
-And <suite> = fewtests | feature | confidence | fault )
+And <suite> = fewtests | feature | crosschecked_feature | status )
 
 
 ===============================================================================
@@ -221,9 +221,9 @@ association of pointer components of coarrays with local objects
 
 -------------------------------------------------------------------------------
 
-II.b    Confidence tests
+II.b    Cross-checked Feature tests
 
-- These can be found under validation/confidence_tests
+- These can be found under validation/crosschecked_feature_tests
 - These tests verify the support of compiler implementations of the
   synchronization constructs to ensure memory consistency for CAF programs the
   major coarray features
@@ -312,7 +312,7 @@ the standard and the images will record this error in 'cross_err'.
 
 -------------------------------------------------------------------------------
 
-II.c    Fault (or status) tests
+II.c    Status tests
 
 - These can be found under validation/fault_tests
 - These tests verify the support of compiler implementations of
@@ -333,8 +333,8 @@ II.c    Fault (or status) tests
 
 - These can be found under validation/few_tests
 - The primary file, 'test_file' contains a list of all the
-  programs that the user wants to run. The fils is divided into
-  three sections: 1. CONFIDENCE tests 2. FEATURE tests 3.
+  programs that the user wants to run. The file is divided into
+  three sections: 1. CROSSCHECKED FEATURE tests 2. FEATURE tests 3.
   NON_CONFORMANCE tests
 - If one needs to test specific programs that fall under one of
   these categories, one must ensure that those files must exist
@@ -354,8 +354,9 @@ The top level folders are:
 
 1. bin : contains all the binaries of all the tests
 
-2. confidence_tests : these include CROSS_tests to verify the correctness of
-the tests
+2. crosschecked_feature_tests : these are feature tests which use additional
+cross tests to provide a confidence measure for the implementation's
+conformance
 
 3. config : these contain multiple versions of CONFIG files for different
 compilers, and other defauls parameters including the time-out delay, number
@@ -371,8 +372,8 @@ of iterations, etc.
     method of verification of the tests, and  results of the some of the
     different CAF compilers (OpenUH, Intel, G95, and Cray).
 
-5. feature_tests : contains tests which verify the implementation of the
-compiler/runtime in accordance with the CAF FORTRAN 2008 standard.
+5. feature_tests : these are quick tests which verify the implementation of
+CAF features in accordance with the Fortran 2008 standard
 
 6. few_tests : this allows user to compiler specific tests in all the other
 forders and listed in a file called 'test_file' (present in this folder)
@@ -381,12 +382,15 @@ forders and listed in a file called 'test_file' (present in this folder)
 adhere to the CAF FORTRAN 2008 standard. The expectation is that the errors
 should be detected by the compiler / CAF-runtime
 
+8. status_tests : contains tests which contain codes which check for the
+status returned by various CAF statements, and respond accordingly.
+
 - Support files include: 
     - support/timedexec.pl : script used to ensure that images do not run
       more that a pre-configured time limit (As set by the TIMEOUT
       configuration parameter) 
-    - testmodule.f90 : this is useful for confidence tests where the
-      calculations for HIGH v/s LOW confidence reside.  All confidence
+    - testmodule.f90 : this is useful for cross-checked tests where the
+      calculations for HIGH vs LOW confidence reside.  All cross-checked
       tests are linked with the module in this file before loading.
 
 ==============================================================================

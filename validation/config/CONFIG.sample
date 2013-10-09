@@ -66,11 +66,11 @@ FFLAGS_CROSS=" $FFLAGS -DCROSS_ "
 # Note: For the file path variables, LOG_PATH is same as the path for the test codes
 
 
-#for CONFIDENCE TESTS
-CONF_COMPILE_PATH="${ROOT}/confidence_tests/compile_output"
-CONF_EXEC_PATH="${ROOT}/confidence_tests/exec_output"
-CONF_TEST_PATH="${ROOT}/confidence_tests"
-CONF_LOG_PATH="${ROOT}/confidence_tests"
+#for CROSSCHECKED FEATURE TESTS
+CC_FEATURE_COMPILE_PATH="${ROOT}/crosschecked_feature_tests/compile_output"
+CC_FEATURE_EXEC_PATH="${ROOT}/crosschecked_feature_tests/exec_output"
+CC_FEATURE_TEST_PATH="${ROOT}/crosschecked_feature_tests"
+CC_FEATURE_LOG_PATH="${ROOT}/crosschecked_feature_tests"
 
 
 #for FEATURE TESTS
@@ -87,11 +87,11 @@ FEW_TEST_PATH="${ROOT}/few_tests"
 FEW_LOG_PATH="${ROOT}/few_tests"
 
 
-#for FAULT TESTS
-FAULT_COMPILE_PATH="${ROOT}/fault_tests/compile_output"
-FAULT_EXEC_PATH="${ROOT}/fault_tests/exec_output"
-FAULT_TEST_PATH="${ROOT}/fault_tests"
-FAULT_LOG_PATH="${ROOT}/fault_tests"
+#for STATUS TESTS
+STATUS_COMPILE_PATH="${ROOT}/status_tests/compile_output"
+STATUS_EXEC_PATH="${ROOT}/status_tests/exec_output"
+STATUS_TEST_PATH="${ROOT}/status_tests"
+STATUS_LOG_PATH="${ROOT}/status_tests"
 
 
 ##for NON-CONFORMANCE TESTS  (lacks full support)

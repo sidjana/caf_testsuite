@@ -1,4 +1,0 @@
-sync_8.5.7a.f90 STOP and SYNC ALL with STAT=STAT_STOPPED_IMAGE specifier
-sync_8.5.7b.f90  STOP and SYNC IMAGES(arr) with STAT=STAT_STOPPED_IMAGE specifier
-sync_8.5.7c.f90  STOP and SYNC IMAGES(*) with STAT=STAT_STOPPED_IMAGE specifier
-

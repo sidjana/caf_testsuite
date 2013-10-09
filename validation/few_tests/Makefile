@@ -11,10 +11,10 @@ COMPILE_OUTPUT:=$(FEW_COMPILE_PATH)
 
 LOG_NAME:=$(DATE).log
 LOGFILE:=$(FEW_LOG_PATH)/$(LOG_NAME)
-SCRIPTS = confidence_test.sh feature_test.sh fault_test.sh
+SCRIPTS = confidence_test.sh feature_test.sh status_test.sh
 
 
-all: clean_output test_file  testmodule.o description $(SCRIPTS) header
+all: clean_output clean_exec test_file  testmodule.o description $(SCRIPTS) header
 	   @source few_test.sh  "$(LOGFILE)"
 	   @cp $(LOGFILE) ./HISTORY/
 	   @mv $(LOGFILE) ./latest_results.log
@@ -24,7 +24,7 @@ all: clean_output test_file  testmodule.o description $(SCRIPTS) header
 #copying scripts from other folders to this one (after modifying the var names).
 $(SCRIPTS):
 	   @sed 's/CONF_/FEW_/g'  $(CONF_TEST_PATH)/confidence_test.sh >  ./confidence_test.sh
-	   @sed 's/FAULT_/FEW_/g'  $(FAULT_TEST_PATH)/fault_test.sh > ./fault_test.sh
+	   @sed 's/STATUS_/FEW_/g'  $(STATUS_TEST_PATH)/status_test.sh > ./status_test.sh
 	   @sed 's/FEATURE_/FEW_/g'  $(FEATURE_TEST_PATH)/feature_test.sh > ./feature_test.sh
 
 
@@ -40,7 +40,7 @@ testmodule.o: $(ROOT)/testmodule.f90
 
 description:
 	   @cat $(CONF_TEST_PATH)/description >>./description
-	   @cat $(FAULT_TEST_PATH)/description >>./description
+	   @cat $(STATUS_TEST_PATH)/description >>./description
 	   @cat $(FEATURE_TEST_PATH)/description >>./description
 
 

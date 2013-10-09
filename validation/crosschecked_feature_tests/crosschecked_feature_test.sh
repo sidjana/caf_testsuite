@@ -5,8 +5,8 @@ if [ ! -f $config_file ]; then
     config_file="../config/CONFIG.sample"
 fi
 source $config_file
-EXEC_OUTPUT="${CONF_EXEC_PATH}"
-COMPILE_OUTPUT="${CONF_COMPILE_PATH}"
+EXEC_OUTPUT="${CC_FEATURE_EXEC_PATH}"
+COMPILE_OUTPUT="${CC_FEATURE_COMPILE_PATH}"
 
 $FC $FFLAGS -o $BIN_PATH/$1 testmodule.o $2 &>$COMPILE_OUTPUT/$2.out
 ANS="$?"

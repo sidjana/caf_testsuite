@@ -5,7 +5,7 @@ include ../config/make.def    #auto-generated
 
 DATE:=$(shell echo "`date +"%m-%d-%y-%T"`")
 LOG_NAME:=$(DATE).log
-LOGFILE:=$(FAULT_LOG_PATH)/$(LOG_NAME)
+LOGFILE:=$(STATUS_LOG_PATH)/$(LOG_NAME)
 
 
 F_TESTS = $(wildcard *.f90)
@@ -15,7 +15,7 @@ total_cnt:=0
 
 .PHONY: all header
 
-all:   clean_output header   $(EXES)
+all:   clean_output clean_exec header   $(EXES)
 	   @cp $(LOGFILE) ./HISTORY
 	   @mv $(LOGFILE) ./latest_results.log
 
@@ -27,7 +27,7 @@ $(EXES): | $(BIN_PATH)
 
 
 header:
-	   @cd ../ ; $(MAKE) -s  fault-header | tee -a $(LOGFILE)
+	   @cd ../ ; $(MAKE) -s  status-header | tee -a $(LOGFILE)
 	   $(eval total_cnt=0)
 
 
@@ -35,7 +35,7 @@ $(BIN_PATH)/%.x: %.f90
 	   $(eval SPEC_IDX:=$(shell echo "`echo "$^"|sed 's/.f90//'| sed 's/*_//'`"))
 	   $(eval DESCRIPTION:=$(shell echo "`cat description | grep "$^" | sed s/"$^"//`"))
 	   @printf '%-20s\t%-70s\t' "$(SPEC_IDX)" "$(DESCRIPTION)" | tee -a $(LOGFILE)
-	   @./fault_test.sh "$@"  "$^" "$(LOGFILE)"
+	   @./status_test.sh "$@"  "$^" "$(LOGFILE)"
 	   $(eval total_cnt=$(shell echo $(total_cnt)\+1 | bc))
 
 
