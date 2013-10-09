@@ -314,7 +314,7 @@ the standard and the images will record this error in 'cross_err'.
 
 II.c    Status tests
 
-- These can be found under validation/fault_tests
+- These can be found under validation/status_tests
 - These tests verify the support of compiler implementations of
   the status-querying contructs.
 - Format of test-file name:

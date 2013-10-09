@@ -7,15 +7,15 @@ include ./config/make.def   # auto-generated
 
 help :
 	@echo -e "If test suite is run from within validation directory, then USAGE: $(MAKE) OPTIONS \n OPTIONS include:"
-	@printf '%-20s\n'      " |  (Note: <suite> = fewtests | feature | crosschecked_feature | status )"
-	@printf '%-20s\n'      " |  "
-	@printf '%-20s%-90s\n' " |_ all:" "all validation tests"
-	@printf '%-20s%-90s\n' " |_ fewtests:" "tests only those listed in the file "test_file" under ./few directory"
-	@printf '%-20s%-90s\n' " |_ feature:" "tests the compiler's feature support (excludes tests that include verification)"
-	@printf '%-20s%-90s\n' " |_ crosschecked_feature:" "performs cross-testing to test support for non-determinism handling constructs"
-	@printf '%-20s%-90s\n' " |_ status:" "tests for verifying handling of status returned by certain statements"
-	@printf '%-20s%-90s\n' " |_ clean<suite>:" "Cleans executables"
-	@printf '%-20s%-90s\n' " |_ cleanall:" "Cleans everything - results, tests-history, compiler-logs, runtime-logs"
+	@printf '%-30s\n'      " |  (Note: <suite> = fewtests | feature | crosschecked_feature | status )"
+	@printf '%-30s\n'      " |  "
+	@printf '%-30s%-90s\n' " |_ all:" "all validation tests"
+	@printf '%-30s%-90s\n' " |_ fewtests:" "tests only those listed in the file "test_file" under ./few directory"
+	@printf '%-30s%-90s\n' " |_ feature:" "tests the compiler's feature support (excludes tests that include verification)"
+	@printf '%-30s%-90s\n' " |_ crosschecked_feature:" "performs cross-testing to test support for non-determinism handling constructs"
+	@printf '%-30s%-90s\n' " |_ status:" "tests for verifying handling of status returned by certain statements"
+	@printf '%-30s%-90s\n' " |_ clean<suite>:" "Cleans executables"
+	@printf '%-30s%-90s\n' " |_ cleanall:" "Cleans everything - results, tests-history, compiler-logs, runtime-logs"
 	@printf '\n%-20s\n\n' "Before running the tests, ensure that the CONFIG file with the required parameters are set in validation/config directory."
 
 

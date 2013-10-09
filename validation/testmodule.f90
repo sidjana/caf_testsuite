@@ -56,6 +56,7 @@
 	  !   ub=100-ub
 
 	  !   write(bound_str,"(F6.3,A,F6.3,A)") lb,"% to ", ub,"%"
+	  # If cross test gives an error, the semantics of the validated CAF construct passes.
 	     write(bound_str,"(A,I6,A,I6)") "Passed:", err_cnt,"/",tot_NITER
 	     write(cmd_str,"(A,A,A)") "echo ",trim(adjustl(bound_str))," > conf.temp"
 	     call system(cmd_str)

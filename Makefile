@@ -15,7 +15,6 @@ all help default:
 	@cd $(VALID_PATH); $(MAKE) -s help
 	@printf '%s\n' "---------OPTIONS for PERFORMANCE TEST SUITE-------------"
 	@cd $(PERFORMANCE_PATH); $(MAKE) -s help
-	@echo -e "\nThe number of images may be varied for each test-category from the corresponding test_*.sh script\n"
 
 
 performance:
