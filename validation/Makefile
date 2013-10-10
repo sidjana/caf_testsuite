@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: all feature non-conformance crosschecked_feature few-tests help
+.PHONY: all feature non-conformance crosschecked_feature fewtests help
 
 TEMP_1:=$(shell ./config/config2makedef.sh)  # generate make.def from CONFIG
 include ./config/make.def   # auto-generated
