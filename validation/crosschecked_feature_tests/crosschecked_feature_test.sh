@@ -24,18 +24,18 @@ if [ "$ANS" == "0" ]; then
        # compile the cross test
        $FC $FFLAGS_CROSS  -o  $BIN_PATH/$1.cross testmodule.o $2 &>/dev/null
 
+       rm -rf ./tmp ./conf.temp
        # run the cross test
-       #rm -rf conf.temp
        perl ../support/timedexec.pl $TIMEOUT $LAUNCHER $BIN_PATH/$1.cross $EXEC_OPTIONS &>./tmp
        RETURN="$?"
+       touch ./tmp ./conf.temp
 
        if [ "$FC" == "g95" ]; then 
 		echo "`sed -n 's/.*(//;s/).*//p' ./tmp`"%
        else
        		echo `cat conf.temp`
-		#rm -rf conf.temp
        fi
-#	rm ./tmp
+       rm -rf ./tmp ./conf.temp
 
   elif [ "$ANS" == "4" ]; then
        # feature test timed out
