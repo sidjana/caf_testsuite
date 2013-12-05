@@ -1,19 +1,18 @@
 module cross_test
 
     IMPLICIT NONE
-    integer :: cross_err[*]
+    integer:: cross_err[*]
 
 contains
 
-    subroutine calc_ori(cross_err)
-        integer:: cross_err[*]
-        if (cross_err .gt. 0) then
+    subroutine calc_ori()
+        if (this_image() == 1 .and. cross_err[1] > 0) then
             STOP 1
         end if
     end subroutine
 
-    subroutine calc (cross_err,tot_NITER)
-        integer :: cross_err[*],tot_NITER, err_cnt
+    subroutine calc (tot_NITER)
+        integer :: tot_NITER, err_cnt
         integer :: size, rank, i
         integer :: percent=0
         real :: mean,sumsq, sqsum, std_dev, root_size,ub,lb,n_size,t_val

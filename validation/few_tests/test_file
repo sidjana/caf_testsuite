@@ -1,10 +1,8 @@
 FEATURE-TESTS
 
-character_test.f90
+intrin_8.5.7e.f90
 
 CROSSCHECKED-FEATURE-TESTS
-
-intrin_8.5.6.f90
 
 STATUS-TESTS
 

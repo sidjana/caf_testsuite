@@ -14,8 +14,8 @@ BIN_PATH="${ROOT}/bin"
 #for ALL TESTS
 NPROCS="4"
 NITER="3"
-SLEEP="4"
-TIMEOUT="30"
+SLEEP="5"
+TIMEOUT="60"
 
 
 #OpenUH CAF Compiler

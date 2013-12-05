@@ -6,7 +6,7 @@
 
         integer(atomic_int_kind) :: i_obj[*]
         logical(atomic_logical_kind) :: l_obj[*] = .true.
-        integer :: sz, rank,tot_NITER=NITER*10000
+        integer :: sz, rank,tot_NITER=NITER!*10000
         integer :: i,k,j
         logical :: l_val
         integer(atomic_int_kind) :: num,i_val
@@ -61,7 +61,7 @@
 
         ! The source of the code below is
         ! ISO/IEC JTC1/SC22/WG5 N1824
-        ! This is a very godd test for atomic_logical_kind coarrays
+        ! This is a very good test for atomic_logical_kind coarrays
 
         if (rank == 1) then
         sync memory
@@ -81,9 +81,9 @@
            sync all
 
 #ifndef CROSS_
-           call calc_ori(cross_err)
+           call calc_ori()
 #else
-           call calc(cross_err,tot_NITER)
+           call calc(tot_NITER)
 #endif
 
       end program

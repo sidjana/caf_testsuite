@@ -3,42 +3,41 @@
          program critical
          use  cross_test
 
-         integer :: num[*], rank, i,j
+         integer :: num[*], me, i,j
          integer,parameter :: M=100000
          integer :: dummy(M)
 
 
-         rank = this_image()
-        if(NPROCS .gt. 1) then
+         me = this_image()
+        if(num_images() .gt. 1) then
 
+	  num = 0
            do i = 1,NITER
                   num = 0
                   sync all
 #ifndef CROSS_
-            critical
+              critical
 #endif
-
-                do j = 1 , M
+              do j = 1 , M
                   num[1] = num[1] + 1
-                  dummy(j)=dummy(j)+1
-                end do
+              end do
 #ifndef CROSS_
              end critical
 #endif
              sync all
 
-             if (rank == 1 .and. num /=(M*NPROCS)) then
+             if (me == 1 .and. num /=(M*NPROCS)) then
                 cross_err = cross_err + 1
-                print *,"num = ", num
+                print *,"Error: num = ", num
              end if
              sync all
            end do
 #ifndef CROSS_
-           print * , "call before", rank, "err=", cross_err
-           call calc_ori(cross_err)
-           print *, "call after", rank
+           print * , "call before", me, "err=", cross_err
+           call calc_ori()
+           print *, "call after", me
 #else
-           call calc(cross_err,NITER)
+           call calc(NITER)
 #endif
 
         else
@@ -46,6 +45,8 @@
           call EXIT (1)
         end if
 
+	print *, "num", num[1]
+	print *, "cross_err", cross_err
 
-           end program
+        end program
 

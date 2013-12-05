@@ -50,9 +50,9 @@ PROGRAM item12_c
       end do
 
 #ifndef CROSS_
-           call calc_ori(cross_err)
+           call calc_ori()
 #else
-           call calc(cross_err,NITER)
+           call calc(NITER)
 #endif
 
       else
