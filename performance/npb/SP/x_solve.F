@@ -6,6 +6,7 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
+       use, intrinsic :: iso_fortran_env
 
 c---------------------------------------------------------------------
 c this function performs the solution of the approximate factorization
@@ -21,6 +22,8 @@ c---------------------------------------------------------------------
      >         buffer_size, c, m, p, istart, stage, p0, nid
        double precision  r1, r2, d, e, s(5), sm1, sm2,
      >                   fac1, fac2
+
+       type(event_type), save :: ev[*]
 
 
 
@@ -64,6 +67,19 @@ c             if (timeron) call timer_start(t_xcomm)
 c             notify_team(predecessor(1))
 c             if (timeron) call timer_stop(t_xcomm)
 
+#ifdef USE_NBCOMM
+             if (predecessor(1) .ne. successor(1)) then
+                sync images( (/predecessor(1),successor(1)/) )
+             else
+                sync images( (/predecessor(1)/) )
+             endif
+
+             nid = predecessor(1)
+!dir$ caf_nowait
+             in_buffer(1:22*buffer_size) =
+     >          out_buffer(p0+1:p0+22*buffer_size)[nid]
+#endif
+
 
 c---------------------------------------------------------------------
 c            communication has already been started.
@@ -77,8 +93,10 @@ c            This waits on the current receive and on the send
 c            from the previous stage. They always come in pairs.
 c---------------------------------------------------------------------
 
+#ifndef USE_NBCOMM
              if (timeron) call timer_start(t_xcomm)
              nid = predecessor(1)
+
 #ifdef USE_BARRIER
       	     p0   = buffoff(buff_id)
       	     buff_id = 3 - buff_id
@@ -93,6 +111,13 @@ c---------------------------------------------------------------------
              endif
 #endif
              if (timeron) call timer_stop(t_xcomm)
+#else
+
+!dir$ caf_wait
+
+             event post (ev[predecessor(1)])
+
+#endif
 
 c---------------------------------------------------------------------
 c            unpack the buffer
@@ -304,6 +329,13 @@ c---------------------------------------------------------------------
           end do
        end do
 
+
+#ifdef USE_NBCOMM
+          if (stage .ne. 1) then
+              event wait (ev)
+          end if
+#endif
+
 c---------------------------------------------------------------------
 c         send information to the next processor, except when this
 c         is the last grid block
@@ -315,7 +347,7 @@ c            create a running pointer for the send buffer
 c---------------------------------------------------------------------
              if (timeron) call timer_start(t_xcomm)
              nid = successor(1)
-#ifdef USE_BARRIER
+#if defined(USE_BARRIER) && !defined(USE_NBCOMM)
       	     p0   = buffoff(buff_id)
 #endif
              if (timeron) call timer_stop(t_xcomm)
@@ -352,6 +384,7 @@ c---------------------------------------------------------------------
 c send data to next phase
 c can't receive data yet because buffer size will be wrong
 c---------------------------------------------------------------------
+#ifndef USE_NBCOMM
              if (timeron) call timer_start(t_xcomm)
 #ifdef USE_BARRIER
              sync all
@@ -363,6 +396,7 @@ c---------------------------------------------------------------------
              endif
 #endif
              if (timeron) call timer_stop(t_xcomm)
+#endif
 
           endif
        end do
@@ -399,6 +433,17 @@ c             if (timeron) call timer_start(t_xcomm)
 c             notify_team(successor(1))
 c             if (timeron) call timer_stop(t_xcomm)
 
+#ifdef USE_NBCOMM
+             if (predecessor(1) .ne. successor(1)) then
+                sync images( (/successor(1),predecessor(1)/) )
+             else
+                sync images( (/successor(1)/) )
+             endif
+             nid = successor(1)
+!dir$ caf_nowait
+             in_buffer(1:10*buffer_size) =
+     >          out_buffer(p0+1:p0+10*buffer_size)[nid]
+#endif
 
 c---------------------------------------------------------------------
 c            communication has already been started
@@ -411,6 +456,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c            wait for pending communication to complete
 c---------------------------------------------------------------------
+#ifndef USE_NBCOMM
              if (timeron) call timer_start(t_xcomm)
              nid = successor(1)
 #ifdef USE_BARRIER
@@ -427,6 +473,12 @@ c---------------------------------------------------------------------
              endif
 #endif
              if (timeron) call timer_stop(t_xcomm)
+#else
+!dir% caf_wait
+
+             event post( ev[successor(1)] )
+
+#endif
 
 c---------------------------------------------------------------------
 c            unpack the buffer for the first three factors
@@ -541,6 +593,12 @@ c---------------------------------------------------------------------
              end do
           end do
 
+#ifdef USE_NBCOMM
+         if (stage .ne. ncells) then
+             event wait( ev )
+         end if
+#endif
+
 c---------------------------------------------------------------------
 c         send on information to the previous processor, if needed
 c---------------------------------------------------------------------
@@ -549,7 +607,7 @@ c---------------------------------------------------------------------
              i1 = istart+1
              if (timeron) call timer_start(t_xcomm)
              nid = predecessor(1)
-#ifdef USE_BARRIER
+#if defined(USE_BARRIER) && !defined(USE_NBCOMM)
              p0   = buffoff(buff_id)
 #endif
              if (timeron) call timer_stop(t_xcomm)
@@ -567,6 +625,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c            pack and send the buffer
 c---------------------------------------------------------------------
+#ifndef USE_NBCOMM
              if (timeron) call timer_start(t_xcomm)
 #ifdef USE_BARRIER
              sync all
@@ -578,6 +637,7 @@ c---------------------------------------------------------------------
              endif
 #endif
              if (timeron) call timer_stop(t_xcomm)
+#endif
 
           endif
 
