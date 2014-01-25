@@ -22,7 +22,7 @@ c---------------------------------------------------------------------
        double precision  r1, r2, d, e, s(5), sm1, sm2,
      >                   fac1, fac2
 
-       type(event_type), save :: ev[*]
+       type(event_type), save :: ev[*], ev2[*], ev3[*]
 
 c---------------------------------------------------------------------
 c now do a sweep on a layer-by-layer basis, i.e. sweeping through cells
@@ -61,14 +61,11 @@ c             if (timeron) call timer_start(t_ycomm)
 c             notify_team(predecessor(2))
 c             if (timeron) call timer_stop(t_ycomm)
 #ifdef USE_NBCOMM
-             if (predecessor(2) .ne. successor(2)) then
-                sync images( (/predecessor(2),successor(2)/) )
-             else
-                sync images( (/predecessor(2)/) )
-             endif
+             event post (ev2[successor(2)])
+             event wait (ev2)
 
              nid = predecessor(2)
-!dir$ caf_nowait
+!! !dir$ caf_nowait
              in_buffer(1:22*buffer_size) =
      >          out_buffer(p0+1:p0+22*buffer_size)[nid]
 #endif
@@ -78,6 +75,10 @@ c            communication has already been started.
 c            compute the left hand side while waiting for the msg
 c---------------------------------------------------------------------
              call lhsy(c)
+
+#ifdef USE_NBCOMM
+#endif
+
 
 c---------------------------------------------------------------------
 c            wait for pending communication to complete
@@ -383,6 +384,7 @@ c---------------------------------------------------------------------
              endif
 #endif
              if (timeron) call timer_stop(t_ycomm)
+#else
 #endif
 
           endif
@@ -422,11 +424,8 @@ c             notify_team(successor(2))
 c             if (timeron) call timer_stop(t_ycomm)
 
 #ifdef USE_NBCOMM
-             if (predecessor(2) .ne. successor(2)) then
-                sync images( (/successor(2),predecessor(2)/) )
-             else
-                sync images( (/successor(2)/) )
-             endif
+             event post(ev3[predecessor(2)])
+             event wait(ev3)
              nid = successor(2)
 !dir$ caf_nowait
              in_buffer(1:10*buffer_size) =
@@ -441,6 +440,9 @@ c            cell that was just finished
 c---------------------------------------------------------------------
 
              call pinvr(slice(2,stage+1))
+
+#ifdef USE_NBCOMM
+#endif
 
 c---------------------------------------------------------------------
 c            wait for pending communication to complete
@@ -463,7 +465,7 @@ c---------------------------------------------------------------------
 #endif
              if (timeron) call timer_stop(t_ycomm)
 #else
-!dir% caf_wait
+!dir$ caf_wait
 
              event post( ev[successor(2)] )
 
@@ -627,6 +629,7 @@ c---------------------------------------------------------------------
              endif
 #endif
              if (timeron) call timer_stop(t_ycomm)
+#else
 #endif
 
           endif

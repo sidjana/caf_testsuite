@@ -24,6 +24,11 @@ c---------------------------------------------------------------------
      >                   fac1, fac2
 
        type(event_type), save :: ev[*]
+       type(event_type),save :: ev2[*]
+       type(event_type),save :: ev3[*]
+
+
+
 
 
 
@@ -68,11 +73,8 @@ c             notify_team(predecessor(1))
 c             if (timeron) call timer_stop(t_xcomm)
 
 #ifdef USE_NBCOMM
-             if (predecessor(1) .ne. successor(1)) then
-                sync images( (/predecessor(1),successor(1)/) )
-             else
-                sync images( (/predecessor(1)/) )
-             endif
+            event post(ev2[successor(1)])
+             event wait(ev2)
 
              nid = predecessor(1)
 !dir$ caf_nowait
@@ -86,6 +88,9 @@ c            communication has already been started.
 c            compute the left hand side while waiting for the msg
 c---------------------------------------------------------------------
              call lhsx(c)
+
+#ifdef USE_NBCOMM
+#endif
 
 c---------------------------------------------------------------------
 c            wait for pending communication to complete
@@ -396,6 +401,7 @@ c---------------------------------------------------------------------
              endif
 #endif
              if (timeron) call timer_stop(t_xcomm)
+#else
 #endif
 
           endif
@@ -434,11 +440,8 @@ c             notify_team(successor(1))
 c             if (timeron) call timer_stop(t_xcomm)
 
 #ifdef USE_NBCOMM
-             if (predecessor(1) .ne. successor(1)) then
-                sync images( (/successor(1),predecessor(1)/) )
-             else
-                sync images( (/successor(1)/) )
-             endif
+              event post(ev3[predecessor(1)])
+              event wait(ev3)
              nid = successor(1)
 !dir$ caf_nowait
              in_buffer(1:10*buffer_size) =
@@ -452,6 +455,9 @@ c            cell that was just finished
 c---------------------------------------------------------------------
 
              call ninvr(slice(1,stage+1))
+
+#ifdef USE_NBCOMM
+#endif
 
 c---------------------------------------------------------------------
 c            wait for pending communication to complete
@@ -474,10 +480,8 @@ c---------------------------------------------------------------------
 #endif
              if (timeron) call timer_stop(t_xcomm)
 #else
-!dir% caf_wait
-
+!dir$ caf_wait
              event post( ev[successor(1)] )
-
 #endif
 
 c---------------------------------------------------------------------
@@ -637,6 +641,7 @@ c---------------------------------------------------------------------
              endif
 #endif
              if (timeron) call timer_stop(t_xcomm)
+#else
 #endif
 
           endif
@@ -649,6 +654,7 @@ c---------------------------------------------------------------------
        end do
 
        if (timeron) call timer_stop(t_xsolve)
+
 
        return
        end
