@@ -31,7 +31,7 @@
        type(co_parent), allocatable :: co_parent_obj[:]
        type(parent) :: parent_obj
 
-       rank = this_image() 
+       rank = this_image()
 
        !.... Initializing all  coarrays by the owning images ....
 

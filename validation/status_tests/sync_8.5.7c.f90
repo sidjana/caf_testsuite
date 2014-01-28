@@ -3,7 +3,7 @@
       program errmsg_stat
         use, intrinsic:: iso_fortran_env
 
-	implicit none
+        implicit none
 
         integer :: stat_var, me
 
@@ -19,7 +19,7 @@
            sync images(*, STAT=stat_var)
            if ( stat_var /= STAT_STOPPED_IMAGE) then
                print *, "Error:stat_var /= STAT_STOPPED_IMAGE: ", me
-	       ERROR STOP 1
+               ERROR STOP 1
            end if
         end if
 

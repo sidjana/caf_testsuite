@@ -8,7 +8,7 @@
         integer :: stat_var, me
 
         me=this_image()
-        
+
         if (num_images() == 1) then
           print *, "Config error: NPROCS should be greater than 1"
           ERROR STOP 1
@@ -16,13 +16,13 @@
 
         if(me /= 1) then
             call sleep(SLEEP) ! ensuring that image 1 teminates
-            sync all(STAT=stat_var) 
+            sync all(STAT=stat_var)
             if ( stat_var /= STAT_STOPPED_IMAGE) then
                print *, "Error:stat_var /= STAT_STOPPED_IMAGE: ", me
                ERROR STOP 1
             endif
         endif
-     
+
         print *, "image", me, "stopping"
       end program
 

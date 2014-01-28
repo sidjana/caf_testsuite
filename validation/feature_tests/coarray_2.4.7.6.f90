@@ -1,169 +1,112 @@
 ! For a coindexed object, its cosubscript list determines the image
 ! index in the same way that a subscript list determines the subscript
-! order value for an i_array element
+! order value for an array element
 
-       program image
+       program cosubscript_test
        implicit none
 
-       integer :: rank, co_i, co_j, co_k, i_arr_i, i_arr_j
-       integer,parameter :: X=3,Y=2, M=2, N=1
-       integer, parameter  :: P=1, Q=-1
+       integer, parameter :: X = 3, Y = 2
+       integer, parameter :: P = 1, Q = -1
+       integer :: me
+       integer :: i,j,k
 
-       integer :: i_sca[1:M,1:N,*]
-       integer, allocatable :: i_arr(:,:)[:,:,:]
-       real :: r_sca[1:M,1:N,*]
-       real, allocatable :: r_arr(:,:)[:,:,:]
+       integer :: scalar[0:P, -1:Q, *]
+       integer :: array(X,Y)[0:P, -1:Q, *]
+       integer, allocatable :: alloc_scalar[:,:,:]
+       integer, allocatable :: alloc_array(:,:)[:,:,:]
 
-       integer :: dim3_max, i_cnt, is_err
-       real :: r_cnt
+       integer :: dim3_max, counter
+       logical :: is_err
 
 
-       ALLOCATE(i_arr(X,Y)[0:P,-1:Q,*])
-       ALLOCATE(r_arr(X,Y)[0:P,-1:Q,*])
+       allocate (alloc_scalar[0:P,-1:Q,*])
+       allocate (alloc_array(X,Y)[0:P,-1:Q,*])
 
-       is_err = 0
-       rank = this_image()
+       is_err = .false.
 
-       i_arr = rank
-       i_sca = rank
-       r_arr = rank * 1.0
-       r_sca = rank * 1.0
+       me = this_image()
 
-       dim3_max = NPROCS / (M*N)
+       array    = me
+       scalar   = me
 
-       if (MOD(NPROCS,(M*N)) .ge. 1) then
-         dim3_max=dim3_max+1
+       alloc_array    = me
+       alloc_scalar   = me
+
+       dim3_max = NPROCS / ( (P+1)*(Q+2) )
+
+       if (MOD(NPROCS,((P+1)*(Q+2))) .ge. 1) then
+         dim3_max = dim3_max+1
        end if
 
        sync all
 
-       ! ******* INTEGER SCALAR ***********
-       ! testing for coindexed i_scalar
-       i_cnt = 0
-       do co_k =1, dim3_max - 1
-         do co_j = 1,N
-           do co_i = 1,M
-            i_cnt = i_cnt+1
-            if (i_cnt /= i_sca[co_i,co_j,co_k]) then
-               print * , "Error is cosubscript translation "
-               print * , "[", co_i,",",co_j,",",co_k,"]/=",i_cnt
-               is_err=1
+       ! ******* SCALAR ***********
+       counter = 0
+       do k =1, dim3_max
+         do j = -1,Q
+           do i = 0,P
+            counter = counter+1
+            if (counter /= scalar[i,j,k]) then
+               print * , "Error in cosubscript translation "
+               print * , "[", i,",",j,",",k,"]/=",counter
+               is_err = .true.
             end if
            end do
          end do
       end do
 
-      ! for the last value of the last dimension
-      do co_j = 1,N
-        do co_i = 1,M
-         i_cnt = i_cnt+1
-         if (i_cnt .le. NPROCS) then
-           if (i_cnt /= i_sca[co_i,co_j,co_k]) then
-              print * , "Error is cosubscript translation "
-              print * , "[", co_i,",",co_j,",",dim3_max,"]/=",i_cnt
-              is_err=1
-           end if
-         end if
-        end do
-      end do
 
-
-      ! *********** INTEGER ARRAY ****************
-      ! testing for allocatable coindexed i_array
-      i_cnt = 0
-      do co_k =1, dim3_max - 1
-         do co_j = -1,Q
-           do co_i = 0,P
-            i_cnt = i_cnt+1
-            if (i_cnt /= i_arr(1,1)[co_i,co_j,co_k]) then
+      ! *********** ARRAY ****************
+      ! testing for allocatable coindexed int_arrayay
+      counter = 0
+      do k =1, dim3_max
+         do j = -1,Q
+           do i = 0,P
+            counter = counter+1
+            if (counter /= array(1,1)[i,j,k]) then
                print * , "Error is cosubscript translation "
-               print * , "[", co_i,",",co_j,",",co_k,"]/=",i_cnt
-               is_err=1
+               print * , "[", i,",",j,",",k,"]/=",counter
+               is_err = .true.
             end if
            end do
          end do
       end do
 
-      ! for the last value of the last dimension
-      do co_j = -1,Q
-        do co_i = 0,P
-         i_cnt = i_cnt+1
-         if (i_cnt .le. NPROCS) then
-           if (i_cnt /= i_arr(1,1)[co_i,co_j,co_k]) then
-              print * , "Error is cosubscript translation "
-              print * , "[", co_i,",",co_j,",",dim3_max,"]/=",i_cnt
-              is_err=1
-           end if
-         end if
-        end do
-      end do
-
-
-      ! ************** REAL SCALAR ***********
-      ! testing for coindexed r_scalar
-       r_cnt = 0.0
-       do co_k =1, dim3_max - 1
-         do co_j = 1,N
-           do co_i = 1,M
-            r_cnt = r_cnt+1
-            if (r_cnt /= r_sca[co_i,co_j,co_k]) then
-               print * , "Error is cosubscript translation "
-               print * , "[", co_i,",",co_j,",",co_k,"]/=",r_cnt
-               is_err=1
+       ! ******* ALLOCATABLE SCALAR ***********
+       counter = 0
+       do k =1, dim3_max
+         do j = -1,Q
+           do i = 0,P
+            counter = counter+1
+            if (counter /= alloc_scalar[i,j,k]) then
+               print * , "Error in cosubscript translation "
+               print * , "[", i,",",j,",",k,"]/=",counter
+               is_err = .true.
             end if
            end do
          end do
       end do
 
-      ! for the last value of the last dimension
-      do co_j = 1,N
-        do co_i = 1,M
-         r_cnt = r_cnt+1
-         if (r_cnt .le. NPROCS) then
-           if (r_cnt /= r_sca[co_i,co_j,co_k]) then
-              print * , "Error is cosubscript translation "
-              print * , "[", co_i,",",co_j,",",dim3_max,"]/=",r_cnt
-              is_err=1
-           end if
-         end if
-        end do
-      end do
 
-
-      ! *********** REAL ARRAY ****************
-      ! testing for allocatable coindexed r_array
-      r_cnt = 0.0
-      do co_k =1, dim3_max - 1
-         do co_j = -1,Q
-           do co_i = 0,P
-            r_cnt = r_cnt+1
-            if (r_cnt /= r_arr(1,1)[co_i,co_j,co_k]) then
+      ! *********** ALLOCATABLE COARRAY ****************
+      ! testing for allocatable coarray
+      counter = 0
+      do k =1, dim3_max
+         do j = -1,Q
+           do i = 0,P
+            counter = counter+1
+            if (counter /= alloc_array(1,1)[i,j,k]) then
                print * , "Error is cosubscript translation "
-               print * , "[", co_i,",",co_j,",",co_k,"]/=",r_cnt
-               is_err=1
+               print * , "[", i,",",j,",",k,"]/=",counter
+               is_err = .true.
             end if
            end do
          end do
       end do
 
-      ! for the last value of the last dimension
-      do co_j = -1,Q
-        do co_i = 0,P
-         r_cnt = r_cnt+1
-         if (r_cnt .le. NPROCS) then
-           if (r_cnt /= r_arr(1,1)[co_i,co_j,co_k]) then
-              print * , "Error is cosubscript translation "
-              print * , "[", co_i,",",co_j,",",dim3_max,"]/=",r_cnt
-              is_err=1
-           end if
-         end if
-        end do
-      end do
 
-
-
-      if (is_err /= 0) then
+      if (is_err) then
            STOP 1
       end if
 
-      end program
+      end program cosubscript_test

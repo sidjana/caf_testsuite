@@ -9,9 +9,9 @@
 
 
          me = this_image()
-        if(num_images() .gt. 1) then
+         if(num_images() .gt. 1) then
 
-	  num = 0
+            num = 0
            do i = 1,NITER
                   num = 0
                   sync all
@@ -45,8 +45,8 @@
           call EXIT (1)
         end if
 
-	print *, "num", num[1]
-	print *, "cross_err", cross_err
+        print *, "num", num[1]
+        print *, "cross_err", cross_err
 
         end program
 

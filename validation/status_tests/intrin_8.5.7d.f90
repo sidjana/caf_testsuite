@@ -1,6 +1,6 @@
-! Testing for LOCK & UNLOCK with STAT=STAT_LOCKED specifier
+! Testing for STAT_LOCKED status
 
-      program lock_unlock
+      program stat_locked_status
 
         USE, INTRINSIC :: ISO_FORTRAN_ENV
 
@@ -12,42 +12,47 @@
         ALLOCATE(a_lock_var [*])
 
         me = this_image()
+        err_cnt = 0
 
         if(NPROCS ==  1) then
-          print * , "Config Error: NPROCS should be greater than 1"
+            print * , "Config Error: NPROCS should be greater than 1"
         end if
 
-	stat_var=STAT_UNLOCKED
+        stat_var = -1
 
         if (me == 1) then
-          LOCK(lock_var, STAT=stat_var)
-          if (stat_var == STAT_LOCKED) then
-	    print *, "stat_var == STAT_LOCKED: ", me
-	  else
-            print *, "Error:stat_var /= STAT_LOCKED: ", me
-            err_cnt = 1
-          end if
-          UNLOCK(lock_var, STAT=stat_var)
+            LOCK(lock_var, STAT=stat_var)
+            if (stat_var /= 0) then
+                print *, "Error: first lock attempt, stat_var = ", stat_var
+                err_cnt = 1
+            end if
+            LOCK(lock_var, STAT=stat_var)
+            if (stat_var /= STAT_LOCKED) then
+                print *, "Error: second lock attempt, stat_var = ", stat_var
+                err_cnt = 1
+            end if
+            UNLOCK(lock_var)
         end if
-
-	stat_var=STAT_UNLOCKED
 
         ! ALLOCATABLE LOCK_TYPE
-        stat_var = 0
+        stat_var = -1
 
         if (me == 1) then
-          LOCK(a_lock_var, STAT=stat_var)
-          if (stat_var == STAT_LOCKED) then
-	    print *, "stat_var == STAT_LOCKED: ", me
-	  else
-            print *, "Error:stat_var /= STAT_LOCKED: ", me
-            err_cnt = 1
-          end if
-          UNLOCK(a_lock_var, STAT=stat_var)
+            LOCK(a_lock_var, STAT=stat_var)
+            if (stat_var /= 0) then
+                print *, "Error: first lock attempt, stat_var = ", stat_var
+                err_cnt = 1
+            end if
+            LOCK(a_lock_var, STAT=stat_var)
+            if (stat_var /= STAT_LOCKED) then
+                print *, "Error: second lock attempt, stat_var = ", stat_var
+                err_cnt = 1
+            end if
+            UNLOCK(a_lock_var)
         end if
 
         if (err_cnt == 1) then
-          call EXIT(1)
+            call EXIT(1)
         end if
 
       end program
