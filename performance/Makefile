@@ -27,7 +27,7 @@ compile_kernels:
 	@cd $(KERNELS_PATH) ; make -s COMPILER=$(COMPILER);
 
 compile_microbenchmarks:
-	@cd $(MICROBENCH_PATH) ; make -s compile  COMPILER=$(COMPILER);
+	@cd $(MICROBENCH_PATH) ; make -s all_tests COMPILER=$(COMPILER);
 
 compile_npb:
 	@cd $(NPB_PATH); ./test_npb.sh compile $(COMPILER);
@@ -38,7 +38,7 @@ execute_kernels:
 	@cd $(KERNELS_PATH) ; make -s runtests COMPILER=$(COMPILER);
 
 execute_microbenchmarks:
-	@cd $(MICROBENCH_PATH) ; make -s execute  COMPILER=$(COMPILER);
+	@cd $(MICROBENCH_PATH) ; make -s run_all_tests COMPILER=$(COMPILER);
 
 execute_npb:
 	@cd $(NPB_PATH) ; ./test_npb.sh execute $(COMPILER);
@@ -49,7 +49,7 @@ complete_kernels:
 	@cd $(KERNELS_PATH) ; make -s runtests COMPILER=$(COMPILER);
 
 complete_microbenchmarks:
-	@cd $(MICROBENCH_PATH) ; make -s complete  COMPILER=$(COMPILER);
+	@cd $(MICROBENCH_PATH) ; make -s run_all_tests COMPILER=$(COMPILER);
 
 complete_npb:
 	@cd $(NPB_PATH) ; ./test_npb.sh complete $(COMPILER);
@@ -64,10 +64,12 @@ cleanperformance cleanall: cleankernels cleanmicrobenchmarks cleannpb
 	@rm -rf  support/make.def*
 
 cleankernels:
-	@cd $(KERNELS_PATH) ;   $(MAKE) -s clean
+	$(MAKE) -C $(KERNELS_PATH) clean
 
 cleanmicrobenchmarks:
-	@cd $(MICROBENCH_PATH) ;  $(MAKE) -s cleanall
+	$(MAKE) -C $(MICROBENCH_PATH) clean
 
 cleannpb:
-	@cd $(NPB_PATH) ;  $(MAKE) -s cleanall
+	$(MAKE) -C $(NPB_PATH) clean
+
+clean: cleanall
