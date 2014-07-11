@@ -1,5 +1,9 @@
 #!/bin/bash
 
+BENCHMARKS="ep cg mg lu ft sp bt"
+CLASSES="S W A B C"
+NPROCS_LST1="1 2 4 8 16"
+NPROCS_LST2="1 4 9 16"
 
 if [ -f ../support/CONFIG ]; then
   source ../support/CONFIG
@@ -50,14 +54,14 @@ mkdir -p $COMP_OUT_DIR $EXEC_OUT_DIR  $HISTORY_OUT_DIR $BIN_DIR $LOG_DIR
 
 printf '%8s %8s %8s %15s %15s %15s %25s \n' "<NAME>" "<CLASS>" "<NPROCS>" "<COMPILATION>" "<EXECUTION>" "<RESULT>" "<TIME(secs)>" | tee -a $LOG_DIR/$logfile
 
-for BM in ep cg sp bt ft lu mg
+for BM in $BENCHMARKS
 do
-	for CLASS in S W A B C
+	for CLASS in $CLASSES
 	do
   		  if [ "$BM" == "ep" -o "$BM" == "cg" -o "$BM" == "ft" -o "$BM" == "mg" -o "$BM" == "lu" ]; then
-  		       NPROCS_LST="1 2 4 8 16";
+  		       NPROCS_LST=$NPROCS_LST1
   		  else
-  		       NPROCS_LST="1 4 9 16"
+  		       NPROCS_LST=$NPROCS_LST2
   		  fi
 
   		  for NP in  $NPROCS_LST
