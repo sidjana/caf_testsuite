@@ -1,8 +1,8 @@
 SHELL := /bin/bash
 
 KERNELS_PATH=./kernels
-MICROBENCH_PATH=./microbenchmarks
-NPB_PATH=./npb
+MICROBENCH_PATH=./microbenchmarks2
+NPB_PATH=./NPB3.3-CAF
 COMPILER?=uhcaf
 
 help default:
