@@ -8,15 +8,15 @@
       program customerdb
         implicit none
 
-        interface 
+        interface
           subroutine sort(customerList,t,startIndex,endIndex)
             integer, intent(in) :: startIndex, endIndex, t
             integer, dimension(t), intent(inout) :: customerList[*]
-          end subroutine sort 
+          end subroutine sort
         end interface
 
-        integer :: totalCount = 100000
-        integer :: customers(100000)[*]
+        integer, parameter :: totalCount = 100000
+        integer :: customers(totalCount)[*]
         integer, allocatable :: work1(:), work2(:)
         integer :: width, width1, width2, cw1, cw2, r
         integer :: startIndex[*], endIndex[*], palSIndex, palEIndex
@@ -63,7 +63,12 @@
                     cycle
                 end if
 
+                !print *, this_image(), " ", mypal
+
                 sync images(mypal)
+
+                if (this_image() < mypal) then
+
                 palSIndex = startIndex[mypal]
                 palEIndex = endIndex[mypal]
                 width1 = palEIndex - palSIndex + 1 ! plus 1 for inclusive
@@ -103,7 +108,7 @@
                     if (work1(cw1) < work2(cw2)) then
                         customers(r) = work1(cw1)
                         cw1 = cw1 + 1
-                    else
+                    else !if (work2(cw2) < work1(cw1)) then
                         customers(r) = work2(cw2)
                         cw2 = cw2 + 1
                     end if
@@ -120,6 +125,9 @@
                 !end if
                 deallocate(work1)
                 deallocate(work2)
+
+                end if
+
                 sync images (mypal)
             end do
         end if
@@ -136,20 +144,34 @@
         write(*, '(A20,F8.2,A)') "elapsed time = ", ticks/(1.0*rate), &
 	& " seconds"
         end if
+
       end program customerdb
 
       subroutine distribute_chunks(me, total, sIndex, eIndex)
+        implicit none
         integer, intent(in) :: me, total
         integer, intent(out) :: sIndex, eIndex
         integer :: width
+        integer :: m,l1,l2,l
 
-        width = ceiling(real(total)/num_images())
-        sIndex = (me-1)*width + 1
-        eIndex = sIndex + width - 1
-        if (eIndex .gt. total) then
-            eIndex = total
+        m = mod(total, num_images())
+        l1 = total / num_images() + 1
+        l2 = total / num_images()
+
+        if (me <= m) then
+            l = l1
+        else
+            l = l2
         end if
-        !print *, me, width, sIndex, eIndex
+
+        if (me <= m) then
+            sIndex = l1*(me-1) + 1
+            eIndex = sIndex + l1 -1
+        else
+            sIndex = m*l1 + (me-m-1)*l2 + 1
+            eIndex = sIndex + l2 - 1
+        end if
+
       end subroutine
 
       subroutine sort(customerList,t,startIndex,endIndex)

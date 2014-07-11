@@ -8,7 +8,7 @@
 !     Solve Helmholtz's equation using Jacobi iteration.
 !
 !     See: http://www.netlib.org/linalg/html_templates/Templates.html
-!          R. Barrett et. al. (1994).  Templates for the solution of 
+!          R. Barrett et. al. (1994).  Templates for the solution of
 !          Linear Systems: Building Blocks for Iterative Methods, 2nd
 !          Edition.  SIAM.  Philadelphia, PA.
 !
@@ -108,11 +108,11 @@
 ! Example implementation of Jacobi iterative method for Helmholtz's equation
 ! using SPMD 2-D domain decomposition and Co-Array Fortran.  Note that
 ! Jacobi has very poor convergence properties, but it is scalable and easy
-! to understand and program.  Use a better scheme, such as Red-Black SOR or 
+! to understand and program.  Use a better scheme, such as Red-Black SOR or
 ! Preconditioned Conjugate Gradients, for solving real problems.
 !
 ! See: http://www.netlib.org/linalg/html_templates/Templates.html
-!      R. Barrett et. al. (1994).  Templates for the solution of 
+!      R. Barrett et. al. (1994).  Templates for the solution of
 !      Linear Systems: Building Blocks for Iterative Methods, 2nd
 !      Edition.  SIAM.  Philadelphia, PA.
 !
@@ -148,43 +148,43 @@
       INTEGER(KIND=8) :: ST, ET, RES
       REAL(KIND=8)    :: TT,RTMP
 
+      INTEGER :: NARGS
       INTEGER :: N,M,P,Q
       INTEGER :: I1,II1,IP,IQ,J1,JJ1,ME,ME_P,ME_Q,MM,NN
       INTEGER :: TICKS1, TICKS2, START_TIME, END_TIME, RATE
       INTEGER, SAVE     :: IN(4)[*]
       REAL, ALLOCATABLE :: ANS(:,:)[:,:],RHS(:,:)[:,:]
       REAL, ALLOCATABLE :: GLOBAL_ANS(:,:)
+      CHARACTER (LEN=20) :: BUFFER
 
       ME = THIS_IMAGE()
 
-!     Use this instead if want to get inputs from command line.
-!        call getarg(1,BUFFER)
-!        READ(BUFFER,*) N
-!        call getarg(2,BUFFER)
-!        READ(BUFFER,*) M
-!        call getarg(3,BUFFER)
-!        READ(BUFFER,*) P
-!        call getarg(4,BUFFER)
-!        READ(BUFFER,*) Q
+      IF (ME == 1) THEN
+          NARGS = COMMAND_ARGUMENT_COUNT()
+          IF (NARGS == 0) THEN
+             WRITE(*,*) 'Solve Helmholtz equation via Jacobi iteration'
+             WRITE(*,*)'N = 1st dimension of entire rectangular grid'
+             WRITE(*,*)'M = 2nd dimension of entire rectangular grid'
+             WRITE(*,*)'P = number of nodes in 1st dimension, N/P an integer'
+             WRITE(*,*)'Q = number of nodes in 2nd dimension, M/Q an integer'
+             WRITE(*,*)'Total number of nodes = P*Q, must be NUM_IMAGES()'
+             WRITE(*,'(a)',advance='no') 'Enter N, M, P, and Q: '
+             READ(5,*) IN(1:4)
 
-!
-!     input.
+             ! Fill up IN(:) with a sample input.
+             !IN(1:4) = (/1000,1000,1,(NUM_IMAGES()/1)/)
+          ELSE
+            call getarg(1,BUFFER)
+            READ(BUFFER,*) IN(1)
+            call getarg(2,BUFFER)
+            READ(BUFFER,*) IN(2)
+            call getarg(3,BUFFER)
+            READ(BUFFER,*) IN(3)
+            call getarg(4,BUFFER)
+            READ(BUFFER,*) IN(4)
+          END IF
+      END IF
 
-!      IF (ME == 1) THEN
-!        WRITE(*,*) 'Solve Helmholtz equation via Jacobi iteration'
-!        WRITE(*,*)'N = 1st dimension of entire rectangular grid'
-!        WRITE(*,*)'M = 2nd dimension of entire rectangular grid'
-!        WRITE(*,*)'P = number of nodes in 1st dimension, N/P an integer'
-!        WRITE(*,*)'Q = number of nodes in 2nd dimension, M/Q an integer'
-!        WRITE(*,*)'Total number of nodes = P*Q, must be NUM_IMAGES()'
-!        WRITE(*,'(a)',advance='no') 'Enter N, M, P, and Q: '
-!        READ(5,*) IN(1:4)
-!      ENDIF
-	
-	! Fill up IN(:) with a sample input. 
-	IN(1:4) = (/1000,1000,1,(NUM_IMAGES()/1)/)
-
-!      SYNC ALL( WAIT=(/1/) )
        IF (ME == 1) THEN
            SYNC IMAGES( * )
        ELSE
@@ -217,6 +217,7 @@
       ENDIF
       ALLOCATE(ANS(0:NN+1,0:MM+1)[0:P-1,0:*])  ! include a halo
       ALLOCATE(RHS(0:NN+1,0:MM+1)[0:P-1,0:*])  ! around (1:NN,1:MM)
+
 !
 !     point source in center of global array.
 !
@@ -269,6 +270,7 @@
            CALL FLUSH(6)
       ENDIF
 
+
       IF (ME == 1) THEN
           SYNC IMAGES( * )
       ELSE
@@ -282,7 +284,7 @@
 !     point source at first point of global array.
 !
       I1  = 1
-      J1  = 1 
+      J1  = 1
       II1 = I1 - ME_P*NN
       JJ1 = J1 - ME_Q*MM
       RHS(:,:) = 0.0  ! rsh is mostly zero
@@ -294,7 +296,7 @@
       CALL JACOBI(ANS,RHS,NN,MM,P,Q, ME,ME_P,ME_Q, 1.E-6)
       SYNC ALL
       if (ME == 1) THEN
-      ENDIF 
+      ENDIF
       IF (ME == 1) THEN
         DO IQ= 0,Q-1
           DO IP= 0,P-1
@@ -335,10 +337,10 @@
         write(*, '(//A20,I8,A)')   "clock rate = ", RATE, " ticks/s"
         write(*, '(A20,I8)')           "ticks  = ", (TICKS1+TICKS2)
         write(*, '(A20,F8.2,A)') "elapsed time = ", &
-	& (TICKS1+TICKS2)/(1.0*rate), " seconds"
+    & (TICKS1+TICKS2)/(1.0*rate), " seconds"
       ELSE
           SYNC IMAGES( 1 )
-      ENDIF 
+      ENDIF
 
 
       END PROGRAM TEST_JACOBI

@@ -1,5 +1,4 @@
 
-      
 
       SUBROUTINE gray_erode(img, height, filterheight, filterwidth, &
             & iterations, pixrange, wLbound, wUbound, localWidth)
@@ -99,7 +98,7 @@
     PROGRAM smoothing_main
         IMPLICIT NONE
 
-      INTERFACE 
+      INTERFACE
       SUBROUTINE gray_erode(img, height, filterheight, filterwidth, &
             & iterations, pixrange, wLbound, wUbound, localWidth)
         IMPLICIT NONE
@@ -129,7 +128,7 @@
 
         if (image_count/=num_images()) then
           print *,"Number of Images must be ",image_count
-	  stop 
+          stop
         end if
 
         print *, "labels(100:200, 10) = ", labels(100:200,10)
@@ -147,11 +146,11 @@
          !END READ IMAGE FROM FILE
 
         !DO SMOOTHING
-	sync all
+        sync all
         call system_clock(start_time, rate)
         call gray_erode(labels, height, filterheight, filterwidth, &
           & iterations, pixrange, wLbound, wUbound, localWidth)
-	sync all
+        sync all
         call system_clock(end_time)
 
         print '("Image:",i2,"-> Time = ",f6.3," seconds.")',this_image(),t_stop - t_start

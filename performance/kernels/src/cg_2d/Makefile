@@ -12,7 +12,7 @@ include ../../../support/make.def-compiler.$(COMPILER)   # auto-generated
 
 default: compile execute
 
-compile $(TEST).x: $(TEST).f90
+compile $(TEST).x: $(TEST).F90
 	@echo -e "\nCompiling ... $(TEST) ..."
 	$(COMPILE_CMD) $(TEST).f90 -o $(TEST).x | tee $(TEST).compile.out
 

@@ -20,9 +20,9 @@
                               u,v,roc2,phi,eta,                         &
                               x1,x2,x3,x4,x5,x6,z1,z2,z3,z4,z5          &
                              )
-       
+
            implicit none
-       
+
            integer,intent(in) :: lx,lz
            integer,intent(in) :: x1,x2,x3,x4,x5,x6,z1,z2,z3,z4,z5
            integer,intent(in) :: xmin,xmax,zmin,zmax
@@ -34,7 +34,7 @@
            real,intent(in)    :: v(xmin-lx:xmax+lx,1,zmin-lz:zmax+lz)
            real,intent(in)    :: roc2(xmin:xmax,1,zmin:zmax)
            real,intent(in)    :: eta(xmin-1:xmax+1,1,zmin-1:zmax+1)
-       
+
            integer            :: i,k
            real               :: lap,coef0
            coef0=coefx(0)+coefz(0)
@@ -51,15 +51,15 @@
                           +coefz(3)*(v(i,1,k+3)+v(i,1,k-3))             &
                           +coefx(4)*(v(i+4,1,k)+v(i-4,1,k))             &
                           +coefz(4)*(v(i,1,k+4)+v(i,1,k-4))
-       
+
                      !! Update the wavefield.
                      u(i,1,k)=((2.-eta(i,1,k)*eta(i,1,k)                &
                           +2.*eta(i,1,k))*v(i,1,k)                      &
                           -u(i,1,k)                                     &
                           +roc2(i,1,k)*(lap                             &
                           +phi(i,1,k)))/(1.+2.*eta(i,1,k))
-       
-                     !! Update the PML function.         
+
+                     !! Update the PML function.
                      phi(i,1,k)=(phi(i,1,k)-                            &
                           ((eta(i+1,1,k)-eta(i-1,1,k))                  &
                           *(v(i+1,1,k)-v(i-1,1,k))*hdx_2                &
@@ -78,8 +78,8 @@
                           +coefz(3)*(v(i,1,k+3)+v(i,1,k-3))             &
                           +coefx(4)*(v(i+4,1,k)+v(i-4,1,k))             &
                           +coefz(4)*(v(i,1,k+4)+v(i,1,k-4))
-       
-                     !! Update the wavefield.         
+
+                     !! Update the wavefield.
                      u(i,1,k)=2.*v(i,1,k)-u(i,1,k)+roc2(i,1,k)*lap
                   enddo
                   do i=x5,x6
@@ -93,15 +93,15 @@
                           +coefz(3)*(v(i,1,k+3)+v(i,1,k-3))             &
                           +coefx(4)*(v(i+4,1,k)+v(i-4,1,k))             &
                           +coefz(4)*(v(i,1,k+4)+v(i,1,k-4))
-       
+
                      !! Update the wavefield.
                      u(i,1,k)=((2.-eta(i,1,k)*eta(i,1,k)                &
                           +2.*eta(i,1,k))*v(i,1,k)                      &
                           -u(i,1,k)                                     &
                           +roc2(i,1,k)*(lap                             &
                           +phi(i,1,k)))/(1.+2.*eta(i,1,k))
-       
-                     !! Update the PML function.         
+
+                     !! Update the PML function.
                      phi(i,1,k)=(phi(i,1,k)-                            &
                           ((eta(i+1,1,k)-eta(i-1,1,k))                  &
                           *(v(i+1,1,k)-v(i-1,1,k))*hdx_2                &
@@ -121,15 +121,15 @@
                           +coefz(3)*(v(i,1,k+3)+v(i,1,k-3))             &
                           +coefx(4)*(v(i+4,1,k)+v(i-4,1,k))             &
                           +coefz(4)*(v(i,1,k+4)+v(i,1,k-4))
-       
+
                      !! Update the wavefield.
                      u(i,1,k)=((2.-eta(i,1,k)*eta(i,1,k)                &
                           +2.*eta(i,1,k))*v(i,1,k)                      &
                           -u(i,1,k)                                     &
                           +roc2(i,1,k)*(lap                             &
                           +phi(i,1,k)))/(1.+2.*eta(i,1,k))
-       
-                     !! Update the PML function.         
+
+                     !! Update the PML function.
                      phi(i,1,k)=(phi(i,1,k)-                            &
                           ((eta(i+1,1,k)-eta(i-1,1,k))                  &
                           *(v(i+1,1,k)-v(i-1,1,k))*hdx_2                &
@@ -153,9 +153,9 @@
            !
            ! This subroutine updates the wavefield with no damping.
            !
-       
+
            implicit none
-       
+
            integer,intent(in) :: im,ip,km,kp
            integer,intent(in) :: lx,lz
            integer,intent(in) :: xmin,xmax,zmin,zmax
@@ -164,7 +164,7 @@
            real,intent(inout) :: u(xmin-lx:xmax+lx,1,zmin-lz:zmax+lz)
            real,intent(in)    :: v(xmin-lx:xmax+lx,1,zmin-lz:zmax+lz)
            real,intent(in)    :: roc2(xmin:xmax,1,zmin:zmax)
-       
+
            integer            :: i,k
            real               :: lap,coef0
            coef0=coefx(0)+coefz(0)
@@ -180,8 +180,8 @@
                        +coefz(3)*(v(i,1,k+3)+v(i,1,k-3))                &
                        +coefx(4)*(v(i+4,1,k)+v(i-4,1,k))                &
                        +coefz(4)*(v(i,1,k+4)+v(i,1,k-4))
-       
-                  !! Update the wavefield.         
+
+                  !! Update the wavefield.
                   u(i,1,k)=2.*v(i,1,k)-u(i,1,k)+roc2(i,1,k)*lap
                enddo
            enddo
@@ -196,11 +196,16 @@
       use cg_2d
       implicit none
 
-      integer,parameter :: npx=2
+      integer           :: npx
       integer           :: px,pz,me,npz
       integer           :: i
+#ifdef NITER
+      integer, parameter:: lx=4,lz=4,nt=NITER
+#else
       integer, parameter:: lx=4,lz=4,nt=1000
-      integer, parameter:: xmin=1,xmax=1000,zmin=1,zmax=500
+#endif
+      !integer, parameter:: xmin=1,xmax=1000,zmin=1,zmax=500
+      integer           :: xmin,xmax,zmin,zmax
       real,parameter    :: dx=4,dz=4,fmax=15,c=3000
       integer           :: it,xsource,zsource,l,z
       integer           :: x1,x2,x3,x4,x5,x6,z1,z2,z3,z4,z5
@@ -213,17 +218,80 @@
       real              :: hdx_2,hdz_2
       character(len=16) :: char
       real              :: rmax, rmin
-      real              :: roc2(xmin:xmax, zmin:zmax)
+      real, allocatable :: roc2(:,:)
 #ifndef INNER
-      real              :: phi(xmin:xmax,1,zmin:zmax)
+      real, allocatable :: phi(:,:,:)
 #endif
-      real              :: u(xmin-lx:xmax+lx, zmin-lz:zmax+lz)[npx,1,*]
-      real              :: v(xmin-lx:xmax+lx, zmin-lz:zmax+lz)[npx,1,*]
+      real, allocatable :: u(:,:)[:,:,:]
+      real, allocatable :: v(:,:)[:,:,:]
       real              :: max_u[*], min_u[*]
 #ifndef INNER
-      real              :: eta(xmin-1:xmax+1,zmin-1:zmax+1)[npx,1,*]
+      real, allocatable :: eta(:,:)[:,:,:]
 #endif
+
+      integer           :: nargs, args(4)[*]
+      integer           :: P, Q, N, M
+      character(len=20) :: buffer
+
       integer :: ticks, start_time, end_time, rate
+
+
+      me = this_image()
+
+      if (me == 1) then
+          nargs = command_argument_count()
+          if (nargs == 0) then
+              write (*,*) "Conjugate Gradient Method with PML"
+              write (*,*) "N      = 1st dimension of entire rectangular grid"
+              write (*,*) "M      = 2nd dimension of entire rectangular grid"
+              write (*,*) "P      = number of nodes in 1st dimension, N/P an integer"
+              write (*,*) "Q      = number of nodes in 2nd dimension, N/Q an integer"
+              write (*,*) "Total number of nodes = P*Q, must be NUM_IMAGES()"
+              write (*,'(a)',advance='no') "Enter N, M, P, and Q: "
+              read (5,*) args(1:4)
+          else
+            call getarg(1,buffer)
+            read(buffer,*) args(1)
+            call getarg(2,buffer)
+            read(buffer,*) args(2)
+            call getarg(3,buffer)
+            read(buffer,*) args(3)
+            call getarg(4,buffer)
+            read(buffer,*) args(4)
+          end if
+      end if
+
+      if (me == 1) then
+          sync images(*)
+      else
+          sync images(1)
+      end if
+
+      N = args(1)[1]
+      M = args(2)[1]
+      P = args(3)[1]
+      Q = args(4)[1]
+      if ((N/P)*P /= N .or. (M/Q)*Q /= M .or. P*Q /= num_images()) then
+          if (ME == 1) then
+              write(6,*) 'BAD INPUT VALUES'
+              call flush(6)
+          end if
+          sync all
+          stop
+      end if
+      xmin = 1
+      xmax = N/P
+      zmin = 1
+      zmax = M/Q
+      npx  = P
+
+      allocate (roc2(xmin:xmax, zmin:zmax))
+      allocate (u(xmin-lx:xmax+lx, zmin-lz:zmax+lz)[npx,1,*])
+      allocate (v(xmin-lx:xmax+lx, zmin-lz:zmax+lz)[npx,1,*])
+#ifndef INNER
+      allocate (phi(xmin:xmax, 1, zmin:zmax))
+      allocate (eta(xmin-1:xmax+1,zmin-1:zmax+1)[npx,1,*])
+#endif
 
       npz = num_images() / npx
 
@@ -243,7 +311,6 @@
       source=0
       u=0.
       v=0.
-      me = this_image()
       px = this_image(v,1)
       pz = this_image(v,3)
 
@@ -255,35 +322,35 @@
       else
           x2 = 0
           x3 = xmin
-      end if 
+      end if
       if (px == npx) then
           x4 = xmax-5
           x5 = xmax-4
-      else 
+      else
           x4 = xmax
           x5 = xmax+1
-      end if 
+      end if
       z3=zmin
       z4=zmax
       if (pz == 1) then
           z3 = 2
-      end if 
+      end if
 
       ! computer source term
       if ( mod(npx,2) == 0) then
           xsource = xmax
           ix = npx/2
-      else 
+      else
           xsource = xmax/2
           ix = npx/2+1
-      end if 
+      end if
       if ( mod(npz,2) == 0) then
           zsource = zmax
           iz = npz/2
       else
           zsource = zmax/2
           iz = npz/2+1
-      endif 
+      endif
 
       call csource(nt,fmax,dt,source)
 
@@ -465,7 +532,7 @@
         end if
 
 
-      ! TODO: support I/O for coarray data 
+      ! TODO: support I/O for coarray data
 !        if (this_image() == 1) then
 !            open(1,file='snap.H',form='formatted')
 !            write(1,*)'in=snap.H@'
@@ -493,16 +560,16 @@
 !                         *(zmax-zmin+2*lz+1))
 !            write(1,rec=1)u
 !            close(1)
-!        end if 
+!        end if
 
 ! 'stop' in the next stmt has been commented since G95 does not exit images cleanly.
       !stop
-      
+
       contains
       !===================================================================
       subroutine second_derivative_coef(coef,l)
       !
-      ! Given the half-order l of desired stencil,this routine returns 
+      ! Given the half-order l of desired stencil,this routine returns
       ! coef which contains the standard associated FD stencil.
       !
       implicit none
@@ -514,7 +581,7 @@
          case(1)
             coef=(/            -2.,    1./)
          case(2)
-            coef=(/         -5./2., 4./3., -1./12./) 
+            coef=(/         -5./2., 4./3., -1./12./)
          case(3)
             coef=(/       -49./18., 3./2., -3./20.,  1./90./)
          case(4)
@@ -529,7 +596,7 @@
          case(7)
             coef=(/-266681./88200., 7./4., -7./24., 7./108., &
                  -7./528.,  7./3300., -7./30888.,  1./84084./)
-    
+
          case default
             write(6,*) 'Error ! Standard FD stencil : invalid order.'
             write(6,*) 'Notice that 2 <= order <= 14.'
@@ -550,7 +617,7 @@
        tpeak=0
        pi=3.1415927
        lam=pi*pi*fpeak*fpeak
-    
+
        do it=1,nt
           t=dt*real(it-1)
           source (it)=2.*lam*(2.*lam*(t-tpeak)*(t-tpeak)-1)*exp(-lam*&
