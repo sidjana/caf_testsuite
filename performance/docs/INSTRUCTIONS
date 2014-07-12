@@ -47,35 +47,35 @@ The list of parameters are:
 Parameter       | Description
 ----------------|-------------------------------------------------------------
 DATE            | Format of date. This format is used for naming the result
-                | logs 
+                | logs
                 |
 TIMEOUT         | Timeperiod in seconds for timing-out on executions. Any
                 | execution which crosses this limit will be denoted as having
-                | 'timed-out' in the test-results and log files. 
+                | 'timed-out' in the test-results and log files.
                 |
 logfile         | name-format of the log file. These files store the testsuite
-                | results. 
+                | results.
                 |
-TESTS_DIR       | Location of the tests 
+TESTS_DIR       | Location of the tests
                 |
-LOG_DIR         | location of the log dump 
+LOG_DIR         | location of the log dump
                 |
 OUTPUT_DIR      | Location of the  results of compilation and execution of all
                 | the tests. All the stdout and stderr are stored in
-                | subdirectories in this path. 
+                | subdirectories in this path.
                 |
-BIN_DIR         | Location of all the executables.  
+BIN_DIR         | Location of all the executables.
                 |
 EXEC_OUT_DIR    | location of stdout and stderr obtained while execution of
-                | the test-binaries. 
+                | the test-binaries.
                 |
 COMP_OUT_DIR    | location of stdout and stderr obtained during compilation of
-                | the test-files. 
+                | the test-files.
                 |
-HISTORY_OUT_DIR | location of all the past compilation/execution results. 
+HISTORY_OUT_DIR | location of all the past compilation/execution results.
                 |
 NITER           | Number of iterations for microbenchmark tests that perform
-                | repeated runs of the paricular communication patterns. 
+                | repeated runs of the paricular communication patterns.
 ------------------------------------------------------------------------------
 
 
@@ -86,7 +86,7 @@ These are located in $PEFORMANCE PATH/support/CONFIG-compiler.<compiler>.
 The  name of the parameters are:
 
 ------------------------------------------------------------------------------
-Parameter       | Description 
+Parameter       | Description
 ------------------------------------------------------------------------------
 COMPILER        | Name of the compiler
                 |
@@ -104,7 +104,7 @@ COMPILE_CMD     | Command format for compilation
 EXEC_CMD        | Command format for execution
 ------------------------------------------------------------------------------
 
-For certain tests, the number of images may be varied for the NPB and kernel tests, 
+For certain tests, the number of images may be varied for the NPB and kernel tests,
 by changing the corresponding test_*.sh script within the respective directories.
 
 Note: The configuration parameters are mainly self-explanatory. For the sake
@@ -118,7 +118,7 @@ I.b Running
 The performance test suite can be run either from the root of the entire
 testsuite or from within the directory - $SUITE_ROOT/performance.
 
-If run from $SUITE_ROOT: 
+If run from $SUITE_ROOT:
 
 USAGE: make performance PARAMS=<OPTIONS>
 
@@ -127,12 +127,12 @@ If run form $SUITE_ROOT/performance:
 USAGE: make [ <OPTIONS> [COMPILER=uhcaf(default)|ifort|g95] ]
 
 Where OPTIONS can be one of:
-|                                                                                                                  
-|_ compile_<suite>:      compiles and generates logs for the codes                                                 
-|_ run_<suite>:          executes and generates logs for the codes                                                 
-|_ complete_<suite>:     executes and generates logs for the codes                                                 
+|
+|_ compile_<suite>:      compiles and generates logs for the codes
+|_ run_<suite>:          executes and generates logs for the codes
+|_ complete_<suite>:     executes and generates logs for the codes
 |_ clean<suite>:         cleans up the logs, executables and all previous
-                         history of the regression runs 
+                         history of the regression runs
 
 ( Note: <suite>: [kernels | microbenchmarks | npb | all] )
 
@@ -150,22 +150,22 @@ subdirectories.
 
 II.a Microbenchmarks
 
-These includes simple CAF codes with point to point communications. 
+These includes simple CAF codes with point to point communications.
 
 The list of test includes:
 
 ------------------------------------------------------------------------------
-Test       	| Explanation 
+Test       	| Explanation
 ------------------------------------------------------------------------------
 bidirectional   |  Round-Trip benchmark with CAF PUT and GET stmts
-get_bandwidth   |  Bandwidth benchmarks with CAF remote PUT operations 
+get_bandwidth   |  Bandwidth benchmarks with CAF remote PUT operations
 noncontiguous   |  Latency benchmark with CAF PUT over non-contiguous memory.
-ping_pong       |  Round-Trip benchmark with CAF PUT and GET  
+ping_pong       |  Round-Trip benchmark with CAF PUT and GET
 put_latency     |  Latency of CAF PUT operation for 4 bytes
 broadcast       |  Bandwidth test for PUT opertions used for Broadcast
-get latency     |  Latency of CAF GET operation for 4 bytes 
-partial_data    |  Latency of CAF PUT operation for noncontiguous local and remote memory  
-put_bandwidth   |  Bandwidth benchmarks with CAF remote PUT operations 
+get latency     |  Latency of CAF GET operation for 4 bytes
+partial_data    |  Latency of CAF PUT operation for noncontiguous local and remote memory
+put_bandwidth   |  Bandwidth benchmarks with CAF remote PUT operations
 reduce          |  SUM Reduction using GET operations.
 ------------------------------------------------------------------------------
 
@@ -212,7 +212,7 @@ These are located under: $SUITE_ROOT/kernels
 
 In order to compile and execute a specific kernel:
 1. cd $SUITE_ROOT/kernels
-2. Usage: make [KERNEL|run_KERNEL|runtests|clean] [COMPILER=uhcaf(default)|ifort|g95] 
+2. Usage: make [KERNEL|run_KERNEL|runtests|clean] [COMPILER=uhcaf(default)|ifort|g95]
 Where KERNEL is one of:
 	 buffon_laplace cg_2d image_smoothing insertion_sort insertion_sort_dtype jacobi mm
 run_KERNEL : compiles and executes KERNEL
@@ -224,8 +224,8 @@ Please ensure:
 - In order the set the number of images to launch while executing a kernel,
   modify the make.def within the corresponding directory -
   $SUITE_ROOT/kernels/src/$KERNEL
-- Other test_suite specific parameters are set in ../support/CONFIG 
-- The compiler specific parameters are set in ../support/CONFIG-compiler.<compiler> 
+- Other test_suite specific parameters are set in ../support/CONFIG
+- The compiler specific parameters are set in ../support/CONFIG-compiler.<compiler>
 - The number of images to be used for a specific kernel is set in KERNEL.def
   within $SUITE_ROOT/kernels/src/KERNEL
 
