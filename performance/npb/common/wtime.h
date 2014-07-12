@@ -1,3 +1,0 @@
-
-#define wtime wtime_
-
