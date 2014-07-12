@@ -12,7 +12,7 @@ c  verification routine
 c---------------------------------------------------------------------
 
         implicit none
-        include 'mpinpb.h'
+        include 'cafnpb.h'
         include 'applu.incl'
 
         double precision xcr(5), xce(5), xci

@@ -17,7 +17,7 @@ c---------------------------------------------------------------------
 
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
 
 c---------------------------------------------------------------------
 c  input parameters
@@ -54,14 +54,6 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c   compute the global sum of individual contributions to dot product.
 c---------------------------------------------------------------------
-c      call MPI_ALLREDUCE( dummy,
-c     >                    sum,
-c     >                    5,
-c     >                    dp_type,
-c     >                    MPI_SUM,
-c     >                    MPI_COMM_WORLD,
-c     >                    IERROR )
-
       call coreduce_r8(caf_sum, dummy(1:5), sum(1:5))
 
       do m = 1, 5

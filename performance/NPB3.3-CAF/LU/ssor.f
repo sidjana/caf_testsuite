@@ -16,7 +16,7 @@ c---------------------------------------------------------------------
       implicit none
       integer  niter
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'applu.incl'
 
 c---------------------------------------------------------------------
@@ -204,14 +204,6 @@ c            end if
       call timer_stop(1)
       wtime = timer_read(1)
  
-c      call MPI_ALLREDUCE( wtime, 
-c     >                    maxtime, 
-c     >                    1, 
-c     >                    MPI_DOUBLE_PRECISION, 
-c     >                    MPI_MAX, 
-c     >                    MPI_COMM_WORLD,
-c     >                    IERROR )
-
       t1(1) = wtime
       call coreduce_r8(caf_max, t1)
       maxtime = t1(1)

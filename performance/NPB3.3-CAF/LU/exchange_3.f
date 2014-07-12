@@ -15,7 +15,7 @@ c---------------------------------------------------------------------
 
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'applu.incl'
 
 c---------------------------------------------------------------------
@@ -29,11 +29,6 @@ c  local variables
 c---------------------------------------------------------------------
       integer i, j, k
       integer ipos1, ipos2
-
-      integer mid
-      integer STATUS(MPI_STATUS_SIZE)
-      integer IERROR
-
 
 
       if (iex.eq.0) then

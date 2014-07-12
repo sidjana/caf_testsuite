@@ -15,7 +15,7 @@ c---------------------------------------------------------------------
 
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'applu.incl'
 
 c---------------------------------------------------------------------
@@ -31,12 +31,6 @@ c  local variables
 c---------------------------------------------------------------------
       integer i, j
       integer ny2
-
-      integer msgid1, msgid3
-      integer STATUS(MPI_STATUS_SIZE)
-      integer IERROR
-
-
 
       ny2 = ny + 2
 

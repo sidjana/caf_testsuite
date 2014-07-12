@@ -9,7 +9,7 @@ c---------------------------------------------------------------------
 
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'applu.incl'
 
 c---------------------------------------------------------------------
@@ -64,9 +64,7 @@ c---------------------------------------------------------------------
      >        /5x,'ADJUST PROBLEM SIZE OR NUMBER OF PROCESSORS',
      >        /5x,'SO THAT NX, NY AND NZ ARE GREATER THAN OR EQUAL',
      >        /5x,'TO 4 THEY ARE CURRENTLY', 3I3)
-          CALL MPI_ABORT( MPI_COMM_WORLD,
-     >                    ERRORCODE,
-     >                    IERROR )
+          error stop
       end if
 
       if ( ( nx .gt. isiz1 ) .or.
@@ -78,9 +76,7 @@ c---------------------------------------------------------------------
      >        /5x,'SO THAT NX, NY AND NZ ARE LESS THAN OR EQUAL TO ',
      >        /5x,'ISIZ1, ISIZ2 AND ISIZ3 RESPECTIVELY.  THEY ARE',
      >        /5x,'CURRENTLY', 3I4)
-          CALL MPI_ABORT( MPI_COMM_WORLD,
-     >                    ERRORCODE,
-     >                    IERROR )
+          error stop
       end if
 
 

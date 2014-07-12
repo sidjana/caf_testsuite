@@ -46,7 +46,7 @@ c---------------------------------------------------------------------
       program EMBAR
 c---------------------------------------------------------------------
 C
-c   This is the MPI version of the APP Benchmark 1,
+c   This is the CAF version of the APP Benchmark 1,
 c   the "embarassingly parallel" benchmark.
 c
 c
@@ -60,7 +60,7 @@ c   not affect the results.
       implicit none
 
       include 'npbparams.h'
-      include 'mpinpb.h'
+      include 'cafnpb.h'
 
       double precision Mops, epsilon, a, s, t1, t2, t3, t4, x, x1, 
      >                 x2, q, sx, sy, tm, an, tt, gc, dum(3),
@@ -82,17 +82,10 @@ c   not affect the results.
       common/storage/ x(2*nk), q(0:nq-1), qq(10000)
       data             dum /1.d0, 1.d0, 1.d0/
 
-      call mpi_init(ierr)
-      call mpi_comm_rank(MPI_COMM_WORLD,node,ierr)
-      call mpi_comm_size(MPI_COMM_WORLD,no_nodes,ierr)
+      node = this_image() - 1
+      no_nodes = num_images()
 
       root = 0
-
-      if (.not. convertdouble) then
-         dp_type = MPI_DOUBLE_PRECISION
-      else
-         dp_type = MPI_REAL
-      endif
 
       if (node.eq.root)  then
 
@@ -132,7 +125,6 @@ c   divide the total number
       if (np .eq. 0) then
          write (6, 1) no_nodes, nn
  1       format ('Too many nodes:',2i6)
-         call mpi_abort(MPI_COMM_WORLD,ierrcode,ierr)
          stop
       endif
 
@@ -313,7 +305,5 @@ c        vectorizable.
           print *, 'Gaussian pairs: ', timer_read(2)
           print *, 'Random numbers: ', timer_read(3)
       endif
-
-      call mpi_finalize(ierr)
 
       end

@@ -59,7 +59,6 @@ c---------------------------------------------------------------------
       character class
       logical verified
       double precision mflops
-      integer ierr
 
 c---------------------------------------------------------------------
 c   initialize communications
@@ -158,7 +157,6 @@ c---------------------------------------------------------------------
 
       END IF
 
-      call mpi_finalize(ierr)
       end
 
 

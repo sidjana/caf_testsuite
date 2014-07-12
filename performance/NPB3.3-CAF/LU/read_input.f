@@ -9,10 +9,10 @@ c---------------------------------------------------------------------
 
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'applu.incl'
 
-      integer IERROR, fstatus, nnodes
+      integer fstatus, nnodes
 
 
 c---------------------------------------------------------------------
@@ -75,7 +75,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c   check problem size
 c---------------------------------------------------------------------
-         call MPI_COMM_SIZE(MPI_COMM_WORLD, nnodes, ierror)
+         nnodes = num_images()
          if (nnodes .ne. nnodes_compiled) then
             write (*, 2000) nnodes, nnodes_compiled
  2000       format (5x,'Warning: program is running on',i3,' processors'
@@ -89,7 +89,7 @@ c---------------------------------------------------------------------
             write (*,2001)
  2001       format (5x,'PROBLEM SIZE IS TOO SMALL - ',
      >           /5x,'SET EACH OF NX, NY AND NZ AT LEAST EQUAL TO 5')
-            CALL MPI_ABORT( MPI_COMM_WORLD, MPI_ERR_OTHER, IERROR )
+            error stop
 
          end if
 
@@ -101,7 +101,7 @@ c---------------------------------------------------------------------
  2002       format (5x,'PROBLEM SIZE IS TOO LARGE - ',
      >           /5x,'NX, NY AND NZ SHOULD BE LESS THAN OR EQUAL TO ',
      >           /5x,'ISIZ01, ISIZ02 AND ISIZ03 RESPECTIVELY')
-            CALL MPI_ABORT( MPI_COMM_WORLD, MPI_ERR_OTHER, IERROR )
+            error stop
 
          end if
 

@@ -10,7 +10,7 @@ c---------------------------------------------------------------------
 
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'applu.incl'
 
       double precision  g(5,-1:isiz1+2,-1:isiz2+2,isiz3)
@@ -19,9 +19,6 @@ c---------------------------------------------------------------------
       integer i, j
       double precision :: dum(5,isiz1+isiz2)
       double precision, save :: dum1(5,isiz1+isiz2)[0:*]
-
-      integer STATUS(MPI_STATUS_SIZE)
-      integer IERROR
 
 
 

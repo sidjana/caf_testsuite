@@ -1,5 +1,21 @@
+#include "wtime.h"
+#include <stdlib.h>
 
-#include "mpi.h"
+/*  Prototype  */
+void wtime( double * );
+
+
+/*****************************************************************/
+/******         E  L  A  P  S  E  D  _  T  I  M  E          ******/
+/*****************************************************************/
+double elapsed_time( void )
+{
+    double t;
+
+    wtime( &t );
+    return( t );
+}
+
 
 double start[64], elapsed[64];
 
@@ -17,7 +33,7 @@ void timer_clear( int n )
 /*****************************************************************/
 void timer_start( int n )
 {
-    start[n] = MPI_Wtime();
+    start[n] = elapsed_time();
 }
 
 
@@ -28,7 +44,7 @@ void timer_stop( int n )
 {
     double t, now;
 
-    now = MPI_Wtime();
+    now = elapsed_time();
     t = now - start[n];
     elapsed[n] += t;
 

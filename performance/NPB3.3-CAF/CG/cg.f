@@ -55,8 +55,7 @@ c---------------------------------------------------------------------
 
       implicit none
 
-      include 'mpinpb.h'
-      integer status(MPI_STATUS_SIZE), request, ierr
+      include 'cafnpb.h'
 
       include 'npbparams.h'
 
@@ -290,9 +289,11 @@ c---------------------------------------------------------------------
       end interface
 
 c---------------------------------------------------------------------
-c  Set up mpi initialization and number of proc testing
+c  Set up number of proc testing
 c---------------------------------------------------------------------
-      call initialize_mpi
+      me = this_image() - 1
+      nprocs = num_images()
+      root = 0
 
 
       if( na .eq. 1400 .and.
@@ -354,12 +355,6 @@ c---------------------------------------------------------------------
  1003 format(' Number of active processes: ', i5 )
  1004 format(' Number of nonzeroes per row: ', i8)
  1005 format(' Eigenvalue shift: ', e8.3)
-      endif
-
-      if (.not. convertdouble) then
-         dp_type = MPI_DOUBLE_PRECISION
-      else
-         dp_type = MPI_REAL
       endif
 
 
@@ -658,37 +653,10 @@ c---------------------------------------------------------------------
       endif
 
 
-      call mpi_finalize(ierr)
-
 
 
       end                              ! end main
 
-
-
-
-
-c---------------------------------------------------------------------
-c---------------------------------------------------------------------
-      subroutine initialize_mpi
-c---------------------------------------------------------------------
-c---------------------------------------------------------------------
-
-      implicit none
-
-      include 'mpinpb.h'
-
-      integer   ierr
-
-
-      call mpi_init( ierr )
-      call mpi_comm_rank( mpi_comm_world, me, ierr )
-      call mpi_comm_size( mpi_comm_world, nprocs, ierr )
-      root = 0
-
-
-      return
-      end
 
 
 
@@ -702,7 +670,7 @@ c---------------------------------------------------------------------
 
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
 
       common / partit_size  /  naa, nzz,
      >                         npcols, nprows,
@@ -744,7 +712,6 @@ c---------------------------------------------------------------------
      >                 /,'is not equal to',/,
      >                 'compiled number of procs (',
      >                 i4, ' )',/   )
-          call mpi_finalize(ierr)
           stop
       endif
 
@@ -757,7 +724,6 @@ c---------------------------------------------------------------------
      >                         num_proc_cols,
      >                        ' which is not a power of two'
               endif
-              call mpi_finalize(ierr)
               stop
           endif
           i = i / 2
@@ -773,7 +739,6 @@ c---------------------------------------------------------------------
      >                         num_proc_rows,
      >                        ' which is not a power of two'
               endif
-              call mpi_finalize(ierr)
               stop
           endif
           i = i / 2
@@ -788,7 +753,6 @@ c---------------------------------------------------------------------
               write( *,* ) 'Error: nprocs is ',
      >                      nprocs,
      >                      ' which is not a power of two'
-              call mpi_finalize(ierr)
               stop
           endif
           i = i / 2
@@ -823,7 +787,7 @@ c---------------------------------------------------------------------
 
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
 
       integer      col_size, row_size
 
@@ -1049,10 +1013,7 @@ c---------------------------------------------------------------------
 
       implicit none
 
-      include 'mpinpb.h'
-
-      integer status(MPI_STATUS_SIZE ), request
-
+      include 'cafnpb.h'
 
       common / partit_size  /  naa, nzz,
      >                         npcols, nprows,

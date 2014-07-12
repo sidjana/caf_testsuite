@@ -11,7 +11,7 @@ c---------------------------------------------------------------------
 
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'applu.incl'
 
 c---------------------------------------------------------------------
@@ -112,14 +112,6 @@ c---------------------------------------------------------------------
 c  compute the global sum of individual contributions to frc1
 c---------------------------------------------------------------------
       dummy(1) = frc1
-c      call MPI_ALLREDUCE( dummy,
-c     >                    frc1,
-c     >                    1,
-c     >                    dp_type,
-c     >                    MPI_SUM,
-c     >                    MPI_COMM_WORLD,
-c     >                    IERROR )
-
       call coreduce_r8(caf_sum, dummy)
       frc1 = dummy(1)
 
@@ -194,14 +186,6 @@ c---------------------------------------------------------------------
 c  compute the global sum of individual contributions to frc2
 c---------------------------------------------------------------------
       dummy(1) = frc2
-c      call MPI_ALLREDUCE( dummy,
-c     >                    frc2,
-c     >                    1,
-c     >                    dp_type,
-c     >                    MPI_SUM,
-c     >                    MPI_COMM_WORLD,
-c     >                    IERROR )
-
       call coreduce_r8(caf_sum, dummy)
       frc2 = dummy(1)
 
@@ -278,13 +262,6 @@ c---------------------------------------------------------------------
 c  compute the global sum of individual contributions to frc3
 c---------------------------------------------------------------------
       dummy(1) = frc3
-c      call MPI_ALLREDUCE( dummy,
-c     >                    frc3,
-c     >                    1,
-c     >                    dp_type,
-c     >                    MPI_SUM,
-c     >                    MPI_COMM_WORLD,
-c     >                    IERROR )
       call coreduce_r8(caf_sum, dummy)
       frc3 = dummy(1)
 

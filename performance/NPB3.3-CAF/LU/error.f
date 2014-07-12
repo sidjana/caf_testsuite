@@ -16,7 +16,7 @@ c---------------------------------------------------------------------
 
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'applu.incl'
 
 c---------------------------------------------------------------------
@@ -27,7 +27,6 @@ c---------------------------------------------------------------------
       double precision  tmp
       double precision  u000ijk(5), dummy(5)
 
-      integer IERROR
 
 
       do m = 1, 5
@@ -52,14 +51,6 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c   compute the global sum of individual contributions to dot product.
 c---------------------------------------------------------------------
-c      call MPI_ALLREDUCE( dummy,
-c     >                    errnm,
-c     >                    5,
-c     >                    dp_type,
-c     >                    MPI_SUM,
-c     >                    MPI_COMM_WORLD,
-c     >                    IERROR )
-
       call coreduce_r8(caf_sum, dummy(1:5), errnm(1:5))
 
       do m = 1, 5

@@ -46,7 +46,7 @@ c---------------------------------------------------------------------
 
 
 c---------------------------------------------------------------------
-      program mg_mpi
+      program mg_caf
 c---------------------------------------------------------------------
 
       use coarray_globals, only: sh_ibuf
@@ -54,7 +54,7 @@ c---------------------------------------------------------------------
 
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'globals.h'
 
 c---------------------------------------------------------------------------c
@@ -85,23 +85,15 @@ c---------------------------------------------------------------------------c
       integer T_bench, T_init
       parameter (T_bench=1, T_init=2)
 
-      call mpi_init(ierr)
-      call mpi_comm_rank(mpi_comm_world, me, ierr)
-      call mpi_comm_size(mpi_comm_world, nprocs, ierr)
+      me = this_image() - 1
+      nprocs = num_images()
 
       root = 0
       if (nprocs_compiled .gt. maxprocs) then
          if (me .eq. root) write(*,20) nprocs_compiled, maxprocs
  20      format(' ERROR: compiled for ',i8,' processes'//
      &          ' The maximum size allowed for this benchmark is ',i6)
-         call mpi_abort(MPI_COMM_WORLD, ierr)
          stop
-      endif
-
-      if (.not. convertdouble) then
-         dp_type = MPI_DOUBLE_PRECISION
-      else
-         dp_type = MPI_REAL
       endif
 
 
@@ -267,7 +259,7 @@ c---------------------------------------------------------------------
      >        ' Initialization time: ',tinit, ' seconds'
       endif
 
-      call mpi_barrier(mpi_comm_world,ierr)
+      sync all
 
       call timer_start(T_bench)
 
@@ -292,8 +284,6 @@ c---------------------------------------------------------------------
 
       t0 = timer_read(T_bench)
 
-c      call mpi_reduce(t0,t,1,dp_type,
-c     >     mpi_max,root,mpi_comm_world,ierr)
 
       tt(1) = t0
       call coreduce_r8(caf_max, tt, result_image=root+1)
@@ -368,7 +358,6 @@ c     >     mpi_max,root,mpi_comm_world,ierr)
       endif
 
 
-      call mpi_finalize(ierr)
       end
 
 c---------------------------------------------------------------------
@@ -381,7 +370,7 @@ c---------------------------------------------------------------------
 
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'globals.h'
 
       integer  is1, is2, is3, ie1, ie2, ie3
@@ -553,7 +542,7 @@ c     multigrid V-cycle routine
 c---------------------------------------------------------------------
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'globals.h'
 
       integer n1, n2, n3, k
@@ -762,7 +751,7 @@ c     based machines.
 c---------------------------------------------------------------------
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'globals.h'
 
       integer m1k, m2k, m3k, m1j, m2j, m3j,k
@@ -858,7 +847,7 @@ c     performance however, with 8 separate "do i1" loops, rather than 4.
 c---------------------------------------------------------------------
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'globals.h'
 
       integer mm1, mm2, mm3, n1, n2, n3,k
@@ -1024,7 +1013,7 @@ c     and eighth weight at the corners) for inhomogeneous boundaries.
 c---------------------------------------------------------------------
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
 
       integer n1, n2, n3, nx, ny, nz
       double precision rnm2, rnmu, r(n1,n2,n3)
@@ -1047,12 +1036,6 @@ c---------------------------------------------------------------------
          enddo
       enddo
 
-c      call mpi_allreduce(rnmu,ss,1,dp_type,
-c     >     mpi_max,mpi_comm_world,ierr)
-c      rnmu = ss
-c      call mpi_allreduce(s, ss, 1, dp_type,
-c     >     mpi_sum,mpi_comm_world,ierr)
-c      s = ss
 
       ss(1) = rnmu
       call coreduce_r8(caf_max, ss)
@@ -1079,7 +1062,7 @@ c     report on norm
 c---------------------------------------------------------------------
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'globals.h'
 
       integer n1, n2, n3, kk
@@ -1111,7 +1094,7 @@ c     comm3 organizes the communication on all borders
 c---------------------------------------------------------------------
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'globals.h'
 
       integer n1, n2, n3, kk
@@ -1167,7 +1150,7 @@ c     comm3_ex  communicates to expand the number of processors
 c---------------------------------------------------------------------
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'globals.h'
 
       integer n1, n2, n3, kk
@@ -1229,7 +1212,7 @@ c     ready allocates a buffer to take in a message
 c---------------------------------------------------------------------
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'globals.h'
 
       integer axis, dir, k
@@ -1242,15 +1225,6 @@ c---------------------------------------------------------------------
          buff(i,buff_id) = 0.0D0
       enddo
 
-
-c---------------------------------------------------------------------
-c     fake message request type
-c---------------------------------------------------------------------
-c      msg_id(axis,dir,1) = msg_type(axis,dir) +1000*me
-c
-c      call mpi_irecv( buff(1,buff_id), buff_len,
-c     >     dp_type, nbr(axis,-dir,k), msg_type(axis,dir), 
-c     >     mpi_comm_world, msg_id(axis,dir,1), ierr)
       return
       end
 
@@ -1270,7 +1244,7 @@ c     give3 sends border data out in the requested direction
 c---------------------------------------------------------------------
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'globals.h'
 
       integer axis, dir, n1, n2, n3, k, ierr
@@ -1291,11 +1265,6 @@ c---------------------------------------------------------------------
                enddo
             enddo
 
-c            call mpi_send( 
-c     >           buff(1, buff_id ), buff_len,dp_type,
-c     >           nbr( axis, dir, k ), msg_type(axis,dir), 
-c     >           mpi_comm_world, ierr)
-
             buff(1:buff_len, buff_id+1)[nbr(axis,dir,k)] =
      >           buff(1:buff_len, buff_id)
 
@@ -1307,11 +1276,6 @@ c     >           mpi_comm_world, ierr)
                   buff(buff_len, buff_id ) = u( n1-1, i2,i3)
                enddo
             enddo
-
-c            call mpi_send( 
-c     >           buff(1, buff_id ), buff_len,dp_type,
-c     >           nbr( axis, dir, k ), msg_type(axis,dir), 
-c     >           mpi_comm_world, ierr)
 
             buff(1:buff_len, buff_id+1)[nbr(axis,dir,k)] =
      >           buff(1:buff_len, buff_id)
@@ -1329,11 +1293,6 @@ c     >           mpi_comm_world, ierr)
                enddo
             enddo
 
-c            call mpi_send( 
-c     >           buff(1, buff_id ), buff_len,dp_type,
-c     >           nbr( axis, dir, k ), msg_type(axis,dir), 
-c     >           mpi_comm_world, ierr)
-
             buff(1:buff_len, buff_id+1)[nbr(axis,dir,k)] =
      >           buff(1:buff_len, buff_id)
 
@@ -1345,11 +1304,6 @@ c     >           mpi_comm_world, ierr)
                   buff(buff_len,  buff_id )= u( i1,n2-1,i3)
                enddo
             enddo
-
-c            call mpi_send( 
-c     >           buff(1, buff_id ), buff_len,dp_type,
-c     >           nbr( axis, dir, k ), msg_type(axis,dir), 
-c     >           mpi_comm_world, ierr)
 
             buff(1:buff_len, buff_id+1)[nbr(axis,dir,k)] =
      >           buff(1:buff_len, buff_id)
@@ -1367,11 +1321,6 @@ c     >           mpi_comm_world, ierr)
                enddo
             enddo
 
-c            call mpi_send( 
-c     >           buff(1, buff_id ), buff_len,dp_type,
-c     >           nbr( axis, dir, k ), msg_type(axis,dir), 
-c     >           mpi_comm_world, ierr)
-
             buff(1:buff_len, buff_id+1)[nbr(axis,dir,k)] =
      >           buff(1:buff_len, buff_id)
 
@@ -1383,11 +1332,6 @@ c     >           mpi_comm_world, ierr)
                   buff(buff_len, buff_id ) = u( i1,i2,n3-1)
                enddo
             enddo
-
-c            call mpi_send( 
-c     >           buff(1, buff_id ), buff_len,dp_type,
-c     >           nbr( axis, dir, k ), msg_type(axis,dir), 
-c     >           mpi_comm_world, ierr)
 
             buff(1:buff_len, buff_id+1)[nbr(axis,dir,k)] =
      >           buff(1:buff_len, buff_id)
@@ -1413,7 +1357,7 @@ c     take3 copies in border data from the requested direction
 c---------------------------------------------------------------------
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'globals.h'
 
       integer axis, dir, n1, n2, n3
@@ -1421,11 +1365,8 @@ c---------------------------------------------------------------------
 
       integer buff_id, indx
 
-      integer status(mpi_status_size), ierr
-
       integer i3, i2, i1
 
-c      call mpi_wait( msg_id( axis, dir, 1 ),status,ierr)
       buff_id = 3 + dir
       indx = 0
 
@@ -1513,7 +1454,7 @@ c     give3_ex sends border data out to expand number of processors
 c---------------------------------------------------------------------
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'globals.h'
 
       integer axis, dir, n1, n2, n3, k, ierr
@@ -1534,11 +1475,6 @@ c---------------------------------------------------------------------
                enddo
             enddo
 
-c            call mpi_send( 
-c     >           buff(1, buff_id ), buff_len,dp_type,
-c     >           nbr( axis, dir, k ), msg_type(axis,dir), 
-c     >           mpi_comm_world, ierr)
-
             buff(1:buff_len, buff_id+1)[nbr(axis,dir,k)] =
      >           buff(1:buff_len, buff_id)
 
@@ -1552,11 +1488,6 @@ c     >           mpi_comm_world, ierr)
                   enddo
                enddo
             enddo
-
-c            call mpi_send( 
-c     >           buff(1, buff_id ), buff_len,dp_type,
-c     >           nbr( axis, dir, k ), msg_type(axis,dir), 
-c     >           mpi_comm_world, ierr)
 
             buff(1:buff_len, buff_id+1)[nbr(axis,dir,k)] =
      >           buff(1:buff_len, buff_id)
@@ -1574,11 +1505,6 @@ c     >           mpi_comm_world, ierr)
                enddo
             enddo
 
-c            call mpi_send( 
-c     >           buff(1, buff_id ), buff_len,dp_type,
-c     >           nbr( axis, dir, k ), msg_type(axis,dir), 
-c     >           mpi_comm_world, ierr)
-
             buff(1:buff_len, buff_id+1)[nbr(axis,dir,k)] =
      >           buff(1:buff_len, buff_id)
 
@@ -1592,11 +1518,6 @@ c     >           mpi_comm_world, ierr)
                   enddo
                enddo
             enddo
-
-c            call mpi_send( 
-c     >           buff(1, buff_id ), buff_len,dp_type,
-c     >           nbr( axis, dir, k ), msg_type(axis,dir), 
-c     >           mpi_comm_world, ierr)
 
             buff(1:buff_len, buff_id+1)[nbr(axis,dir,k)] =
      >           buff(1:buff_len, buff_id)
@@ -1614,11 +1535,6 @@ c     >           mpi_comm_world, ierr)
                enddo
             enddo
 
-c            call mpi_send( 
-c     >           buff(1, buff_id ), buff_len,dp_type,
-c     >           nbr( axis, dir, k ), msg_type(axis,dir), 
-c     >           mpi_comm_world, ierr)
-
             buff(1:buff_len, buff_id+1)[nbr(axis,dir,k)] =
      >           buff(1:buff_len, buff_id)
 
@@ -1632,11 +1548,6 @@ c     >           mpi_comm_world, ierr)
                   enddo
                enddo
             enddo
-
-c            call mpi_send( 
-c     >           buff(1, buff_id ), buff_len,dp_type,
-c     >           nbr( axis, dir, k ), msg_type(axis,dir), 
-c     >           mpi_comm_world, ierr)
 
             buff(1:buff_len, buff_id+1)[nbr(axis,dir,k)] =
      >           buff(1:buff_len, buff_id)
@@ -1662,7 +1573,7 @@ c     take3_ex copies in border data to expand number of processors
 c---------------------------------------------------------------------
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'globals.h'
 
       integer axis, dir, n1, n2, n3
@@ -1670,11 +1581,8 @@ c---------------------------------------------------------------------
 
       integer buff_id, indx
 
-      integer status(mpi_status_size) , ierr
-
       integer i3, i2, i1
 
-c      call mpi_wait( msg_id( axis, dir, 1 ),status,ierr)
       buff_id = 3 + dir
       indx = 0
 
@@ -1765,7 +1673,7 @@ c---------------------------------------------------------------------
 
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'globals.h'
 
       integer axis, dir, n1, n2, n3
@@ -1942,7 +1850,7 @@ c---------------------------------------------------------------------
 
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       include 'globals.h'
 
       integer axis, dir, n1, n2, n3
@@ -2144,7 +2052,7 @@ c     and zero elsewhere.
 c---------------------------------------------------------------------
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
 
       integer  is1, is2, is3, ie1, ie2, ie3
       common /grid/ is1,is2,is3,ie1,ie2,ie3
@@ -2237,9 +2145,6 @@ c---------------------------------------------------------------------
       do  i=mm,1,-1
 
          best = z( j1(i1,1), j2(i1,1), j3(i1,1) )
-c         call mpi_allreduce(best,temp,1,dp_type,
-c     >        mpi_max,mpi_comm_world,ierr)
-c         best = temp
          temp(1) = best
          call coreduce_r8(caf_max, temp)
          best = temp(1)
@@ -2257,8 +2162,6 @@ c         best = temp
             jg( 3, i, 1) = 0
          endif
          ten( i, 1 ) = best
-c         call mpi_allreduce(jg(0,i,1), jg_temp,4,MPI_INTEGER,
-c     >        mpi_max,mpi_comm_world,ierr)
          call coreduce_i4(caf_max, jg(0:3,i,1), jg_temp(1:4))
          jg( 0, i, 1) =  jg_temp(1)
          jg( 1, i, 1) =  jg_temp(2)
@@ -2266,8 +2169,6 @@ c     >        mpi_max,mpi_comm_world,ierr)
          jg( 3, i, 1) =  jg_temp(4)
 
          best = z( j1(i0,0), j2(i0,0), j3(i0,0) )
-c         call mpi_allreduce(best,temp,1,dp_type,
-c     >        mpi_min,mpi_comm_world,ierr)
          temp(1) = best
          call coreduce_r8(caf_min, temp)
          best = temp(1)
@@ -2284,8 +2185,6 @@ c     >        mpi_min,mpi_comm_world,ierr)
             jg( 3, i, 0) = 0
          endif
          ten( i, 0 ) = best
-c         call mpi_allreduce(jg(0,i,0), jg_temp,4,MPI_INTEGER,
-c     >        mpi_max,mpi_comm_world,ierr)
          call coreduce_i4(caf_max, jg(0:3,i,1), jg_temp(1:4))
          jg( 0, i, 0) =  jg_temp(1)
          jg( 1, i, 0) =  jg_temp(2)
@@ -2349,7 +2248,7 @@ c---------------------------------------------------------------------
 
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
 
       integer n1,n2,n3,i1,i2,i3,ierr
       double precision z(n1,n2,n3)
@@ -2372,7 +2271,7 @@ c---------------------------------------------------------------------
             write(*,*)'  '
  6          format(6f15.11)
          endif
-         call mpi_barrier(mpi_comm_world,ierr)
+         sync all
       enddo
 
       return 
@@ -2388,7 +2287,7 @@ c---------------------------------------------------------------------
 
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
 
       integer n1,n2,n3,i1,i2,i3,i,ierr
       double precision z(n1,n2,n3)
@@ -2411,7 +2310,7 @@ c---------------------------------------------------------------------
             write(*,*)'  '
  6          format(15f6.3)
          endif
-         call mpi_barrier(mpi_comm_world,ierr)
+         sync all
       enddo
 
       return 
@@ -2427,7 +2326,7 @@ c---------------------------------------------------------------------
 
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
       integer n1,n2,n3,i1,i2,i3,ierr,i
       double precision z(n1,n2,n3)
 
@@ -2444,7 +2343,7 @@ c---------------------------------------------------------------------
             write(*,*)'  '
  6          format(8D10.3)
          endif
-         call mpi_barrier(mpi_comm_world,ierr)
+         sync all
       enddo
 
 c     call comm3(z,n1,n2,n3)
@@ -2510,7 +2409,7 @@ c     bubble        does a bubble sort in direction dir
 c---------------------------------------------------------------------
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
 
       integer m, ind, j1( m, 0:1 ), j2( m, 0:1 ), j3( m, 0:1 )
       double precision ten( m, 0:1 )
@@ -2584,7 +2483,7 @@ c---------------------------------------------------------------------
 
       implicit none
 
-      include 'mpinpb.h'
+      include 'cafnpb.h'
 
       integer n1, n2, n3
       double precision z(n1,n2,n3)
