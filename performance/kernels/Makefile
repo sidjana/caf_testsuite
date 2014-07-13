@@ -5,7 +5,7 @@ COMPILER ?= uhcaf
 TEMP_1:=$(shell cd ../support; ./config2makedef.sh; cd -)  # generate make.def from CONFIG
 include ../support/make.def-compiler.$(COMPILER)   # auto-generated
 
-TESTS = buffon_laplace cg_2d image_smoothing insertion_sort insertion_sort_dtype jacobi mm
+TESTS = buffon_laplace cafhash cg_2d image_smoothing insertion_sort insertion_sort_dtype jacobi mm
 
 RUN_TESTS := $(addprefix run_, $(TESTS))
 
