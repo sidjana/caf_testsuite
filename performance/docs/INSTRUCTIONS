@@ -1,6 +1,6 @@
 CAF Performance Test Suite Instructions
 
-Last modified: 1st October, 2013
+Last modified: 12th July, 2014
 HPCTools Group, University of Houston
 
 This document describes the method for using the performance test suite and
@@ -207,6 +207,8 @@ The current list includes:
 - Insertion sort
 - Insertion sort (using derived types)
 - Matrix Multiplication (naive)
+- CAF Distributred Hash Table
+- Synchronization Benchmarks
 
 These are located under: $SUITE_ROOT/kernels
 
