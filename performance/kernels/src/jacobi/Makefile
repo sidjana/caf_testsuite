@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-TEST = ?
+TEST = jacobi
 
 COMPILER ?= uhcaf
 
@@ -18,8 +18,7 @@ compile $(TEST).x: $(TEST).f90
 
 execute: $(TEST).x 
 	@ echo -e "\nExecuting ... $(TEST).x ... with $(NPROCS) images "
-	@ perl ../../../../support/timedexec.pl $(TIMEOUT) "$(LAUNCHER) ./$(TEST).x $(EXEC_OPTIONS)"  | tee $(TEST).exec.out
-	#@if [ -f $(TEST).exec.out ]; then grep 'clock rate\|elapsed time\|ticks' $(TEST).exec.out  | tee /dev/null ; fi 
+	@ perl ../../../../support/timedexec.pl $(TIMEOUT) "$(LAUNCHER) ./$(TEST).x $(N) $(M) $(P) $(Q) $(EXEC_OPTIONS)"  | tee $(TEST).exec.out
 
 clean:
 	rm -rf *.x *.out *.mod *.compile
