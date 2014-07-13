@@ -21,6 +21,7 @@ ALL_TESTS=$(LATENCY_TESTS) $(BW_TESTS) $(STRIDED_BW_TESTS) $(REDUCE_TESTS)
 
 run_all_tests: all_tests
 	$(EXEC_CMD) $(BINDIR)/$^
+	@ $(LAUNCHER) ../../../support/kill_orhpan_procs.sh  $^
 
 all_tests: all_tests.o
 	$(COMPILE_CMD) $(LDFLAGS) -o $(BINDIR)/$@ $^
@@ -30,6 +31,7 @@ all_tests.o: caf_tests.F90
 
 run_latency_tests: latency_tests
 	$(EXEC_CMD) $(BINDIR)/$^
+	@ $(LAUNCHER) ../../../support/kill_orhpan_procs.sh  $^
 
 latency_tests: latency_tests.o
 	$(COMPILE_CMD) $(LDFLAGS) -o $(BINDIR)/$@ $^
@@ -39,6 +41,7 @@ latency_tests.o: caf_tests.F90
 
 run_bw_tests: bw_tests
 	$(EXEC_CMD) $(BINDIR)/$^
+	@ $(LAUNCHER) ../../../support/kill_orhpan_procs.sh  $^
 
 bw_tests: bw_tests.o
 	$(COMPILE_CMD) $(LDFLAGS) -o $(BINDIR)/$@ $^
@@ -48,6 +51,7 @@ bw_tests.o: caf_tests.F90
 
 run_strided_bw_tests: strided_bw_tests
 	$(EXEC_CMD) $(BINDIR)/$^
+	@ $(LAUNCHER) ../../../support/kill_orhpan_procs.sh  $^
 
 strided_bw_tests: strided_bw_tests.o
 	$(COMPILE_CMD) $(LDFLAGS) -o $(BINDIR)/$@ $^
@@ -57,6 +61,7 @@ strided_bw_tests.o: caf_tests.F90
 
 run_reduce_tests: reduce_tests
 	$(EXEC_CMD) $(BINDIR)/$^
+	@ $(LAUNCHER) ../../../support/kill_orhpan_procs.sh  $^
 
 reduce_tests: reduce_tests.o
 	$(COMPILE_CMD) $(LDFLAGS) -o $(BINDIR)/$@ $^

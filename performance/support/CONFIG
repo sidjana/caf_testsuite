@@ -16,7 +16,7 @@ ROOT=${BENCH_PATH}
 
 #user-defined
 DATE=`date +"%m-%d-%y-%T"`
-TIMEOUT=1000
+TIMEOUT=90
 logfile=${DATE}.log
 TESTS_DIR=${ROOT}/src/              # directory for the test codes
 LOG_DIR=${ROOT}/logs/                # directory for the output of the regression

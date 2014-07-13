@@ -23,7 +23,9 @@ hashobj.o: hashobj.c
 
 execute: $(TEST).x
 	@ echo -e "\nExecuting ... $(TEST).x ... with $(NPROCS) images "
+	@ if [ "$(COMPILER)" == "ifort" ]; then export FOR_COARRAY_NUM_IMAGES=$(NPROCS); fi
 	@ perl ../../../../support/timedexec.pl $(TIMEOUT) "$(LAUNCHER) ./$(TEST).x $(EXEC_OPTIONS)"  | tee $(TEST).exec.out
+	@ $(LAUNCHER) $(ROOT)/../../../../support/kill_orhpan_procs.sh  $(TEST).x
 
 clean:
 	rm -rf *.x *.out *.mod *.compile *.o

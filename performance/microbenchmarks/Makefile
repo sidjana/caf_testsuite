@@ -19,6 +19,6 @@ complete all: ./test_microbenchmarks.sh
 	@./test_microbenchmarks.sh  complete $(COMPILER) $(TYPE)
 
 
-cleanall:  ./test_microbenchmarks.sh
+clean:  ./test_microbenchmarks.sh
 	@./test_microbenchmarks.sh  cleanall
 

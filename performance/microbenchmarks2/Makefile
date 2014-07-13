@@ -16,7 +16,8 @@ $(RUN_TESTS) $(TESTS):
 	@make -C $(SRCDIR) $@ compiler=$(compiler) NPROCS=$(NPROCS)
 
 help:
-	@echo -e "Usage: make [ run_<tests> | <tests> | clean ]"
+	@echo -e "Usage: make [ run_<tests> | <tests>  [ compiler=<name>] [NPROCS=<num-imgs>] ]"
+	@echo -e "     : make clean"
 	@echo -e "Where: tests =  all_tests        | "
 	@echo -e "                latency_tests    | "
 	@echo -e "                bw_tests         | "

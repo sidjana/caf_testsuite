@@ -28,7 +28,7 @@ if [ $# == 2 ]; then
     BOTH="1"
     compiler=$2
   else
-  echo "USAGE: test_npb.sh [mode [compiler] ] where "
+  echo -e "USAGE: test_npb.sh [mode [compiler] ]\n where "
   echo "           mode     = compile|execute|complete"
   echo "           compiler = uhcaf|ifort|g95|crayftn"
     exit 1
@@ -91,8 +91,20 @@ do
 			      VERIFICATION="N/A"
 			      TIME="--"
   		     	      if [ -f  $BIN_DIR/$opfile ]; then  #compilation passed
+				 
+				 # While using the Intel compiler, the number of images 
+				 # to be launched for an executable is determined by:
+				 # (a) passing -coarray-num-images=<img-cnt> to ifort
+				 # (b) setting FOR_COARRAY_NUM_IMAGES=<img-cnt> in the env. [overrides flag above]
+				 # The following construct dynamically sets the number of images to override 
+				 # any settings at CONFIG-ifort
+				 if [ "$compiler" == "ifort" ]; then
+					export FOR_COARRAY_NUM_IMAGES=$NP
+				 fi
 
   		     	         EXEC_OUT=` perl $ROOT/../../support/timedexec.pl $TIMEOUT "$LAUNCHER $BIN_DIR/$opfile $EXEC_OPTIONS " &> $EXEC_OUT_DIR/$opfile.exec && echo 1||echo -1`
+				 $LAUNCHER $ROOT/../../support/kill_orhpan_procs.sh $opfile
+
   		     	         if [ "$EXEC_OUT" == "-1" ]; then                         #runtime error
   		     	             EXEC_STATUS="RUNTIME ERROR"
 				     FAILED_COUNT=$(($FAILED_COUNT+1))

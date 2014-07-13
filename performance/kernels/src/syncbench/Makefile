@@ -12,13 +12,15 @@ include ../../../support/make.def-compiler.$(COMPILER)   # auto-generated
 
 default: compile execute
 
-compile $(TEST).x: $(TEST).F90
+compile $(TEST).x: $(TEST).f90
 	@echo -e "\nCompiling ... $(TEST) ..."
-	$(COMPILE_CMD) $(TEST).F90 -o $(TEST).x | tee $(TEST).compile.out
+	$(COMPILE_CMD) $(TEST).f90 -o $(TEST).x | tee $(TEST).compile.out
 
 execute: $(TEST).x
 	@ echo -e "\nExecuting ... $(TEST).x ... with $(NPROCS) images and $(SYNCNITER) iterations "
+	@ if [ "$(COMPILER)" == "ifort" ]; then export FOR_COARRAY_NUM_IMAGES=$(NPROCS); fi
 	@ perl ../../../../support/timedexec.pl $(TIMEOUT) "$(LAUNCHER) ./$(TEST).x $(SYNCNITER) $(EXEC_OPTIONS)"  | tee $(TEST).exec.out
+	@ $(LAUNCHER) $(ROOT)/../../../../support/kill_orhpan_procs.sh  $(TEST).x
 
 clean:
 	rm -rf *.x *.out *.mod *.compile
