@@ -249,6 +249,7 @@
               write (*,*) "Total number of nodes = P*Q, must be NUM_IMAGES()"
               write (*,'(a)',advance='no') "Enter N, M, P, and Q: "
               read (5,*) args(1:4)
+              !"
           else
             call getarg(1,buffer)
             read(buffer,*) args(1)

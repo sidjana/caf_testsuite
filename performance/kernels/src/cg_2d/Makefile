@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-TEST = ?
+TEST = cg_2d
 
 COMPILER ?= uhcaf
 
@@ -14,12 +14,11 @@ default: compile execute
 
 compile $(TEST).x: $(TEST).F90
 	@echo -e "\nCompiling ... $(TEST) ..."
-	$(COMPILE_CMD) $(TEST).f90 -o $(TEST).x | tee $(TEST).compile.out
+	$(COMPILE_CMD) $(TEST).F90 -o $(TEST).x | tee $(TEST).compile.out
 
 execute: $(TEST).x 
 	@ echo -e "\nExecuting ... $(TEST).x ... with $(NPROCS) images "
-	@ perl ../../../../support/timedexec.pl $(TIMEOUT) "$(LAUNCHER) ./$(TEST).x $(EXEC_OPTIONS)"  | tee $(TEST).exec.out
-	#@if [ -f $(TEST).exec.out ]; then grep 'clock rate\|elapsed time\|ticks' $(TEST).exec.out  | tee /dev/null ; fi 
+	@ perl ../../../../support/timedexec.pl $(TIMEOUT) "$(LAUNCHER) ./$(TEST).x $(N) $(M) $(P) $(Q) $(EXEC_OPTIONS)"  | tee $(TEST).exec.out
 
 clean:
 	rm -rf *.x *.out *.mod *.compile
