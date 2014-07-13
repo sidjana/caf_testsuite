@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 KERNELS_PATH=./kernels
-MICROBENCH_PATH=./microbenchmarks2
+MICROBENCH_PATH=./microbenchmarks
 NPB_PATH=./NPB3.3-CAF
 COMPILER?=uhcaf
 
@@ -27,7 +27,7 @@ compile_kernels:
 	@cd $(KERNELS_PATH) ; make -s COMPILER=$(COMPILER);
 
 compile_microbenchmarks:
-	@cd $(MICROBENCH_PATH) ; make -s all_tests COMPILER=$(COMPILER);
+	@cd $(MICROBENCH_PATH) ; make -s compile COMPILER=$(COMPILER);
 
 compile_npb:
 	@cd $(NPB_PATH); ./test_npb.sh compile $(COMPILER);
@@ -38,7 +38,7 @@ execute_kernels:
 	@cd $(KERNELS_PATH) ; make -s runtests COMPILER=$(COMPILER);
 
 execute_microbenchmarks:
-	@cd $(MICROBENCH_PATH) ; make -s run_all_tests COMPILER=$(COMPILER);
+	@cd $(MICROBENCH_PATH) ; make -s execute COMPILER=$(COMPILER);
 
 execute_npb:
 	@cd $(NPB_PATH) ; ./test_npb.sh execute $(COMPILER);
@@ -49,7 +49,7 @@ complete_kernels:
 	@cd $(KERNELS_PATH) ; make -s runtests COMPILER=$(COMPILER);
 
 complete_microbenchmarks:
-	@cd $(MICROBENCH_PATH) ; make -s run_all_tests COMPILER=$(COMPILER);
+	@cd $(MICROBENCH_PATH) ; make -s complete COMPILER=$(COMPILER);
 
 complete_npb:
 	@cd $(NPB_PATH) ; ./test_npb.sh complete $(COMPILER);
