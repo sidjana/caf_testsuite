@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-TEST = ?
+TEST = insertion_sort_dtype
 
 COMPILER ?= uhcaf
 

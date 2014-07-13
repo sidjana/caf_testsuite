@@ -59,6 +59,9 @@
         integer :: i,j,m
 
         do i=startIndex, endIndex-1
+!             if (this_image() == 1 .and. mod(i,1000) == 1) then
+!                 print *, "i = ", i, "endIndex = ", endIndex
+!             end if
             m = i
             do j=i+1,endIndex
                 if (customerList(j)%id .lt. customerList(m)%id) then
@@ -66,11 +69,11 @@
                 end if
             end do
 
-            if (m /= i) then
-                temp = customerList(i)
-                customerList(i) = customerList(m)
-                customerList(m) = temp
-            end if
+             if (m /= i) then
+                 temp = customerList(i)
+                 customerList(i) = customerList(m)
+                 customerList(m) = temp
+             end if
         end do
       end subroutine sort_db_with_id
 
@@ -116,7 +119,7 @@
         use insertion_sort_routines
         implicit none
 
-        integer, parameter :: totalCount = 1000000
+        integer, parameter :: totalCount = 100000
         type(tcustomer), allocatable :: customers(:)[:]
         type(tcustomer) :: tmp
         type(tcustomer), allocatable :: work1(:), work2(:)
