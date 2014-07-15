@@ -1,4 +1,9 @@
 #!/bin/bash
 
-tmp_var="`pgrep -u $(whoami) $1`"; kill -s 9 $tmp_var &> /dev/null; unset tmp_var
+colnum="\$1"
+for proc in  `ps -u $(whoami) | awk  "/$1/ {print $colnum}"`
+do
+    kill -9 $proc
+done
+sleep 2 # arbitrary wait to allow process teardown
 

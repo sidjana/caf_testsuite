@@ -38,7 +38,7 @@ intrin_8.5.6.3b     	LOCK with ACQUIRED_LOCK=.FALSE.                            
 intrin_8.5.7d       	LOCK construct with STAT=STAT_LOCKED specifier                        	PASS           	PASS           
 intrin_8.5.7e       	LOCK construct with STAT=STAT_LOCKED_OTHER_IMAGE specifier            	PASS           	PASS           
 intrin_8.5.7f       	UNLOCK construct with STAT=STAT_UNLOCKED specifier                    	PASS           	PASS           
-sync_8.5.7a         	SYNC ALL with STAT=STAT_STOPPED_IMAGE specifier                       	PASS           	FAIL           
-sync_8.5.7b         	SYNC IMAGES(arr) with STAT=STAT_STOPPED_IMAGE specifier               	PASS           	FAIL           
-sync_8.5.7c         	SYNC IMAGES(*) with STAT=STAT_STOPPED_IMAGE specifier                 	PASS           	FAIL           
+sync_8.5.7a         	SYNC ALL with STAT=STAT_STOPPED_IMAGE specifier                       	PASS           	PASS           
+sync_8.5.7b         	SYNC IMAGES(arr) with STAT=STAT_STOPPED_IMAGE specifier               	PASS           	PASS           
+sync_8.5.7c         	SYNC IMAGES(*) with STAT=STAT_STOPPED_IMAGE specifier                 	PASS           	PASS           
 

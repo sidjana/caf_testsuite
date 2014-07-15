@@ -15,7 +15,8 @@ if [ "$ANS" == "0" ]; then
    printf '%-15s\t' "PASS"  | tee -a $3
 
    #run the feature test
-   perl ../support/timedexec.pl $TIMEOUT $LAUNCHER $BIN_PATH/$1 $EXEC_OPTIONS &>$EXEC_OUTPUT/$2.out
+   perl ../../support/timedexec.pl $TIMEOUT $LAUNCHER $BIN_PATH/$1 $EXEC_OPTIONS &>$EXEC_OUTPUT/$2.out
+   $LAUNCHER ../../support/kill_orhpan_procs.sh $1 
   # check if the feature test passed execution
    if [ "$?" == "0" ]; then
        # feature test passed execution
@@ -26,7 +27,8 @@ if [ "$ANS" == "0" ]; then
 
        rm -rf ./tmp ./conf.temp
        # run the cross test
-       perl ../support/timedexec.pl $TIMEOUT $LAUNCHER $BIN_PATH/$1.cross $EXEC_OPTIONS &>./tmp
+       perl ../../support/timedexec.pl $TIMEOUT $LAUNCHER $BIN_PATH/$1.cross $EXEC_OPTIONS &>./tmp
+       $LAUNCHER ../../support/kill_orhpan_procs.sh $1.cross
        RETURN="$?"
        touch ./tmp ./conf.temp
 
@@ -51,3 +53,4 @@ else
 
 fi
 
+rm -rf ./tmp ./conf.temp

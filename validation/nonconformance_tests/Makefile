@@ -41,7 +41,8 @@ tail:
 	   @ $(FC) $(FFLAGS)  -o $(BIN_PATH)/$@ $^ 2>$(COMPILE_OUTPUT)/$^.out ;\
 	     if [ "$$?" == "1" ]; then \
 		     printf '%s\t\t' "PASS" | tee -a $(LOGFILE)  ; \
-			 perl ../support/timedexec.pl $(TIMEOUT) $(LAUNCHER)  $(BIN_PATH)/$@  2>$(EXEC_OUTPUT)/$@.out ; \
+			 perl ../../support/timedexec.pl $(TIMEOUT) $(LAUNCHER)  $(BIN_PATH)/$@  2>$(EXEC_OUTPUT)/$@.out ; \
+			 $(LAUNCHER) ../../support/kill_orhpan_procs.sh $@
 			 if [ "$$?" == "1" ]; then \
 			 	printf '%s\n' "PASS" | tee -a $(LOGFILE) ;\
 			 else \

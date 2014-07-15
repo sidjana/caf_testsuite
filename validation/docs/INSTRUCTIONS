@@ -387,9 +387,6 @@ the errors should be detected by the compiler or runtime.
 status returned by various CAF statements, and respond accordingly.
 
 - Support files include:
-    - support/timedexec.pl : script used to ensure that images do not run
-      more that a pre-configured time limit (As set by the TIMEOUT
-      configuration parameter)
     - testmodule.f90 : this is useful for cross-checked tests. All
       cross-checked tests are linked with the module in this file before
       loading.
