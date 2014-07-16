@@ -1,12 +1,17 @@
-TEMP_1:=$(shell ../config/config2makedef.sh)  # generate make.def from CONFIG
-include ../config/make.def  # auto-generated
+SHELL := /bin/bash
+
+COMPILER ?= uhcaf
+TEMP_1:=$(shell cd ../config; ./config2makedef.sh; cd -)  # generate make.def from CONFIG
+include ../config/make-validation.def #auto-generated
+include ../config/make-compiler.$(COMPILER).def #auto-generated
+
+BIN_PATH:=../bin/
+EXEC_OUTPUT:=./
+COMPILE_OUTPUT:=./
 
 DATE:=$(shell echo "`date +"%m-%d-%y-%T"`")
-EXEC_OUTPUT:=$(NONCONF_EXEC_PATH)
-COMPILE_OUTPUT:=$(NONCONF_COMPILE_PATH)
-
 LOG_NAME:=$(DATE).log
-LOGFILE:=$(NONCONF_LOG_PATH)/$(LOG_NAME)
+LOGFILE:=$(LOG_NAME)
 
 F_TESTS = $(wildcard *.f90)
 F_EXES  = $(F_TESTS:.f90=.x)
@@ -38,11 +43,11 @@ tail:
 	   $(eval SPEC_IDX:=$(shell echo "`echo "$^"|sed 's/.f90//'| sed 's/*_//'`"))
 	   $(eval DESCRIPTION:=$(shell echo "`cat description | grep "$^" | sed s/"$^"//`"))
 	   @ printf '%-20s\t%-80s\t' "$(SPEC_IDX)" "$(DESCRIPTION)" | tee -a $(LOGFILE)
-	   @ $(FC) $(FFLAGS)  -o $(BIN_PATH)/$@ $^ 2>$(COMPILE_OUTPUT)/$^.out ;\
+	   @ $(FC) $(FFLAGS) $(FFLAGS_VALIDATION_DEFS)  -o ../$@ $^ 2>$(COMPILE_OUTPUT)/$^.out ;\
 	     if [ "$$?" == "1" ]; then \
 		     printf '%s\t\t' "PASS" | tee -a $(LOGFILE)  ; \
 			 perl ../../support/timedexec.pl $(TIMEOUT) $(LAUNCHER)  $(BIN_PATH)/$@  2>$(EXEC_OUTPUT)/$@.out ; \
-			 $(LAUNCHER) ../../support/kill_orhpan_procs.sh $@
+			 ../../support/kill_orphan_procs.sh $@
 			 if [ "$$?" == "1" ]; then \
 			 	printf '%s\n' "PASS" | tee -a $(LOGFILE) ;\
 			 else \

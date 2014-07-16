@@ -3,7 +3,7 @@ SHELL := /bin/bash
 
 COMPILER ?= uhcaf
 TEMP_1:=$(shell cd ../support; ./config2makedef.sh; cd -)  # generate make.def from CONFIG
-include ../support/make.def-compiler.$(COMPILER)   # auto-generated
+include ../support/make-compiler.$(COMPILER).def   # auto-generated
 
 TESTS = buffon_laplace cafhash cg_2d image_smoothing insertion_sort insertion_sort_dtype jacobi mm syncbench
 
@@ -11,7 +11,7 @@ RUN_TESTS := $(addprefix run_, $(TESTS))
 
 default: $(TESTS)
 
-help: 
+help:
 	@echo "Usage: make [KERNEL|run_KERNEL|runtests|clean] [COMPILER=uhcaf(default)|ifort|g95] "
 	@echo -e "Where KERNEL is one of:\n\t $(TESTS)"
 	@echo -e "Please ensure:\n The test_suite specific parameters are set in ../support/CONFIG \n The compiler specific parameters in ../support/CONFIG-compiler.<compiler> \n"
@@ -28,6 +28,5 @@ $(RUN_TESTS): run_%:
 	@cd src/$*; make -s execute TEST=$* COMPILER=$(COMPILER)
 	@echo -e "\n--------------------------------------\n"
 
-clean: 
+clean:
 	@for d in $(TESTS); do if [ -d src/$$d ]; then cd src/$$d ; make TEST=$$d clean ; cd ../.. ; fi;  done 
-	

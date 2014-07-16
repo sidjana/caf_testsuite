@@ -1,12 +1,11 @@
 ## These variables are needed for the output files and for the naming of graphs.
 ## Please set these variables to their appropiate values.
 
-#OpenUH CAF Compiler
-COMPILER="uhcaf"
-FC="uhcaf"
-FFLAGS="-ftpp "
-FFLAGS_BENCH_DEFS="-DNPROCS=${NPROCS} -DNITER=${NITER}"
-LAUNCHER="cafrun -n ${NPROCS} --image-heap=1G"
+##Intel CAF Compiler
+COMPILER="ifort"
+FC="ifort"
+FFLAGS="-coarray -coarray-num-images=4 -fpp -DNPROCS=${NPROCS}  -DNITER=${NITER}"
+LAUNCHER=""
 EXEC_OPTIONS=""
 FFLAGS_CROSS=" $FFLAGS "
 

@@ -2,8 +2,10 @@ SHELL := /bin/bash
 
 .PHONY: all feature non-conformance crosschecked_feature fewtests help
 
-TEMP_1:=$(shell ./config/config2makedef.sh)  # generate make.def from CONFIG
-include ./config/make.def   # auto-generated
+COMPILER ?= uhcaf
+TEMP_1:=$(shell cd config; ./config2makedef.sh; cd -)  # generate make.def from CONFIG
+#include ./config/make-validation.def  # auto-generated
+include ./config/make-compiler.$(COMPILER).def  # auto-generated
 
 help :
 	@echo -e "If test suite is run from within validation directory, then USAGE: $(MAKE) OPTIONS \n OPTIONS include:"
@@ -23,7 +25,7 @@ all:  feature crosschecked_feature status
 
 
 feature:
-	@cd $(FEATURE_TEST_PATH); $(MAKE) -s  all;
+	@cd feature_tests; $(MAKE) -s  all;
 
 
 feature-header:
@@ -33,7 +35,7 @@ feature-header:
 
 
 crosschecked_feature:
-	@cd $(CC_FEATURE_TEST_PATH); $(MAKE) -s all;
+	@cd crosschecked_feature_tests; $(MAKE) -s all;
 
 
 crosschecked_feature-header:
@@ -44,7 +46,7 @@ crosschecked_feature-header:
 
 
 nonconformance:
-	@cd $(NONCONF_TEST_PATH); $(MAKE) -s all
+	@cd nonconformance_tests; $(MAKE) -s all
 
 
 nonconformance-header:
@@ -54,7 +56,7 @@ nonconformance-header:
 
 
 status:
-	@cd $(STATUS_TEST_PATH); $(MAKE) -s all
+	@cd status_tests; $(MAKE) -s all
 
 
 status-header:
@@ -65,7 +67,7 @@ status-header:
 
 
 fewtests:
-	@cd $(FEW_TEST_PATH); $(MAKE) -s  all
+	@cd few_tests; $(MAKE) -s  all
 
 
 
@@ -75,23 +77,24 @@ clean:
 
 
 cleanfewtests:
-	@cd $(FEW_TEST_PATH); $(MAKE) -s clean_exec;
+	@cd few_tests; $(MAKE) -s clean_exec;
 
 cleanfeature:
-	@cd $(FEATURE_TEST_PATH); $(MAKE) -s clean_exec;
+	@cd feature_tests; $(MAKE) -s clean_exec;
 
 cleancrosschecked_feature:
-	@cd $(CC_FEATURE_TEST_PATH); $(MAKE) -s clean_exec;
+	@cd crosschecked_feature_tests; $(MAKE) -s clean_exec;
 
 cleanstatus:
-	@cd $(STATUS_TEST_PATH); $(MAKE) -s clean_exec;
+	@cd status_tests; $(MAKE) -s clean_exec;
 
 cleanall clean_output clean_exec clean_history:
-	@cd $(FEATURE_TEST_PATH); $(MAKE) -s $@; cd .. ;
-	@cd $(FEW_TEST_PATH); $(MAKE) -s $@; cd .. ;
-	@cd $(CC_FEATURE_TEST_PATH); $(MAKE) -s $@; cd .. ;
-	@cd $(STATUS_TEST_PATH); $(MAKE) -s $@; cd .. ;
+	@cd feature_tests; $(MAKE) -s $@; cd .. ;
+	@cd few_tests; $(MAKE) -s $@; cd .. ;
+	@cd crosschecked_feature_tests; $(MAKE) -s $@; cd .. ;
+	@cd status_tests; $(MAKE) -s $@; cd .. ;
 	@if [ "$@" == "cleanall" ];  then \
 		rm -rf ./bin/*.* , *.mod; rm -rf ./config/make.def ; \
+		rm -rf ./config/make*.def; \
 	 fi;
 

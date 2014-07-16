@@ -1,16 +1,19 @@
 SHELL := /bin/bash
 
-TEMP_1:=$(shell ../config/config2makedef.sh)  # generate make.def from CONFIG
-include ../config/make.def    #auto-generated
+COMPILER ?= uhcaf
+TEMP_1:=$(shell cd ../config; ./config2makedef.sh; cd -)  # generate make.def from CONFIG
+include ../config/make-validation.def #auto-generated
+include ../config/make-compiler.$(COMPILER).def #auto-generated
 
 DATE:=$(shell echo "`date +"%m-%d-%y-%T"`")
 LOG_NAME:=$(DATE).log
-LOGFILE:=$(STATUS_LOG_PATH)/$(LOG_NAME)
+LOGFILE:=$(LOG_NAME)
+BIN_PATH:=../bin/
 
 
 F_TESTS = $(wildcard *.f90)
 F_EXES  = $(F_TESTS:.f90=.x)
-EXES    = $(addprefix $(BIN_PATH)/,$(F_EXES) )
+EXES    = $(F_EXES)
 total_cnt:=0
 
 .PHONY: all header
@@ -31,17 +34,13 @@ header:
 	   $(eval total_cnt=0)
 
 
-$(BIN_PATH)/%.x: %.f90
+%.x: %.f90
 	   $(eval SPEC_IDX:=$(shell echo "`echo "$^"|sed 's/.f90//'| sed 's/*_//'`"))
 	   $(eval DESCRIPTION:=$(shell echo "`cat description | grep "$^" | sed s/"$^"//`"))
 	   @printf '%-20s\t%-70s\t' "$(SPEC_IDX)" "$(DESCRIPTION)" | tee -a $(LOGFILE)
-	   @./status_test.sh "$@"  "$^" "$(LOGFILE)"
+	   @./status_test.sh "$@"  "$^" $(LOGFILE) $(COMPILER)
 	   $(eval total_cnt=$(shell echo $(total_cnt)\+1 | bc))
 
-
-$(BIN_PATH):
-	    @mkdir $(BIN_PATH)
-		@echo "making dir"
 
 clean_output:
 	    @rm -rf compile_output/*.out exec_output/*.out

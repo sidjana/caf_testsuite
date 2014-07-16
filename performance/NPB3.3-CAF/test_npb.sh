@@ -103,7 +103,7 @@ do
 				 fi
 
   		     	         EXEC_OUT=` perl $ROOT/../../support/timedexec.pl $TIMEOUT "$LAUNCHER $BIN_DIR/$opfile $EXEC_OPTIONS " &> $EXEC_OUT_DIR/$opfile.exec && echo 1||echo -1`
-				 $LAUNCHER $ROOT/../../support/kill_orhpan_procs.sh $opfile
+				         $ROOT/../../support/kill_orphan_procs.sh $opfile
 
   		     	         if [ "$EXEC_OUT" == "-1" ]; then                         #runtime error
   		     	             EXEC_STATUS="RUNTIME ERROR"

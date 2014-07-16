@@ -10,13 +10,12 @@ print_file_descriptor()
     sed "s/$file//" | sed 's/^[ ]*//g'`"| tee -a $2
 }
 
+LOGFILE=$1
+COMPILER=$2
 
-config_file="../config/CONFIG"
-if [ ! -f $config_file ]; then
-    config_file="../config/CONFIG.sample"
-fi
+config_file="../config/CONFIG-validation"
 source $config_file
-CURRENT=$FEW_TEST_PATH
+CURRENT=./
 MAKE_CMD="make -s "
 
 for file in `cat test_file`
@@ -41,11 +40,11 @@ do
     	  elif [ "$file" == "NON-CONFORMANCE" ]; then
 	        	type="non-conformance"
     	  elif [ "$file" == "END-TESTS" ]; then
-		        printf '%s\n' "-----END OF TESTS-----" | tee -a $1
+		        printf '%s\n' "-----END OF TESTS-----" | tee -a $LOGFILE
                 break
 		  fi
 
-          cd $CURRENT
+         # cd $CURRENT
           continue
 
     else
@@ -58,11 +57,11 @@ do
 
         if [ "$type" == "crosschecked_feature" ]; then
 
-            cd ../; $MAKE_CMD crosschecked_feature-header; cd $CURRENT;
-            print_file_descriptor $file $1
-            if [ -f $CC_FEATURE_TEST_PATH/$file ]; then
-                cp $CC_FEATURE_TEST_PATH/$file .
-                bash crosschecked_feature_test.sh "$file_exec" "$file" "$1"
+            cd ../; $MAKE_CMD crosschecked_feature-header; cd few_tests;
+            print_file_descriptor $file $LOGFILE
+            if [ -f ../crosschecked_feature_tests/$file ]; then
+                cp crosschecked_feature_tests/$file .
+                bash crosschecked_feature_test.sh "$file_exec" "$file" $LOGFILE $COMPILER
                 rm ./$file
             else
                 echo "ABSENT"
@@ -70,11 +69,11 @@ do
 
         elif [ "$type" == "feature" ]; then
 
-            cd ../; $MAKE_CMD feature-header; cd $CURRENT;
-            print_file_descriptor $file $1
-            if [ -f $FEATURE_TEST_PATH/$file ]; then
-                cp $FEATURE_TEST_PATH/$file .
-                bash feature_test.sh "$file_exec" "$file" "$1"
+            cd ../; $MAKE_CMD feature-header; cd few_tests;
+            print_file_descriptor $file $LOGFILE
+            if [ -f ../feature_tests/$file ]; then
+                cp ../feature_tests/$file .
+                bash feature_test.sh "$file_exec" "$file" $LOGFILE $COMPILER
                 rm ./$file
             else
                 echo "ABSENT"
@@ -82,20 +81,20 @@ do
 
         elif [ "$type" == "status" ]; then
 
-            cd ../; $MAKE_CMD status-header; cd $CURRENT;
-            print_file_descriptor $file $1
-            if [ -f $STATUS_TEST_PATH/$file ]; then
-                cp $STATUS_TEST_PATH/$file .
-                bash status_test.sh "$file_exec" "$file" "$1"
-                rm ./$file
-            else
-                echo "ABSENT"
-            fi
+           cd ../; $MAKE_CMD status-header; cd few_tests;
+           print_file_descriptor $file $1
+           if [ -f ../status_tests/$file ]; then
+               cp ../status_tests/$file .
+               bash status_test.sh "$file_exec" "$file" $LOGFILE $COMPILER
+               rm ./$file
+           else
+               echo "ABSENT"
+           fi
 
         elif [ "$type" == "non-conformance" ]; then
 
             cd ../; $MAKE_CMD non-conformance-header
-            print_file_descriptor $file $1
+            print_file_descriptor $file $LOGFILE
             echo "Not supported"
 
         fi
