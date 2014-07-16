@@ -48,7 +48,7 @@ contains
    integer*8 :: lv
    integer :: desti, destpos,localCount
    integer (kind=atomic_int_kind) :: localhash, o, new
-   
+
    lv=v
 
    do while (1.gt.0)
@@ -57,7 +57,7 @@ contains
       if(desti*localhashlen.lt.v) then
          desti=desti+1
       end if
-      
+
       destpos = v - (desti - 1)*localhashlen
 
       new = 0
@@ -85,7 +85,7 @@ contains
    integer*8 :: o,v
    integer*8 :: lv
    integer :: desti, destpos,localCount,localHash
-   
+
    lv=v
 
    do while (1.gt.0)
@@ -94,7 +94,7 @@ contains
       if(desti*localhashlen.lt.v) then
          desti=desti+1
       end if
-      
+
       destpos = v - (desti - 1)*localhashlen
       ! lock the data
       lock(iLock[desti])
@@ -132,9 +132,36 @@ contains
 
 end module initialise
 
+module co_helper
+    contains
+
+    subroutine co_sum(x)
+        integer :: x
+        integer, save :: t[*]
+        integer :: i
+
+        t = x
+
+        sync all
+
+        if (this_image() == 1) then
+          do i = 2, num_images()
+              t = t + t[i]
+          end do
+        end if
+
+        sync all
+
+        x = t[1]
+
+    end subroutine
+
+end module
+
 
 program DHT
   use initialise
+  use co_helper
   integer :: i,j
   integer*8 :: pb,b,v
   integer :: start_wtime, end_wtime, rate
