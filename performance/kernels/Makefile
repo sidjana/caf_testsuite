@@ -25,7 +25,7 @@ $(TESTS):
 
 ##################### EXECUTION ###################
 $(RUN_TESTS): run_%:
-	@cd src/$*; make -s execute TEST=$* COMPILER=$(COMPILER)
+	@cd src/$*; make -s TEST=$* COMPILER=$(COMPILER)
 	@echo -e "\n--------------------------------------\n"
 
 clean:

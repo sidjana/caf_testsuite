@@ -10,18 +10,24 @@ include ./$(TEST).def # user-defined
 include ../../../../config/make.def   # auto-generated
 include ../../../../config/make-compiler.$(COMPILER).def   # auto-generated
 
-default: compile execute
+default: clean print_test compile execute
 
 compile $(TEST).x: $(TEST).f90
-	@echo -en "\nCompiling ... $(TEST) ...  "
-	set -o pipefail; $(COMPILE_CMD) $(TEST).f90 -o $(TEST).x | tee $(TEST).compile.out
-	@echo "PASS"
+	@echo -e "\nCompiling ... $(COMPILE_CMD) $(TEST).f90 -o $(TEST).x"
+	@-$(COMPILE_CMD) $(TEST).f90 -o $(TEST).x | tee $(TEST).compile.out
 
 execute: $(TEST).x
-	@ echo -e "\nExecuting ... $(TEST).x ... with $(NPROCS) images "
-	@ if [ "$(COMPILER)" == "ifort" ]; then export FOR_COARRAY_NUM_IMAGES=$(NPROCS); fi
-	@ perl ../../../../support/timedexec.pl $(TIMEOUT) "$(LAUNCHER) ./$(TEST).x $(EXEC_OPTIONS)"  | tee $(TEST).exec.out
-	@ ../../../../support/kill_orphan_procs.sh  $(TEST).x
+	@if [ -f $(TEST).x ]; then \
+		echo -e "\nExecuting ... $(TEST).x ... with $(NPROCS) images "; \
+		if [ "$(COMPILER)" == "ifort" ]; then export FOR_COARRAY_NUM_IMAGES=$(NPROCS); fi; \
+		perl ../../../../support/timedexec.pl $(TIMEOUT) "$(LAUNCHER) ./$(TEST).x $(EXEC_OPTIONS)"  | tee $(TEST).exec.out; \
+		../../../../support/kill_orphan_procs.sh  $(TEST).x; \
+	 fi
+
+print_test:
+	@echo -e "\n--------------------------"
+	@echo -e "TESTING $(TEST)"
+	@echo -e "---------------------------\n"
 
 clean:
 	rm -rf *.x *.out *.mod *.compile
