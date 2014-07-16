@@ -1,13 +1,8 @@
 compiler ?= uhcaf
 NPROCS ?= 4
 
-include ../../support/make.def
-include ../../support/make.def-compiler.$(compiler)
-
-FC = uhcaf
-LD = $(FC)
-FFLAGS = --mpi
-LDFLAGS = $(FFLAGS)
+TEMP_1:=$(shell cd ../../support; ./config2makedef.sh; cd -)  # generate make.def from CONFIG
+include ../../support/make-compiler.$(compiler).def  # auto-generated
 
 BINDIR=../bin
 
@@ -22,7 +17,7 @@ ALL_TESTS=$(LATENCY_TESTS) $(BW_TESTS) $(STRIDED_BW_TESTS) $(REDUCE_TESTS)
 run_all_tests: all_tests
 	$(EXEC_CMD) $(BINDIR)/$^
 
-all_tests: all_tests.o
+all_tests: all_tests.o wtime.o
 	$(COMPILE_CMD) $(LDFLAGS) -o $(BINDIR)/$@ $^
 
 all_tests.o: caf_tests.F90
@@ -31,7 +26,7 @@ all_tests.o: caf_tests.F90
 run_latency_tests: latency_tests
 	$(EXEC_CMD) $(BINDIR)/$^
 
-latency_tests: latency_tests.o
+latency_tests: latency_tests.o wtime.o
 	$(COMPILE_CMD) $(LDFLAGS) -o $(BINDIR)/$@ $^
 
 latency_tests.o: caf_tests.F90
@@ -40,7 +35,7 @@ latency_tests.o: caf_tests.F90
 run_bw_tests: bw_tests
 	$(EXEC_CMD) $(BINDIR)/$^
 
-bw_tests: bw_tests.o
+bw_tests: bw_tests.o wtime.o
 	$(COMPILE_CMD) $(LDFLAGS) -o $(BINDIR)/$@ $^
 
 bw_tests.o: caf_tests.F90
@@ -49,7 +44,7 @@ bw_tests.o: caf_tests.F90
 run_strided_bw_tests: strided_bw_tests
 	$(EXEC_CMD) $(BINDIR)/$^
 
-strided_bw_tests: strided_bw_tests.o
+strided_bw_tests: strided_bw_tests.o wtime.o
 	$(COMPILE_CMD) $(LDFLAGS) -o $(BINDIR)/$@ $^
 
 strided_bw_tests.o: caf_tests.F90
@@ -58,11 +53,12 @@ strided_bw_tests.o: caf_tests.F90
 run_reduce_tests: reduce_tests
 	$(EXEC_CMD) $(BINDIR)/$^
 
-reduce_tests: reduce_tests.o
+reduce_tests: reduce_tests.o wtime.o
 	$(COMPILE_CMD) $(LDFLAGS) -o $(BINDIR)/$@ $^
 
 reduce_tests.o: caf_tests.F90
 	$(COMPILE_CMD) -c $(FFLAGS) $(REDUCE_TESTS) $< -o $@
+
 
 .PHONY:clean
 clean:

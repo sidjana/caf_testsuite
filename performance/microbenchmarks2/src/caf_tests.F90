@@ -8,7 +8,7 @@ module caf_microbenchmarks
     use, intrinsic :: iso_fortran_env
     implicit none
 
-    include 'mpif.h'
+!    include 'mpif.h'
 
     integer, parameter :: BARRIER = 1
     integer, parameter :: P2P = 2
@@ -37,6 +37,16 @@ module caf_microbenchmarks
     integer :: numi
 
     contains
+
+
+    function MY_WTIME()
+        double precision :: MY_WTIME
+        double precision :: t
+
+        call wtime(t)
+
+        MY_WTIME = t
+    end function MY_WTIME
 
 
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -81,11 +91,11 @@ module caf_microbenchmarks
             end if
         end if
 
-        t1 = MPI_WTIME()
+        t1 = MY_WTIME()
         do i = 1, LAT_NITER
           call do_sync(sync)
         end do
-        t2 = MPI_WTIME()
+        t2 = MY_WTIME()
 
         stats_buffer(1) = 1000000*(t2-t1)/(LAT_NITER)
 
@@ -121,12 +131,12 @@ module caf_microbenchmarks
         end if
 
         if (ti < partner) then
-            t1 = MPI_WTIME()
+            t1 = MY_WTIME()
             do i = 1, LAT_NITER
               recv_buffer(1)[partner] = send_buffer(1)
               recv_buffer(1) = recv_buffer(1)[partner]
             end do
-            t2 = MPI_WTIME()
+            t2 = MY_WTIME()
 
             stats_buffer(1) = 1000000*(t2-t1)/(LAT_NITER)
         end if
@@ -170,23 +180,23 @@ module caf_microbenchmarks
         end if
 
         if (ti < partner) then
-            t1 = MPI_WTIME()
+            t1 = MY_WTIME()
             do i = 1, LAT_NITER
               recv_buffer(1)[partner] = send_buffer(1)
               call do_sync(sync)
               call do_sync(sync)
             end do
-            t2 = MPI_WTIME()
+            t2 = MY_WTIME()
 
             stats_buffer(1) = 1000000*(t2-t1)/(LAT_NITER)
         else if (ti <= numi) then
-            t1 = MPI_WTIME()
+            t1 = MY_WTIME()
             do i = 1, LAT_NITER
               call do_sync(sync)
               recv_buffer(1)[partner] = send_buffer(1)
               call do_sync(sync)
             end do
-            t2 = MPI_WTIME()
+            t2 = MY_WTIME()
 
             stats_buffer(1) = 1000000*(t2-t1)/(LAT_NITER)
         end if
@@ -230,23 +240,23 @@ module caf_microbenchmarks
         end if
 
         if (ti < partner) then
-            t1 = MPI_WTIME()
+            t1 = MY_WTIME()
             do i = 1, LAT_NITER
               recv_buffer(1) = send_buffer(1)[partner]
               call do_sync(sync)
               call do_sync(sync)
             end do
-            t2 = MPI_WTIME()
+            t2 = MY_WTIME()
 
             stats_buffer(1) = 1000000*(t2-t1)/(LAT_NITER)
         else if (ti <= numi) then
-            t1 = MPI_WTIME()
+            t1 = MY_WTIME()
             do i = 1, LAT_NITER
               call do_sync(sync)
               recv_buffer(1) = send_buffer(1)[partner]
               call do_sync(sync)
             end do
-            t2 = MPI_WTIME()
+            t2 = MY_WTIME()
 
             stats_buffer(1) = 1000000*(t2-t1)/(LAT_NITER)
         end if
@@ -293,15 +303,15 @@ module caf_microbenchmarks
           nrep = BW_NITER
 
           if (ti < partner) then
-              t1 = MPI_WTIME()
+              t1 = MY_WTIME()
               do i = 1, nrep
                 recv_buffer(1:blksize)[partner] = send_buffer(1:blksize)
-                if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+                if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
                   nrep = i
                   exit
                 end if
               end do
-              t2 = MPI_WTIME()
+              t2 = MY_WTIME()
 
               stats_buffer(num_stats) = &
                   dble(blksize)*ELEM_SIZE*nrep/(1024*1024*(t2-t1))
@@ -349,15 +359,15 @@ module caf_microbenchmarks
           nrep = BW_NITER
 
           if (ti < partner) then
-              t1 = MPI_WTIME()
+              t1 = MY_WTIME()
               do i = 1, nrep
                 recv_buffer(1:blksize) = send_buffer(1:blksize)[partner]
-                if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+                if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
                   nrep = i
                   exit
                 end if
               end do
-              t2 = MPI_WTIME()
+              t2 = MY_WTIME()
 
               stats_buffer(num_stats) = &
                   dble(blksize)*ELEM_SIZE*nrep/(1024*1024*(t2-t1))
@@ -404,7 +414,7 @@ module caf_microbenchmarks
         do while (blksize <= BUFFER_SIZE/2)
           nrep = BW_NITER
 
-          t1 = MPI_WTIME()
+          t1 = MY_WTIME()
           do i = 1, nrep
             rand_seed = i*this_image()
             call random_seed(rand_seed)
@@ -416,12 +426,12 @@ module caf_microbenchmarks
             recv_buffer(rand_index:rand_index+blksize-1)[rand_image] = &
                 send_buffer(1:blksize)
             unlock (image_lock[rand_image])
-            if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+            if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
               nrep = i
               exit
             end if
           end do
-          t2 = MPI_WTIME()
+          t2 = MY_WTIME()
 
           stats_buffer(num_stats) = &
               dble(blksize)*ELEM_SIZE*nrep/(1024*1024*(t2-t1))
@@ -468,7 +478,7 @@ module caf_microbenchmarks
         do while (blksize <= BUFFER_SIZE)
           nrep = BW_NITER
 
-          t1 = MPI_WTIME()
+          t1 = MY_WTIME()
           do i = 1, nrep
             rand_seed = i*this_image()
             call random_seed(rand_seed)
@@ -480,12 +490,12 @@ module caf_microbenchmarks
             recv_buffer(1:blksize) = &
                  send_buffer(rand_index:rand_index+blksize-1)[rand_image]
             unlock (image_lock[rand_image])
-            if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+            if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
               nrep = i
               exit
             end if
           end do
-          t2 = MPI_WTIME()
+          t2 = MY_WTIME()
 
           stats_buffer(num_stats) = &
               dble(blksize)*ELEM_SIZE*nrep/(1024*1024*(t2-t1))
@@ -543,39 +553,39 @@ module caf_microbenchmarks
 
           if (ti < partner) then
               if (strided == TARGET_STRIDED) then
-                  t1 = MPI_WTIME()
+                  t1 = MY_WTIME()
                   do i = 1, nrep
                     extent = MAX_COUNT*stride
                     recv_buffer(1:extent:stride)[partner] = send_buffer(1:MAX_COUNT)
-                    if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+                    if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
                       nrep = i
                       exit
                     end if
                   end do
-                  t2 = MPI_WTIME()
+                  t2 = MY_WTIME()
               else if (strided == ORIGIN_STRIDED) then
-                  t1 = MPI_WTIME()
+                  t1 = MY_WTIME()
                   do i = 1, nrep
                     extent = MAX_COUNT*stride
                     recv_buffer(1:MAX_COUNT)[partner] = send_buffer(1:extent:stride)
-                    if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+                    if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
                       nrep = i
                       exit
                     end if
                   end do
-                  t2 = MPI_WTIME()
+                  t2 = MY_WTIME()
               else
-                  t1 = MPI_WTIME()
+                  t1 = MY_WTIME()
                   do i = 1, nrep
                     extent = MAX_COUNT*stride
                     recv_buffer(1:extent:stride)[partner] = &
                                  send_buffer(1:extent:stride)
-                    if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+                    if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
                       nrep = i
                       exit
                     end if
                   end do
-                  t2 = MPI_WTIME()
+                  t2 = MY_WTIME()
               end if
 
               stats_buffer(num_stats) = &
@@ -635,39 +645,39 @@ module caf_microbenchmarks
 
           if (ti < partner) then
               if (strided == TARGET_STRIDED) then
-                  t1 = MPI_WTIME()
+                  t1 = MY_WTIME()
                   do i = 1, nrep
                     extent = MAX_COUNT*stride
                     recv_buffer(1:MAX_COUNT) = send_buffer(1:extent:stride)[partner]
-                    if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+                    if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
                       nrep = i
                       exit
                     end if
                   end do
-                  t2 = MPI_WTIME()
+                  t2 = MY_WTIME()
               else if (strided == ORIGIN_STRIDED) then
-                  t1 = MPI_WTIME()
+                  t1 = MY_WTIME()
                   do i = 1, nrep
                     extent = MAX_COUNT*stride
                     recv_buffer(1:extent:stride) = send_buffer(1:MAX_COUNT)[partner]
-                    if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+                    if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
                       nrep = i
                       exit
                     end if
                   end do
-                  t2 = MPI_WTIME()
+                  t2 = MY_WTIME()
               else
-                  t1 = MPI_WTIME()
+                  t1 = MY_WTIME()
                   do i = 1, nrep
                     extent = MAX_COUNT*stride
                     recv_buffer(1:extent:stride) = &
                                  send_buffer(1:extent:stride)[partner]
-                    if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+                    if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
                       nrep = i
                       exit
                     end if
                   end do
-                  t2 = MPI_WTIME()
+                  t2 = MY_WTIME()
               end if
 
               stats_buffer(num_stats) = &
@@ -719,15 +729,15 @@ module caf_microbenchmarks
         do while (blksize <= BUFFER_SIZE)
           nrep = BW_NITER
 
-          t1 = MPI_WTIME()
+          t1 = MY_WTIME()
           do i = 1, nrep
             recv_buffer(1:blksize)[partner] = send_buffer(1:blksize)
-            if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+            if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
               nrep = i
               exit
             end if
           end do
-          t2 = MPI_WTIME()
+          t2 = MY_WTIME()
 
           stats_buffer(num_stats) = &
               dble(blksize)*ELEM_SIZE*nrep/(1024*1024*(t2-t1))
@@ -772,15 +782,15 @@ module caf_microbenchmarks
         do while (blksize <= BUFFER_SIZE)
           nrep = BW_NITER
 
-          t1 = MPI_WTIME()
+          t1 = MY_WTIME()
           do i = 1, nrep
             recv_buffer(1:blksize) = send_buffer(1:blksize)[partner]
-            if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+            if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
               nrep = i
               exit
             end if
           end do
-          t2 = MPI_WTIME()
+          t2 = MY_WTIME()
 
           stats_buffer(num_stats) = &
               dble(blksize)*ELEM_SIZE*nrep/(1024*1024*(t2-t1))
@@ -837,39 +847,39 @@ module caf_microbenchmarks
           nrep = BW_NITER
 
           if (strided == TARGET_STRIDED) then
-              t1 = MPI_WTIME()
+              t1 = MY_WTIME()
               do i = 1, nrep
                 extent = MAX_COUNT*stride
                 recv_buffer(1:extent:stride)[partner] = send_buffer(1:MAX_COUNT)
-                if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+                if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
                   nrep = i
                   exit
                 end if
               end do
-              t2 = MPI_WTIME()
+              t2 = MY_WTIME()
           else if (strided == ORIGIN_STRIDED) then
-              t1 = MPI_WTIME()
+              t1 = MY_WTIME()
               do i = 1, nrep
                 extent = MAX_COUNT*stride
                 recv_buffer(1:MAX_COUNT)[partner] = send_buffer(1:extent:stride)
-                if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+                if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
                   nrep = i
                   exit
                 end if
               end do
-              t2 = MPI_WTIME()
+              t2 = MY_WTIME()
           else
-              t1 = MPI_WTIME()
+              t1 = MY_WTIME()
               do i = 1, nrep
                 extent = MAX_COUNT*stride
                 recv_buffer(1:extent:stride)[partner] = &
                              send_buffer(1:extent:stride)
-                if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+                if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
                   nrep = i
                   exit
                 end if
               end do
-              t2 = MPI_WTIME()
+              t2 = MY_WTIME()
           end if
 
           stats_buffer(num_stats) = &
@@ -928,39 +938,39 @@ module caf_microbenchmarks
           nrep = BW_NITER
 
           if (strided == TARGET_STRIDED) then
-              t1 = MPI_WTIME()
+              t1 = MY_WTIME()
               do i = 1, nrep
                 extent = MAX_COUNT*stride
                 recv_buffer(1:MAX_COUNT) = send_buffer(1:extent:stride)[partner]
-                if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+                if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
                   nrep = i
                   exit
                 end if
               end do
-              t2 = MPI_WTIME()
+              t2 = MY_WTIME()
           else if (strided == ORIGIN_STRIDED) then
-              t1 = MPI_WTIME()
+              t1 = MY_WTIME()
               do i = 1, nrep
                 extent = MAX_COUNT*stride
                 recv_buffer(1:extent:stride) = send_buffer(1:MAX_COUNT)[partner]
-                if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+                if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
                   nrep = i
                   exit
                 end if
               end do
-              t2 = MPI_WTIME()
+              t2 = MY_WTIME()
           else
-              t1 = MPI_WTIME()
+              t1 = MY_WTIME()
               do i = 1, nrep
                 extent = MAX_COUNT*stride
                 recv_buffer(1:extent:stride) = &
                              send_buffer(1:extent:stride)[partner]
-                if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+                if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
                   nrep = i
                   exit
                 end if
               end do
-              t2 = MPI_WTIME()
+              t2 = MY_WTIME()
           end if
 
           stats_buffer(num_stats) = &
@@ -1021,7 +1031,7 @@ module caf_microbenchmarks
           nrep = BW_NITER
 
           if (strided == TARGET_STRIDED) then
-              t1 = MPI_WTIME()
+              t1 = MY_WTIME()
               do i = 1, nrep
                 rand_seed = i*this_image()
                 call random_seed(rand_seed)
@@ -1031,14 +1041,14 @@ module caf_microbenchmarks
                 lock (image_lock[rand_image])
                 recv_buffer(1:extent:stride)[partner] = send_buffer(1:MAX_COUNT)
                 unlock (image_lock[rand_image])
-                if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+                if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
                   nrep = i
                   exit
                 end if
               end do
-              t2 = MPI_WTIME()
+              t2 = MY_WTIME()
           else if (strided == ORIGIN_STRIDED) then
-              t1 = MPI_WTIME()
+              t1 = MY_WTIME()
               do i = 1, nrep
                 rand_seed = i*this_image()
                 call random_seed(rand_seed)
@@ -1048,14 +1058,14 @@ module caf_microbenchmarks
                 lock (image_lock[rand_image])
                 recv_buffer(1:MAX_COUNT)[partner] = send_buffer(1:extent:stride)
                 unlock (image_lock[rand_image])
-                if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+                if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
                   nrep = i
                   exit
                 end if
               end do
-              t2 = MPI_WTIME()
+              t2 = MY_WTIME()
           else
-              t1 = MPI_WTIME()
+              t1 = MY_WTIME()
               do i = 1, nrep
                 rand_seed = i*this_image()
                 call random_seed(rand_seed)
@@ -1066,12 +1076,12 @@ module caf_microbenchmarks
                 recv_buffer(1:extent:stride)[partner] = &
                              send_buffer(1:extent:stride)
                 unlock (image_lock[rand_image])
-                if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+                if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
                   nrep = i
                   exit
                 end if
               end do
-              t2 = MPI_WTIME()
+              t2 = MY_WTIME()
           end if
 
           stats_buffer(num_stats) = &
@@ -1132,7 +1142,7 @@ module caf_microbenchmarks
           nrep = BW_NITER
 
           if (strided == TARGET_STRIDED) then
-              t1 = MPI_WTIME()
+              t1 = MY_WTIME()
               do i = 1, nrep
                 rand_seed = i*this_image()
                 call random_seed(rand_seed)
@@ -1142,35 +1152,35 @@ module caf_microbenchmarks
                 lock (image_lock[rand_image])
                 recv_buffer(1:MAX_COUNT) = send_buffer(1:extent:stride)[partner]
                 unlock (image_lock[rand_image])
-                if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+                if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
                   nrep = i
                   exit
                 end if
               end do
-              t2 = MPI_WTIME()
+              t2 = MY_WTIME()
           else if (strided == ORIGIN_STRIDED) then
-              t1 = MPI_WTIME()
+              t1 = MY_WTIME()
               do i = 1, nrep
                 extent = MAX_COUNT*stride
                 recv_buffer(1:extent:stride) = send_buffer(1:MAX_COUNT)[partner]
-                if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+                if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
                   nrep = i
                   exit
                 end if
               end do
-              t2 = MPI_WTIME()
+              t2 = MY_WTIME()
           else
-              t1 = MPI_WTIME()
+              t1 = MY_WTIME()
               do i = 1, nrep
                 extent = MAX_COUNT*stride
                 recv_buffer(1:extent:stride) = &
                              send_buffer(1:extent:stride)[partner]
-                if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+                if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
                   nrep = i
                   exit
                 end if
               end do
-              t2 = MPI_WTIME()
+              t2 = MY_WTIME()
           end if
 
           stats_buffer(num_stats) = &
@@ -1224,7 +1234,7 @@ module caf_microbenchmarks
         do while (blksize <= BUFFER_SIZE)
           nrep = RED_NITER
 
-          t1 = MPI_WTIME()
+          t1 = MY_WTIME()
           do i = 1, nrep
             !recv_buffer(1:blksize)[partner] = send_buffer(1:blksize)
             if (separate_target) then
@@ -1232,12 +1242,12 @@ module caf_microbenchmarks
             else
                 call co_sum(send_buffer(1:blksize), send_buffer(1:blksize));
             end if
-            if (mod(i,10) == 0 .and. (MPI_WTIME()-t1) > TIMEOUT) then
+            if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
               nrep = i
               exit
             end if
           end do
-          t2 = MPI_WTIME()
+          t2 = MY_WTIME()
 
           stats_buffer(num_stats) = 1000000*(t2-t1)/(RED_NITER)
 
