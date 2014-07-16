@@ -1,8 +1,8 @@
 compiler ?= uhcaf
 NPROCS ?= 4
 
-TEMP_1:=$(shell cd ../../config; ./config2makedef.sh; cd -)  # generate make.def from CONFIG
-include ../../config/make-compiler.$(compiler).def  # auto-generated
+TEMP_1:=$(shell cd ../../../config; ./config2makedef.sh; cd -)  # generate make.def from CONFIG
+include ../../../config/make-compiler.$(compiler).def  # auto-generated
 
 BINDIR=../bin
 
