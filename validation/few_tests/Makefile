@@ -30,8 +30,8 @@ $(SCRIPTS):
 
 header:
 	   @printf '\n%s\n\n%s\n\n' "--------------- CAF SPECIFIC testsuite ---------------" \
-			                      "Evaluating $(COMPILER)" | tee -a $(LOGFILE)
-
+			            "Evaluating $(COMPILER)" | tee -a $(LOGFILE)
+	   @printf '%-20s\t%-70s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"
 
 testmodule.o: ../testmodule.f90
 	   @$(FC) $(FFLAGS) $(FFLAGS_VALIDATION_DEFS) -c  ../testmodule.f90

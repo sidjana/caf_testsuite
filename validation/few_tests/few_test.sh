@@ -81,7 +81,7 @@ do
 
         elif [ "$type" == "status" ]; then
 
-           cd ../; $MAKE_CMD status-header; cd few_tests;
+           #$MAKE_CMD header; cd few_tests;
            print_file_descriptor $file $1
            if [ -f ../status_tests/$file ]; then
                cp ../status_tests/$file .
