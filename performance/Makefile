@@ -8,7 +8,7 @@ COMPILER?=uhcaf
 help default:
 	@printf '\n%10s\n' "(If test suite is run from within performance directory, then run: $(MAKE) [<OPTIONS> [COMPILER=uhcaf(default)|ifort|g95|crayftn]])"
 	@printf '%10s\n' "OPTIONS include:"
-	@printf '%-25s\n' "| ( Note: <suite>: [kernels | microbenchmarks | npb | all] )"
+	@printf '%-25s\n' "| ( Note: <suite> = kernels|microbenchmarks|npb|all] )"
 	@printf '%-25s%-90s\n' "| "
 	@printf '%-25s%-90s\n' "|_ compile_<suite>:" "compiles and generates logs for the codes"
 	@printf '%-25s%-90s\n' "|_ execute_<suite>:" "executes and generates logs for the codes"
