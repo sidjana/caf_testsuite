@@ -15,8 +15,9 @@ include ../../../../config/make-compiler.$(COMPILER).def   # auto-generated
 default: compile execute
 
 compile $(TEST).x: $(TEST).F90 hashobj.o
-	@echo -e "\nCompiling ... $(TEST) ..."
-	$(COMPILE_CMD) -DNHASH=${NHASH} $(TEST).F90 hashobj.o -o $(TEST).x | tee $(TEST).compile.out
+	@echo -en "\nCompiling ... $(TEST) ...  "
+	set -o pipefail; $(COMPILE_CMD) -DNHASH=${NHASH} $(TEST).F90 hashobj.o -o $(TEST).x | tee $(TEST).compile.out
+	@echo "PASS"
 
 hashobj.o: hashobj.c
 	$(CC) $(CFLAGS) -DNHASH=${NHASH} -c hashobj.c

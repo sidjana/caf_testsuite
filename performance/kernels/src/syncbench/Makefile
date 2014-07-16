@@ -13,8 +13,9 @@ include ../../../../config/make-compiler.$(COMPILER).def   # auto-generated
 default: compile execute
 
 compile $(TEST).x: $(TEST).f90
-	@echo -e "\nCompiling ... $(TEST) ..."
-	$(COMPILE_CMD) $(TEST).f90 -o $(TEST).x | tee $(TEST).compile.out
+	@echo -en "\nCompiling ... $(TEST) ...  "
+	set -o pipefail; $(COMPILE_CMD) $(TEST).f90 -o $(TEST).x | tee $(TEST).compile.out
+	@echo "PASS"
 
 execute: $(TEST).x
 	@ echo -e "\nExecuting ... $(TEST).x ... with $(NPROCS) images and $(SYNCNITER) iterations "
