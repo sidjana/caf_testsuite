@@ -44,8 +44,8 @@ Options for Validation Test Suite
  |_ feature:                  tests the compiler's feature support (excludes tests that include verification)
  |_ crosschecked_feature:     performs cross-testing to test support for non-determinism handling constructs
  |_ status:                   tests for verifying handling of status returned by certain statements
- |_ clean<suite>:             Cleans executables (where <suite> = fewtests|feature|crosschecked_feature|status)
- |_ cleanall:                 Cleans everything - results, tests-history, compiler-logs, runtime-logs
+ |_ clean_<suite>:            cleans executables (where <suite> = fewtests|feature|crosschecked_feature|status)
+ |_ cleanall:                 cleans everything - results, tests-history, compiler-logs, runtime-logs
 
 Before running any <suite>, please ensure that:
  The 'user-defined' parameters are set in config/CONFIG-validation
