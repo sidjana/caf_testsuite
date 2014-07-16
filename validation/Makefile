@@ -3,9 +3,8 @@ SHELL := /bin/bash
 .PHONY: all feature non-conformance crosschecked_feature fewtests help
 
 COMPILER ?= uhcaf
-TEMP_1:=$(shell cd config; ./config2makedef.sh; cd -)  # generate make.def from CONFIG
-#include ./config/make-validation.def  # auto-generated
-include ./config/make-compiler.$(COMPILER).def  # auto-generated
+TEMP_1:=$(shell cd ../config; ./config2makedef.sh; cd -)  # generate make.def from CONFIG
+include ../config/make-compiler.$(COMPILER).def  # auto-generated
 
 help :
 	@echo -e "If test suite is run from within validation directory, then USAGE: $(MAKE) OPTIONS \n OPTIONS include:"
@@ -96,5 +95,6 @@ cleanall clean_output clean_exec clean_history:
 	@if [ "$@" == "cleanall" ];  then \
 		rm -rf ./bin/*.* , *.mod; rm -rf ./config/make.def ; \
 		rm -rf ./config/make*.def; \
+		rm -rf *.log; \
 	 fi;
 

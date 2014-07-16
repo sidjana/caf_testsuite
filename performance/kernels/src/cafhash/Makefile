@@ -6,11 +6,11 @@ TEST = cafhash
 
 COMPILER ?= uhcaf
 
-TEMP_1:=$(shell cd ../../../support; ./config2makedef.sh; cd -)  # generate make.def from CONFIG
+TEMP_1:=$(shell cd ../../../../config; ./config2makedef.sh; cd -)  # generate make.def from CONFIG
 
 include ./$(TEST).def # user-defined
-include ../../../support/make.def   # auto-generated
-include ../../../support/make-compiler.$(COMPILER).def   # auto-generated
+include ../../../../config/make.def   # auto-generated
+include ../../../../config/make-compiler.$(COMPILER).def   # auto-generated
 
 default: compile execute
 
@@ -25,7 +25,7 @@ execute: $(TEST).x
 	@ echo -e "\nExecuting ... $(TEST).x ... with $(NPROCS) images "
 	@ if [ "$(COMPILER)" == "ifort" ]; then export FOR_COARRAY_NUM_IMAGES=$(NPROCS); fi
 	@ perl ../../../../support/timedexec.pl $(TIMEOUT) "$(LAUNCHER) ./$(TEST).x $(EXEC_OPTIONS)"  | tee $(TEST).exec.out
-	@ $(ROOT)/../../../../support/kill_orphan_procs.sh  $(TEST).x
+	@ ../../../../support/kill_orphan_procs.sh  $(TEST).x
 
 clean:
 	rm -rf *.x *.out *.mod *.compile *.o

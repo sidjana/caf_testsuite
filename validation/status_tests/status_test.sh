@@ -8,9 +8,9 @@ SOURCE=$2
 LOGFILE=$3
 COMPILER=$4
 
-config_file="../config/CONFIG-validation"
+config_file="../../config/CONFIG-validation"
 source $config_file
-config_file="../config/CONFIG-compiler.${COMPILER}"
+config_file="../../config/CONFIG-compiler.${COMPILER}"
 source $config_file
 
 exec_out="0"

@@ -58,11 +58,13 @@ clean:
 	- rm -f MPI_dummy/test MPI_dummy/libmpi.a
 	- rm -f sys/setparams sys/makesuite sys/setparams.h
 	- rm -f btio.*.out*
+	- rm -f */*.mod
+	- rm -f bin/sp.* bin/lu.* bin/mg.* bin/ft.* bin/bt.* bin/is.* 
+	- rm -f bin/ep.* bin/cg.* bin/dt.*
 
 veryclean: clean
 	- rm -f config/make.def config/suite.def 
-	- rm -f bin/sp.* bin/lu.* bin/mg.* bin/ft.* bin/bt.* bin/is.* 
-	- rm -f bin/ep.* bin/cg.* bin/dt.*
+	- rm -rf logs
 
 header:
 	@ sys/print_header

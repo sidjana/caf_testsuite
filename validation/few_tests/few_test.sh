@@ -13,7 +13,7 @@ print_file_descriptor()
 LOGFILE=$1
 COMPILER=$2
 
-config_file="../config/CONFIG-validation"
+config_file="../../config/CONFIG-validation"
 source $config_file
 CURRENT=./
 MAKE_CMD="make -s "

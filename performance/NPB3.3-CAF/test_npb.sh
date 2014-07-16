@@ -5,10 +5,10 @@ CLASSES="S W A B C"
 NPROCS_LST1="1 2 4 8 16"
 NPROCS_LST2="1 4 9 16"
 
-if [ -f ../support/CONFIG ]; then
-  source ../support/CONFIG
+if [ -f ../../config/CONFIG ]; then
+  source ../../config/CONFIG
 else
-  echo "CONFIG file missing. Please ensure that CONFIG file is present under $ROOT/../support"
+  echo "CONFIG file missing. Please ensure that CONFIG file is present under $ROOT/../../config"
 fi
 
 
@@ -37,7 +37,7 @@ else
   echo "USAGE: test_npb.sh [mode] [compiler] where "
   echo "           mode     = compile|execute|complete"
   echo "           compiler = uhcaf|ifort|g95|crayftn"
-  echo -e "Please ensure:\n The test_suite specific parameters are set in ${BENCH_PATH}/../support/CONFIG \n The compiler specific parameters in ${BENCH_PATH}/../support/CONFIG-compiler.<compiler> \n For NPB tests, also ensure that config/make.def.${compiler} is present"
+  echo -e "Please ensure:\n The test_suite specific parameters are set in ${BENCH_PATH}/../../config/CONFIG \n The compiler specific parameters in ${BENCH_PATH}/../../config/CONFIG-compiler.<compiler> \n For NPB tests, also ensure that $PWD/config/make.def.${compiler} is present"
   exit 1
 fi
 
@@ -72,7 +72,7 @@ do
 			VERIFICATION="N/A"
 			TIME="N/A"
 
-			source ${BENCH_PATH}/../support/CONFIG-compiler.$compiler
+			source ${BENCH_PATH}/../../config/CONFIG-compiler.$compiler
 			cp ./config/make.def.$compiler ./config/make.def
   		     	opfile=$BM.$CLASS.$NP
 			printf '%8s %8s %8s ' "$BM" "$CLASS" "$NP"  | tee -a $LOG_DIR/$logfile

@@ -1,9 +1,9 @@
 #!/bin/bash
 
-if [ -f ../support/CONFIG ]; then
-  source ../support/CONFIG
+if [ -f ../../config/CONFIG ]; then
+  source ../../config/CONFIG
 else
-  echo "CONFIG file missing. Please ensure that CONFIG file is present under $ROOT/../support"
+  echo "CONFIG file missing. Please ensure that CONFIG file is present under ${ROOT}/../../config/"
 fi
 
 if [ "$1" == "cleanall" ]; then
@@ -30,7 +30,7 @@ if [ $# == 3 ]; then
     echo "           mode     = compile|execute|complete"
     echo "           compiler = uhcaf|ifort|g95"
     echo "           file = <file-name>|ALL"
-    echo -e "Please ensure:\n The test_suite specific parameters are set in ${BENCH_PATH}/../support/CONFIG \n The compiler specific parameters in ${BENCH_PATH}/../support/CONFIG-compiler.<compiler> \n"
+    echo -e "Please ensure:\n The test_suite specific parameters are set in ${BENCH_PATH}/../../config/CONFIG \n The compiler specific parameters in ${BENCH_PATH}/../../config/CONFIG-compiler.<compiler> \n"
     echo "The results of all the microbenchmarks are stored in a plottable format in $EXEC_OUT_DIR"
     exit 1
   fi
@@ -50,13 +50,13 @@ else
     echo "           mode     = compile|execute|complete"
     echo "           compiler = uhcaf|ifort|g95"
     echo "           file = <file-name>|ALL"
-    echo -e "Please ensure:\n The test_suite specific parameters are set in ${BENCH_PATH}/../support/CONFIG \n The compiler specific parameters in ${BENCH_PATH}/../support/CONFIG-compiler.<compiler> \n"
+    echo -e "Please ensure:\n The test_suite specific parameters are set in ${BENCH_PATH}/../../config/CONFIG \n The compiler specific parameters in ${BENCH_PATH}/../../config/CONFIG-compiler.<compiler> \n"
     echo "The results of all the microbenchmarks are stored in a plottable format in $EXEC_OUT_DIR"
     exit 1
 fi
 
-if [ ! -f ../../support/CONFIG-compiler.${compiler} ]; then
-  echo "../../support/CONFIG-compiler.${compiler} file missing. Please ensure that CONFIG file is present under $ROOT/../support"
+if [ ! -f ${BENCH_PATH}/../../config/CONFIG-compiler.${compiler} ]; then
+  echo "../../config/CONFIG-compiler.${compiler} file missing. Please ensure that the compiler specific file is present under ${ROOT}/../../config/"
   exit 1
 fi
 
@@ -70,7 +70,7 @@ if [ "$COMPILE_TESTS" -eq "1" -o "$BOTH" -eq "1" ]; then
  for file in $FILE_LIST ; do
        NP=2
        NPROCS=$NP
-       source ${BENCH_PATH}/../support/CONFIG-compiler.${compiler}
+       source ${BENCH_PATH}/../../config/CONFIG-compiler.${compiler}
        type=`echo $file | awk -F"/" '{print $NF}'`
        opfile=$type.out
        logfile=$DATE.log
@@ -89,7 +89,7 @@ if [ "$EXECUTE_TESTS" -eq "1" -o "$BOTH" -eq "1" ]; then           #execution en
  for file in $FILE_LIST ; do
        NP=2
        NPROCS=$NP
-       source ${BENCH_PATH}/../support/CONFIG-compiler.${compiler}
+       source ${BENCH_PATH}/../../config/CONFIG-compiler.${compiler}
        type=`echo $file | awk -F"/" '{print $NF}'`
        opfile=$type.out
        logfile=$DATE.log

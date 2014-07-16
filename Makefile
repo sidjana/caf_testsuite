@@ -2,8 +2,7 @@ SHELL := /bin/bash
 PERFORMANCE_PATH=./performance
 VALID_PATH=./validation
 
-TEMP=$(shell cd $(VALID_PATH)/config; ./config2makedef.sh)
-TEMP=$(shell cd $(PERFORMANCE_PATH)/support; ./config2makedef.sh)
+TEMP=$(shell cd config; ./config2makedef.sh)
 
 .PHONY: help performance validation
 
@@ -26,6 +25,7 @@ validation:
 
 
 clean cleanall: performance-clean validation-clean
+	@rm -rf config/make-compiler.* config/make.def config/make-validation.def
 
 
 performance-clean:

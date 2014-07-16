@@ -1,9 +1,9 @@
 SHELL := /bin/bash
 
 COMPILER ?= uhcaf
-TEMP_1:=$(shell cd ../config; ./config2makedef.sh; cd -)  # generate make.def from CONFIG
-include ../config/make-validation.def #auto-generated
-include ../config/make-compiler.$(COMPILER).def #auto-generated
+TEMP_1:=$(shell cd ../../config; ./config2makedef.sh; cd -)  # generate make.def from CONFIG
+include ../../config/make-validation.def #auto-generated
+include ../../config/make-compiler.$(COMPILER).def #auto-generated
 
 DATE:=$(shell echo "`date +"%m-%d-%y-%T"`")
 
