@@ -7,8 +7,7 @@ TEMP_1:=$(shell cd ../config; ./config2makedef.sh; cd -)  # generate make.def fr
 include ../config/make-compiler.$(COMPILER).def  # auto-generated
 
 help :
-	@echo -e "If test suite is run from within validation directory, then USAGE: $(MAKE) OPTIONS \n OPTIONS include:"
-	@printf '%-30s\n'      " |  (Note: <suite> = fewtests | feature | crosschecked_feature | status )"
+	@echo -e "(If test suite is run from within validation directory, then run: $(MAKE) <OPTIONS> [COMPILER=uhcaf(default)|ifort|g95|crayftn])\n" "OPTIONS include:"
 	@printf '%-30s\n'      " |  "
 	@printf '%-30s%-90s\n' " |_ all:" "all validation tests"
 	@printf '%-30s%-90s\n' " |_ fewtests:" "tests only those listed in the file "test_file" under ./few directory"
@@ -16,8 +15,9 @@ help :
 	@printf '%-30s%-90s\n' " |_ crosschecked_feature:" "performs cross-testing to test support for non-determinism handling constructs"
 	@printf '%-30s%-90s\n' " |_ status:" "tests for verifying handling of status returned by certain statements"
 	@printf '%-30s%-90s\n' " |_ clean<suite>:" "Cleans executables"
+	@printf '%-30s\n'      " |  (Note: <suite> = fewtests | feature | crosschecked_feature | status )"
 	@printf '%-30s%-90s\n' " |_ cleanall:" "Cleans everything - results, tests-history, compiler-logs, runtime-logs"
-	@printf '\n%-20s\n\n' "Before running the tests, ensure that the CONFIG file with the required parameters are set in validation/config directory."
+	@echo -e "\nBefore running any <suite>, please ensure that:\n The 'user-defined' parameters are set in config/CONFIG-validation \n The compiler specific parameters in config/CONFIG-compiler.<compiler> \n"
 
 
 all:  feature crosschecked_feature status

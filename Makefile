@@ -9,7 +9,7 @@ TEMP=$(shell cd config; ./config2makedef.sh)
 
 all help default:
 	@printf '\n\n%10s\n\n' "CAF Validation and Performance Test Suites"
-	@printf '%s\n%s\n\n' "If the tests are executed from this root directory of the test suite, then" "USAGE: $(MAKE) [performance | validation | clean] PARAMS=<OPTIONS>"
+	@printf '%s\n\n%s\n\n' "If the tests are executed from this root directory of the test suite, then" "USAGE: $(MAKE) [performance | validation | clean] PARAMS=<OPTIONS> [COMPILER=uhcaf(default)|ifort|g95|crayftn]"
 	@printf '%s\n\n' "---------OPTIONS for VALIDATION TEST SUITE-------------"
 	@cd $(VALID_PATH); $(MAKE) -s help
 	@printf '%s\n' "---------OPTIONS for PERFORMANCE TEST SUITE-------------"
