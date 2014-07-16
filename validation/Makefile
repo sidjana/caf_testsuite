@@ -21,69 +21,34 @@ help :
 
 all:  feature crosschecked_feature status
 
-
 feature:
 	@cd feature_tests; $(MAKE) -s  all;
-
-
-feature-header:
-	@printf '\n%s\n%s\n' "-------------------- CAF FEATURE TESTS ----------------------"  \
-	   				"Evaluating $(COMPILER)"
-	@printf '%-20s\t%-70s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"
-
 
 crosschecked_feature:
 	@cd crosschecked_feature_tests; $(MAKE) -s all;
 
-
-crosschecked_feature-header:
-		@printf '\n%s\n%s\n' "----------- CAF CROSS-CHECKED FEATURE TESTS --------------"  \
-                    "Evaluating $(COMPILER)"
-	   	@ printf '%-18s\t%-60s\t%s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  "CROSS CHECK"
-
-
-
 nonconformance:
 	@cd nonconformance_tests; $(MAKE) -s all
-
-
-nonconformance-header:
-		@printf '\n%s\n%s\n' "-------------------- CAF NONCONFORMANCE TESTS ----------------------"  \
-	   				"Evaluating $(COMPILER)"
-	   @printf '%-20s\t%-80s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"
-
 
 status:
 	@cd status_tests; $(MAKE) -s all
 
-
-status-header:
-		@printf '\n%s\n%s\n' "----------------------- CAF STATUS TESTS --------------------------"  \
-	   				"Evaluating $(COMPILER)"
-	   @printf '%-20s\t%-70s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"
-
-
-
 fewtests:
 	@cd few_tests; $(MAKE) -s  all
-
-
 
 clean:
 	@ printf '%s\n' " $(MAKE) cleanall|clean_output|clean_exec|clean_history"
 
-
-
-cleanfewtests:
+clean_fewtests:
 	@cd few_tests; $(MAKE) -s clean_exec;
 
-cleanfeature:
+clean_feature:
 	@cd feature_tests; $(MAKE) -s clean_exec;
 
-cleancrosschecked_feature:
+clean_crosschecked_feature:
 	@cd crosschecked_feature_tests; $(MAKE) -s clean_exec;
 
-cleanstatus:
+clean_status:
 	@cd status_tests; $(MAKE) -s clean_exec;
 
 cleanall clean_output clean_exec clean_history:

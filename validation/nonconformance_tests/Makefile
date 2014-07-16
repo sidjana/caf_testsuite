@@ -28,7 +28,9 @@ all:   clean_output clean_exec header $(EXES) tail
 
 
 header:
-	@cd ../ ; $(MAKE) -s  non-conformance-header | tee -a $(LOGFILE)
+		@printf '\n%s\n%s\n' "-------------------- CAF NONCONFORMANCE TESTS ----------------------"  \
+	   				"Evaluating $(COMPILER)"
+	   @printf '%-20s\t%-80s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION" | tee -a $(LOGFILE)
 
 
 tail:

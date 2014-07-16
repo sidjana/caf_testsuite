@@ -30,7 +30,9 @@ $(EXES): | $(BIN_PATH)
 
 
 header:
-	   @cd ../ ; $(MAKE) -s  status-header | tee -a $(LOGFILE)
+	   @printf '\n%s\n%s\n' "----------------------- CAF STATUS TESTS --------------------------"  \
+			"Evaluating $(COMPILER)"
+	   @printf '%-20s\t%-70s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION" | tee -a $(LOGFILE)
 	   $(eval total_cnt=0)
 
 

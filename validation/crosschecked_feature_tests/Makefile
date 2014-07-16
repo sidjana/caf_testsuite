@@ -27,7 +27,9 @@ all:  clean_output clean_exec header testmodule.o  $(EXES)
 
 
 header:
-	   @cd ../ ; $(MAKE) -s  crosschecked_feature-header | tee -a $(LOGFILE)
+	   @printf '\n%s\n%s\n' "----------- CAF CROSS-CHECKED FEATURE TESTS --------------"  \
+                                 "Evaluating $(COMPILER)"
+	   @ printf '%-18s\t%-60s\t%s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"  "CROSS CHECK" | tee -a $(LOGFILE)
 
 
 #$(BIN_PATH)/%.x: %.f90

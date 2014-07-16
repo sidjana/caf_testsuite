@@ -25,7 +25,9 @@ all:   clean_output clean_exec header $(EXES) tail
 
 
 header:
-	 @cd .. ; $(MAKE) -s  feature-header | tee -a $(LOGFILE)
+	 @printf '\n%s\n%s\n' "-------------------- CAF FEATURE TESTS ----------------------"  \
+		 "Evaluating $(COMPILER)"
+	 @printf '%-20s\t%-70s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION" | tee -a $(LOGFILE)
 
 
 tail:
