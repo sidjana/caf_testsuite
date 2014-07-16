@@ -1,15 +1,19 @@
 #!/bin/bash
 
-BENCHMARKS="ep cg mg lu ft sp bt"
-CLASSES="S W A B C"
-NPROCS_LST1="1 2 4 8 16"
-NPROCS_LST2="1 4 9 16"
-
-if [ -f ../../config/CONFIG ]; then
-  source ../../config/CONFIG
+if [ -f config/CONFIG-npb ]; then
+  source config/CONFIG-npb
 else
-  echo "CONFIG file missing. Please ensure that CONFIG file is present under $ROOT/../../config"
+  echo "CONFIG-npb file missing. Please ensure that CONFIG file is present under config/CONFIG-npb"
 fi
+
+COMPILE_TESTS="0"
+EXECUTE_TESTS="0"
+BOTH="0"
+PASSED_COUNT=0
+FAILED_COUNT=0
+COMPILE_STATUS="UNKNOWN"
+EXEC_STATUS="UNKNOWN"
+EXEC_OUT="0"
 
 
 if [ "$1" == "cleanall" ]; then
@@ -37,7 +41,9 @@ else
   echo "USAGE: test_npb.sh [mode] [compiler] where "
   echo "           mode     = compile|execute|complete"
   echo "           compiler = uhcaf|ifort|g95|crayftn"
-  echo -e "Please ensure:\n The test_suite specific parameters are set in ${BENCH_PATH}/../../config/CONFIG \n The compiler specific parameters in ${BENCH_PATH}/../../config/CONFIG-compiler.<compiler> \n For NPB tests, also ensure that $PWD/config/make.def.${compiler} is present"
+  echo "Please ensure: "
+  echo "The test_suite specific parameters are set in ./config/CONFIG-npb. The "
+  echo "compiler specific parameters are set in ./config/make.def.\$compiler."
   exit 1
 fi
 
@@ -72,9 +78,9 @@ do
 			VERIFICATION="N/A"
 			TIME="N/A"
 
-			source ${BENCH_PATH}/../../config/CONFIG-compiler.$compiler
+			#source ${BENCH_PATH}/../../config/CONFIG-compiler.$compiler
 			cp ./config/make.def.$compiler ./config/make.def
-  		     	opfile=$BM.$CLASS.$NP
+  		    opfile=$BM.$CLASS.$NP
 			printf '%8s %8s %8s ' "$BM" "$CLASS" "$NP"  | tee -a $LOG_DIR/$logfile
   		     	if [ "$COMPILE_TESTS"=="1" -o "$BOTH"=="1" ]; then
 
@@ -91,19 +97,19 @@ do
 			      VERIFICATION="N/A"
 			      TIME="--"
   		     	      if [ -f  $BIN_DIR/$opfile ]; then  #compilation passed
-				 
-				 # While using the Intel compiler, the number of images 
+
+				 # While using the Intel compiler, the number of images
 				 # to be launched for an executable is determined by:
 				 # (a) passing -coarray-num-images=<img-cnt> to ifort
 				 # (b) setting FOR_COARRAY_NUM_IMAGES=<img-cnt> in the env. [overrides flag above]
-				 # The following construct dynamically sets the number of images to override 
+				 # The following construct dynamically sets the number of images to override
 				 # any settings at CONFIG-ifort
 				 if [ "$compiler" == "ifort" ]; then
 					export FOR_COARRAY_NUM_IMAGES=$NP
 				 fi
 
-  		     	         EXEC_OUT=` perl $ROOT/../../support/timedexec.pl $TIMEOUT "$LAUNCHER $BIN_DIR/$opfile $EXEC_OPTIONS " &> $EXEC_OUT_DIR/$opfile.exec && echo 1||echo -1`
-				         $ROOT/../../support/kill_orphan_procs.sh $opfile
+  		     	         EXEC_OUT=` perl ./../../support/timedexec.pl $TIMEOUT "$LAUNCHER $BIN_DIR/$opfile $EXEC_OPTIONS " &> $EXEC_OUT_DIR/$opfile.exec && echo 1||echo -1`
+				         ./../../support/kill_orphan_procs.sh $opfile
 
   		     	         if [ "$EXEC_OUT" == "-1" ]; then                         #runtime error
   		     	             EXEC_STATUS="RUNTIME ERROR"
@@ -123,7 +129,7 @@ do
 	done
 done
 
-echo "______________________________EXECUTION STATISTICS (not compilation)__________________________" | tee -a $LOG_DIR/$logfile
+echo "============================= EXECUTION STATISTICS (not compilation) =========================" | tee -a $LOG_DIR/$logfile
 echo "TOTAL PASSED = $PASSED_COUNT TOTAL FAILED = $FAILED_COUNT"  | tee -a $LOG_DIR/$logfile
 echo "Results of this performance run can be found in: $LOG_DIR/$logfile"
 
