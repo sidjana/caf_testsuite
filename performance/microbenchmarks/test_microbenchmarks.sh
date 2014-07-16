@@ -121,7 +121,7 @@ if [ "$EXECUTE_TESTS" -eq "1" -o "$BOTH" -eq "1" ]; then           #execution en
        printf 'Test: %s\tNumber of Images: %s\tExecution Status: %s\n' "$type" "$NP" "$EXEC_STATUS" | tee -a $LOG_DIR/$logfile
        cat $EXEC_OUT_DIR/$opfile.exec  2>/dev/null
  done
-echo "______________________________EXECUTION STATISTICS__________________________" | tee -a $LOG_DIR/$logfile
+echo "============================= EXECUTION STATISTICS =========================" | tee -a $LOG_DIR/$logfile
 echo "TOTAL PASSED = $PASSED_COUNT TOTAL FAILED = $FAILED_COUNT"  | tee -a $LOG_DIR/$logfile
 echo "Results of this performance run can be found in: $LOG_DIR/$logfile"
 echo "The results of all the microbenchmarks are stored in plottable format in $EXEC_OUT_DIR"
