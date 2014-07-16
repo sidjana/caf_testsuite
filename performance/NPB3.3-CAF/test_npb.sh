@@ -82,7 +82,7 @@ do
 			cp ./config/make.def.$compiler ./config/make.def
   		    opfile=$BM.$CLASS.$NP
 			printf '%8s %8s %8s ' "$BM" "$CLASS" "$NP"  | tee -a $LOG_DIR/$logfile
-  		     	if [ "$COMPILE_TESTS"=="1" -o "$BOTH"=="1" ]; then
+  		     	if [ "$COMPILE_TESTS" -eq "1" -o "$BOTH" -eq "1" ]; then
 
 			 	make clean &>/dev/null
   		     	 	COMPILE_OUT=`make $BM NPROCS=$NP CLASS=$CLASS COMPILER=$compiler >>$COMP_OUT_DIR/$opfile.compile 2>&1 && echo 1 || echo -1`
