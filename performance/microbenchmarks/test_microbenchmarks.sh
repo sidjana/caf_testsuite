@@ -11,7 +11,7 @@ if [ "$1" == "cleanall" ]; then
     rm -rf $TESTS_DIR/*.mod
     exit 0
 fi
-cd $TESTS_DIR ; 
+cd $TESTS_DIR ;
 
 if [ $# == 3 ]; then
   if [ "$1" == "compile" ]; then
@@ -74,6 +74,7 @@ if [ "$COMPILE_TESTS" -eq "1" -o "$BOTH" -eq "1" ]; then
        type=`echo $file | awk -F"/" '{print $NF}'`
        opfile=$type.out
        logfile=$DATE.log
+        echo "$COMPILE_CMD  $type $BIN_DIR/rtc.o -o $BIN_DIR/$opfile >>$COMP_OUT_DIR/$opfile.compile"
         COMPILE_OUT=`$COMPILE_CMD  $type $BIN_DIR/rtc.o -o $BIN_DIR/$opfile >>$COMP_OUT_DIR/$opfile.compile 2>&1 && echo 1 || echo -1`
         if [ "$COMPILE_OUT" -eq "1" ]; then
           COMPILE_STATUS="PASS"
