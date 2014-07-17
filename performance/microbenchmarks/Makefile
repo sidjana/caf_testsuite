@@ -18,7 +18,10 @@ execute: ./test_microbenchmarks.sh
 complete all: ./test_microbenchmarks.sh
 	@./test_microbenchmarks.sh  complete $(COMPILER) $(TYPE)
 
+.PHONY: clean cleanall
 
-clean:  ./test_microbenchmarks.sh
+cleanall:  ./test_microbenchmarks.sh
 	@./test_microbenchmarks.sh  cleanall
 
+clean:  ./test_microbenchmarks.sh
+	@./test_microbenchmarks.sh  clean

@@ -62,16 +62,16 @@ complete_npb:
 .PHONY: clean clean_kernels clean_microbenchmarks clean_npb
 
 
-cleanperformance cleanall: cleankernels cleanmicrobenchmarks cleannpb
+cleanperformance: cleankernels cleanmicrobenchmarks cleannpb
 	@rm -rf  config/make.def*
 
 cleankernels:
 	$(MAKE) -C $(KERNELS_PATH) clean
 
 cleanmicrobenchmarks:
-	$(MAKE) -C $(MICROBENCH_PATH) clean
+	$(MAKE) -C $(MICROBENCH_PATH) cleanall
 
 cleannpb:
 	$(MAKE) -C $(NPB_PATH) clean
 
-clean: cleanall
+clean: cleanperformance

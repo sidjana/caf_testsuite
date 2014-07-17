@@ -6,9 +6,15 @@ else
   echo "CONFIG file missing. Please ensure that CONFIG file is present under ${ROOT}/../../config/"
 fi
 
+#specify NITER parameter for microbenchmarks
+FFLAGS_BENCH_DEFS="-DNITER=${NITER}"
+
 if [ "$1" == "cleanall" ]; then
-    rm -rf $LOG_DIR $BIN_DIR
-    rm -rf $TESTS_DIR/*.mod
+    rm -rf $LOG_DIR
+    rm -rf $TESTS_DIR/*.mod $BIN_DIR
+    exit 0
+elif [ "$1" == "clean" ]; then
+    rm -rf $TESTS_DIR/*.mod $BIN_DIR
     exit 0
 fi
 cd $TESTS_DIR ;
@@ -72,7 +78,7 @@ if [ "$COMPILE_TESTS" -eq "1" -o "$BOTH" -eq "1" ]; then
        NPROCS=$NP
        source ${BENCH_PATH}/../../config/CONFIG-compiler.${compiler}
        type=`echo $file | awk -F"/" '{print $NF}'`
-       opfile=$type.out
+       opfile=$type.x
        logfile=$DATE.log
         echo "$COMPILE_CMD  $type $BIN_DIR/rtc.o -o $BIN_DIR/$opfile >>$COMP_OUT_DIR/$opfile.compile"
         COMPILE_OUT=`$COMPILE_CMD  $type $BIN_DIR/rtc.o -o $BIN_DIR/$opfile >>$COMP_OUT_DIR/$opfile.compile 2>&1 && echo 1 || echo -1`
@@ -91,7 +97,7 @@ if [ "$EXECUTE_TESTS" -eq "1" -o "$BOTH" -eq "1" ]; then           #execution en
        NPROCS=$NP
        source ${BENCH_PATH}/../../config/CONFIG-compiler.${compiler}
        type=`echo $file | awk -F"/" '{print $NF}'`
-       opfile=$type.out
+       opfile=$type.x
        logfile=$DATE.log
 
        if [ -f  $BIN_DIR/$opfile ]; then  #compilation passed
