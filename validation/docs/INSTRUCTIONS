@@ -50,15 +50,15 @@ I.a Configuring
        Parameters           |               Description
 ----------------------------|--------------------------------------------------
 NPROCS                      |  Number of images to launch
--------------------------------------------------------------------------------
+                            |
 NITER                       |  Number of times the test is repeated
--------------------------------------------------------------------------------
+                            |
 SLEEP                       |  This is used to intentionally slow down certain
                             |  images to introduce different progress rates
--------------------------------------------------------------------------------
+                            |
 TIMEOUT                     |  This parameter is used to assign a maximum time-
                             |  to an image to complete execution.
--------------------------------------------------------------------------------
+                            |
 FFLAGS_VALIDATION_DEFS      |  Preprocessor definitions to pass in to the Fortran
                             |  compiler
 -------------------------------------------------------------------------------
@@ -70,14 +70,14 @@ FFLAGS_VALIDATION_DEFS      |  Preprocessor definitions to pass in to the Fortra
        Parameters           |               Description
 ----------------------------|--------------------------------------------------
 COMPILER                    | Name of CAF Implementation being tested
--------------------------------------------------------------------------------
+                            |
 FC                          | Command to invoke the compiler
--------------------------------------------------------------------------------
+                            |
 FFLAGS                      | Flags to use for all Fortran compilations
--------------------------------------------------------------------------------
+                            |
 LAUNCHER                    | Name of the launcher program, with launcher,
                             | options, if applicable.
--------------------------------------------------------------------------------
+                            |
 EXEC_OPTIONS                | Flags that should be passed after the executable name
                             | while launching multiple images, if applicable
 -------------------------------------------------------------------------------
