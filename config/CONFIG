@@ -26,7 +26,6 @@ EXEC_OUT_DIR=${OUTPUT_DIR}/latest_execute
 COMP_OUT_DIR=${OUTPUT_DIR}/latest_compile
 HISTORY_OUT_DIR=${OUTPUT_DIR}/history
 NITER=100
-NHASH=40000
 
 # for microbenchmarks
 # NOTE: the tests work with allocated memory heap > 1MB

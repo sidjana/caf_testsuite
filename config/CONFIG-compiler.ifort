@@ -5,7 +5,6 @@
 COMPILER="ifort"
 FC="ifort"
 FFLAGS="-coarray -coarray-num-images=${NPROCS} -fpp "
-FFLAGS_BENCH_DEFS="-DNPROCS=${NPROCS}  -DNITER=${NITER}"
 LAUNCHER=""
 EXEC_OPTIONS=""
 FFLAGS_CROSS=" $FFLAGS "

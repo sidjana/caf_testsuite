@@ -5,7 +5,6 @@
 COMPILER="g95"
 FC="g95"
 FFLAGS="-cpp -fno-second-underscore "
-FFLAGS_BENCH_DEFS="-DNPROCS=${NPROCS} -DNITER=${NITER}"
 LAUNCHER=""
 EXEC_OPTIONS=" --g95 images=${NPROCS}"
 FFLAGS_CROSS=" $FFLAGS "

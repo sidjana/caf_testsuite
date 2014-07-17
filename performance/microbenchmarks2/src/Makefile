@@ -15,7 +15,7 @@ ALL_TESTS=$(LATENCY_TESTS) $(BW_TESTS) $(STRIDED_BW_TESTS) $(REDUCE_TESTS)
 #.PHONY:all_tests latency_tests bw_tests strided_bw_tests reduce_tests
 
 run_all_tests: all_tests
-	$(EXEC_CMD) $(BINDIR)/$^
+	$(LAUNCHER) $(BINDIR)/$^ $(EXEC_OPTIONS)
 
 all_tests: all_tests.o wtime.o
 	$(COMPILE_CMD) $(LDFLAGS) -o $(BINDIR)/$@ $^
@@ -24,7 +24,7 @@ all_tests.o: caf_tests.F90
 	$(COMPILE_CMD) -c $(FFLAGS) $(ALL_TESTS) $< -o $@
 
 run_latency_tests: latency_tests
-	$(EXEC_CMD) $(BINDIR)/$^
+	$(LAUNCHER) $(BINDIR)/$^ $(EXEC_OPTIONS)
 
 latency_tests: latency_tests.o wtime.o
 	$(COMPILE_CMD) $(LDFLAGS) -o $(BINDIR)/$@ $^
@@ -33,7 +33,7 @@ latency_tests.o: caf_tests.F90
 	$(COMPILE_CMD) -c $(FFLAGS) $(LATENCY_TESTS) $< -o $@
 
 run_bw_tests: bw_tests
-	$(EXEC_CMD) $(BINDIR)/$^
+	$(LAUNCHER) $(BINDIR)/$^ $(EXEC_OPTIONS)
 
 bw_tests: bw_tests.o wtime.o
 	$(COMPILE_CMD) $(LDFLAGS) -o $(BINDIR)/$@ $^
@@ -42,7 +42,7 @@ bw_tests.o: caf_tests.F90
 	$(COMPILE_CMD) -c $(FFLAGS) $(BW_TESTS) $< -o $@
 
 run_strided_bw_tests: strided_bw_tests
-	$(EXEC_CMD) $(BINDIR)/$^
+	$(LAUNCHER) $(BINDIR)/$^ $(EXEC_OPTIONS)
 
 strided_bw_tests: strided_bw_tests.o wtime.o
 	$(COMPILE_CMD) $(LDFLAGS) -o $(BINDIR)/$@ $^
@@ -51,7 +51,7 @@ strided_bw_tests.o: caf_tests.F90
 	$(COMPILE_CMD) -c $(FFLAGS) $(STRIDED_BW_TESTS) $< -o $@
 
 run_reduce_tests: reduce_tests
-	$(EXEC_CMD) $(BINDIR)/$^
+	$(LAUNCHER) $(BINDIR)/$^ $(EXEC_OPTIONS)
 
 reduce_tests: reduce_tests.o wtime.o
 	$(COMPILE_CMD) $(LDFLAGS) -o $(BINDIR)/$@ $^
