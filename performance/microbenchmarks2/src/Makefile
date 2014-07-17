@@ -12,7 +12,7 @@ STRIDED_BW_TESTS=-DSTRIDED_BW_TESTS
 REDUCE_TESTS=-DREDUCE_TESTS
 ALL_TESTS=$(LATENCY_TESTS) $(BW_TESTS) $(STRIDED_BW_TESTS) $(REDUCE_TESTS)
 
-#.PHONY:all_tests latency_tests bw_tests strided_bw_tests reduce_tests
+.PHONY:all_tests latency_tests bw_tests strided_bw_tests reduce_tests
 
 run_all_tests: all_tests
 	$(LAUNCHER) $(BINDIR)/$^ $(EXEC_OPTIONS)
@@ -62,4 +62,4 @@ reduce_tests.o: caf_tests.F90
 
 .PHONY:clean
 clean:
-	@rm -rf *.o $(BINDIR)/*_tests *.mod
+	rm -rf *.o $(BINDIR)/*_tests *.mod

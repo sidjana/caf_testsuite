@@ -4,7 +4,7 @@
 #G95 Compiler
 COMPILER="g95"
 FC="g95"
-FFLAGS="-cpp -fno-second-underscore "
+FFLAGS="-cpp -fno-second-underscore -DNO_LOCK_SUPPORT "
 LAUNCHER=""
 EXEC_OPTIONS=" --g95 images=${NPROCS}"
 

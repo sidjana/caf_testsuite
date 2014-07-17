@@ -8,8 +8,6 @@ module caf_microbenchmarks
     use, intrinsic :: iso_fortran_env
     implicit none
 
-!    include 'mpif.h'
-
     integer, parameter :: BARRIER = 1
     integer, parameter :: P2P = 2
 
@@ -28,7 +26,9 @@ module caf_microbenchmarks
 
     integer, parameter :: NUM_STATS = 32
 
+#ifndef NO_LOCK_SUPPORT
     type(lock_type) :: image_lock[*]
+#endif
     integer :: send_buffer(BUFFER_SIZE)[*]
     integer :: recv_buffer(BUFFER_SIZE)[*]
     double precision, allocatable :: stats_buffer(:)[:]
@@ -63,6 +63,7 @@ module caf_microbenchmarks
         end if
     end subroutine
 
+#ifdef LATENCY_TESTS
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     !                       LATENCY TESTS
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -83,10 +84,10 @@ module caf_microbenchmarks
 
         if (ti == 1) then
             if (sync == BARRIER) then
-                write (*,'(//,"SYNC Latency: (",I0," pairs, ",A0,")")') &
+                write (*,'(//,"SYNC Latency: (",I0," pairs, ",A,")")') &
                     num_pairs, "barrier"
             else
-                write (*,'(//, "SYNC Latency: (",I0," pairs, ",A0,")")') &
+                write (*,'(//, "SYNC Latency: (",I0," pairs, ",A,")")') &
                     num_pairs, "p2p"
             end if
         end if
@@ -171,10 +172,10 @@ module caf_microbenchmarks
 
         if (ti == 1) then
             if (sync == BARRIER) then
-                write (*,'(//,"Put-Put Latency: (",I0," pairs, ",A0,")")') &
+                write (*,'(//,"Put-Put Latency: (",I0," pairs, ",A,")")') &
                     num_pairs, "barrier"
             else
-                write (*,'(//, "Put-Put Latency: (",I0," pairs, ",A0,")")') &
+                write (*,'(//, "Put-Put Latency: (",I0," pairs, ",A,")")') &
                     num_pairs, "p2p"
             end if
         end if
@@ -231,10 +232,10 @@ module caf_microbenchmarks
 
         if (ti == 1) then
             if (sync == BARRIER) then
-                write (*,'(//,"Get-Get Latency: (",I0," pairs, ",A0,")")') &
+                write (*,'(//,"Get-Get Latency: (",I0," pairs, ",A,")")') &
                     num_pairs, "barrier"
             else
-                write (*,'(//,"Get-Get Latency: (",I0," pairs, ",A0,")")') &
+                write (*,'(//,"Get-Get Latency: (",I0," pairs, ",A,")")') &
                     num_pairs, "p2p"
             end if
         end if
@@ -273,9 +274,11 @@ module caf_microbenchmarks
         end if
 
     end subroutine run_getget_latency_test
+#endif
 
+#ifdef BW_TESTS
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    !                   1-WAY BANDWIDTH TESTS
+    !                   BANDWIDTH TESTS
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     subroutine run_put_bw_test()
@@ -389,6 +392,7 @@ module caf_microbenchmarks
         end do
     end subroutine run_get_bw_test
 
+#ifndef NO_LOCK_SUPPORT
     subroutine run_rand_put_bw_test()
         implicit none
         double precision :: t1, t2
@@ -515,195 +519,8 @@ module caf_microbenchmarks
           blksize = blksize * 2
         end do
     end subroutine run_rand_get_bw_test
+#endif
 
-    subroutine run_strided_put_bw_test(strided)
-        implicit none
-
-        integer, intent(in) :: strided
-
-        character (len=15) :: strided_label(3)
-        double precision :: t1, t2
-        integer :: ti, ni, nrep
-        integer :: num_stats
-        integer :: num_pairs
-        integer, parameter :: MAX_COUNT = 32*1024
-        integer, parameter :: MAX_BLKSIZE = BUFFER_SIZE
-        integer, parameter :: MAX_STRIDE = MAX_BLKSIZE / MAX_COUNT
-        integer :: stride,extent
-        integer :: i
-
-        ti = this_image()
-        ni = num_images()
-        num_pairs = numi / 2
-
-        if (ti == 1) then
-            strided_label(1) = "Target Strided"
-            strided_label(2) = "Origin Strided"
-            strided_label(3) = "Both Strided"
-
-            write (*,'(//,"1-Way ",A0," Put Bandwith: (",I0," pairs)")') &
-                strided_label(strided), num_pairs
-            write (*,'(A20, A20, A20, A20)') "count", "stride", "nrep", "bandwidth"
-        end if
-
-        num_stats = 1
-        stride = 1
-        do while (stride <= MAX_STRIDE)
-          nrep = BW_NITER
-
-          if (ti < partner) then
-              if (strided == TARGET_STRIDED) then
-                  t1 = MY_WTIME()
-                  do i = 1, nrep
-                    extent = MAX_COUNT*stride
-                    recv_buffer(1:extent:stride)[partner] = send_buffer(1:MAX_COUNT)
-                    if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
-                      nrep = i
-                      exit
-                    end if
-                  end do
-                  t2 = MY_WTIME()
-              else if (strided == ORIGIN_STRIDED) then
-                  t1 = MY_WTIME()
-                  do i = 1, nrep
-                    extent = MAX_COUNT*stride
-                    recv_buffer(1:MAX_COUNT)[partner] = send_buffer(1:extent:stride)
-                    if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
-                      nrep = i
-                      exit
-                    end if
-                  end do
-                  t2 = MY_WTIME()
-              else
-                  t1 = MY_WTIME()
-                  do i = 1, nrep
-                    extent = MAX_COUNT*stride
-                    recv_buffer(1:extent:stride)[partner] = &
-                                 send_buffer(1:extent:stride)
-                    if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
-                      nrep = i
-                      exit
-                    end if
-                  end do
-                  t2 = MY_WTIME()
-              end if
-
-              stats_buffer(num_stats) = &
-                  dble(MAX_COUNT)*ELEM_SIZE*nrep/(1024*1024*(t2-t1))
-          end if
-
-          sync all
-
-          if (ti == 1) then
-              do i = 2, num_pairs
-                  stats_buffer(num_stats) = stats_buffer(num_stats) + &
-                                            stats_buffer(num_stats)[i]
-              end do
-              write (*, '(I20,I20,I20,F17.3, " MB/s")') &
-                     MAX_COUNT, stride, nrep, stats_buffer(num_stats)/num_pairs
-          end if
-
-          num_stats = num_stats + 1
-          stride = stride * 2
-        end do
-    end subroutine run_strided_put_bw_test
-
-    subroutine run_strided_get_bw_test(strided)
-        implicit none
-
-        integer, intent(in) :: strided
-
-        character (len=15) :: strided_label(3)
-        double precision :: t1, t2
-        integer :: ti, ni, nrep
-        integer :: num_stats
-        integer :: num_pairs
-        integer, parameter :: MAX_COUNT = 32*1024
-        integer, parameter :: MAX_BLKSIZE = BUFFER_SIZE
-        integer, parameter :: MAX_STRIDE = MAX_BLKSIZE / MAX_COUNT
-        integer :: stride,extent
-        integer :: i
-
-        ti = this_image()
-        ni = num_images()
-        num_pairs = numi / 2
-
-        if (ti == 1) then
-            strided_label(1) = "Target Strided"
-            strided_label(2) = "Origin Strided"
-            strided_label(3) = "Both Strided"
-
-            write (*,'(//,"1-Way ",A0," Get Bandwith: (",I0," pairs)")') &
-                strided_label(strided), num_pairs
-            write (*,'(A20, A20, A20, A20)') "count", "stride", "nrep", "bandwidth"
-        end if
-
-        num_stats = 1
-        stride = 1
-        do while (stride <= MAX_STRIDE)
-          nrep = BW_NITER
-
-          if (ti < partner) then
-              if (strided == TARGET_STRIDED) then
-                  t1 = MY_WTIME()
-                  do i = 1, nrep
-                    extent = MAX_COUNT*stride
-                    recv_buffer(1:MAX_COUNT) = send_buffer(1:extent:stride)[partner]
-                    if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
-                      nrep = i
-                      exit
-                    end if
-                  end do
-                  t2 = MY_WTIME()
-              else if (strided == ORIGIN_STRIDED) then
-                  t1 = MY_WTIME()
-                  do i = 1, nrep
-                    extent = MAX_COUNT*stride
-                    recv_buffer(1:extent:stride) = send_buffer(1:MAX_COUNT)[partner]
-                    if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
-                      nrep = i
-                      exit
-                    end if
-                  end do
-                  t2 = MY_WTIME()
-              else
-                  t1 = MY_WTIME()
-                  do i = 1, nrep
-                    extent = MAX_COUNT*stride
-                    recv_buffer(1:extent:stride) = &
-                                 send_buffer(1:extent:stride)[partner]
-                    if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
-                      nrep = i
-                      exit
-                    end if
-                  end do
-                  t2 = MY_WTIME()
-              end if
-
-              stats_buffer(num_stats) = &
-                  dble(MAX_COUNT)*ELEM_SIZE*nrep/(1024*1024*(t2-t1))
-          end if
-
-          sync all
-
-          if (ti == 1) then
-              do i = 2, num_pairs
-                  stats_buffer(num_stats) = stats_buffer(num_stats) + &
-                                            stats_buffer(num_stats)[i]
-              end do
-              write (*, '(I20,I20,I20,F17.3, " MB/s")') &
-                     MAX_COUNT, stride, nrep, stats_buffer(num_stats)/num_pairs
-          end if
-
-          num_stats = num_stats + 1
-          stride = stride * 2
-        end do
-    end subroutine run_strided_get_bw_test
-
-
-    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    !                   2-WAY BANDWIDTH TESTS
-    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     subroutine run_put_bw_bidir_test()
         implicit none
@@ -811,6 +628,201 @@ module caf_microbenchmarks
         end do
     end subroutine run_get_bw_bidir_test
 
+#endif
+
+
+
+#ifdef STRIDED_BW_TESTS
+
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !                  STRIDED BANDWIDTH TESTS
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    subroutine run_strided_put_bw_test(strided)
+        implicit none
+
+        integer, intent(in) :: strided
+
+        character (len=15) :: strided_label(3)
+        double precision :: t1, t2
+        integer :: ti, ni, nrep
+        integer :: num_stats
+        integer :: num_pairs
+        integer, parameter :: MAX_COUNT = 32*1024
+        integer, parameter :: MAX_BLKSIZE = BUFFER_SIZE
+        integer, parameter :: MAX_STRIDE = MAX_BLKSIZE / MAX_COUNT
+        integer :: stride,extent
+        integer :: i
+
+        ti = this_image()
+        ni = num_images()
+        num_pairs = numi / 2
+
+        if (ti == 1) then
+            strided_label(1) = "Target Strided"
+            strided_label(2) = "Origin Strided"
+            strided_label(3) = "Both Strided"
+
+            write (*,'(//,"1-Way ",A," Put Bandwith: (",I0," pairs)")') &
+                strided_label(strided), num_pairs
+            write (*,'(A20, A20, A20, A20)') "count", "stride", "nrep", "bandwidth"
+        end if
+
+        num_stats = 1
+        stride = 1
+        do while (stride <= MAX_STRIDE)
+          nrep = BW_NITER
+
+          if (ti < partner) then
+              if (strided == TARGET_STRIDED) then
+                  t1 = MY_WTIME()
+                  do i = 1, nrep
+                    extent = MAX_COUNT*stride
+                    recv_buffer(1:extent:stride)[partner] = send_buffer(1:MAX_COUNT)
+                    if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
+                      nrep = i
+                      exit
+                    end if
+                  end do
+                  t2 = MY_WTIME()
+              else if (strided == ORIGIN_STRIDED) then
+                  t1 = MY_WTIME()
+                  do i = 1, nrep
+                    extent = MAX_COUNT*stride
+                    recv_buffer(1:MAX_COUNT)[partner] = send_buffer(1:extent:stride)
+                    if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
+                      nrep = i
+                      exit
+                    end if
+                  end do
+                  t2 = MY_WTIME()
+              else
+                  t1 = MY_WTIME()
+                  do i = 1, nrep
+                    extent = MAX_COUNT*stride
+                    recv_buffer(1:extent:stride)[partner] = &
+                                 send_buffer(1:extent:stride)
+                    if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
+                      nrep = i
+                      exit
+                    end if
+                  end do
+                  t2 = MY_WTIME()
+              end if
+
+              stats_buffer(num_stats) = &
+                  dble(MAX_COUNT)*ELEM_SIZE*nrep/(1024*1024*(t2-t1))
+          end if
+
+          sync all
+
+          if (ti == 1) then
+              do i = 2, num_pairs
+                  stats_buffer(num_stats) = stats_buffer(num_stats) + &
+                                            stats_buffer(num_stats)[i]
+              end do
+              write (*, '(I20,I20,I20,F17.3, " MB/s")') &
+                     MAX_COUNT, stride, nrep, stats_buffer(num_stats)/num_pairs
+          end if
+
+          num_stats = num_stats + 1
+          stride = stride * 2
+        end do
+    end subroutine run_strided_put_bw_test
+
+    subroutine run_strided_get_bw_test(strided)
+        implicit none
+
+        integer, intent(in) :: strided
+
+        character (len=15) :: strided_label(3)
+        double precision :: t1, t2
+        integer :: ti, ni, nrep
+        integer :: num_stats
+        integer :: num_pairs
+        integer, parameter :: MAX_COUNT = 32*1024
+        integer, parameter :: MAX_BLKSIZE = BUFFER_SIZE
+        integer, parameter :: MAX_STRIDE = MAX_BLKSIZE / MAX_COUNT
+        integer :: stride,extent
+        integer :: i
+
+        ti = this_image()
+        ni = num_images()
+        num_pairs = numi / 2
+
+        if (ti == 1) then
+            strided_label(1) = "Target Strided"
+            strided_label(2) = "Origin Strided"
+            strided_label(3) = "Both Strided"
+
+            write (*,'(//,"1-Way ",A," Get Bandwith: (",I0," pairs)")') &
+                strided_label(strided), num_pairs
+            write (*,'(A20, A20, A20, A20)') "count", "stride", "nrep", "bandwidth"
+        end if
+
+        num_stats = 1
+        stride = 1
+        do while (stride <= MAX_STRIDE)
+          nrep = BW_NITER
+
+          if (ti < partner) then
+              if (strided == TARGET_STRIDED) then
+                  t1 = MY_WTIME()
+                  do i = 1, nrep
+                    extent = MAX_COUNT*stride
+                    recv_buffer(1:MAX_COUNT) = send_buffer(1:extent:stride)[partner]
+                    if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
+                      nrep = i
+                      exit
+                    end if
+                  end do
+                  t2 = MY_WTIME()
+              else if (strided == ORIGIN_STRIDED) then
+                  t1 = MY_WTIME()
+                  do i = 1, nrep
+                    extent = MAX_COUNT*stride
+                    recv_buffer(1:extent:stride) = send_buffer(1:MAX_COUNT)[partner]
+                    if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
+                      nrep = i
+                      exit
+                    end if
+                  end do
+                  t2 = MY_WTIME()
+              else
+                  t1 = MY_WTIME()
+                  do i = 1, nrep
+                    extent = MAX_COUNT*stride
+                    recv_buffer(1:extent:stride) = &
+                                 send_buffer(1:extent:stride)[partner]
+                    if (mod(i,10) == 0 .and. (MY_WTIME()-t1) > TIMEOUT) then
+                      nrep = i
+                      exit
+                    end if
+                  end do
+                  t2 = MY_WTIME()
+              end if
+
+              stats_buffer(num_stats) = &
+                  dble(MAX_COUNT)*ELEM_SIZE*nrep/(1024*1024*(t2-t1))
+          end if
+
+          sync all
+
+          if (ti == 1) then
+              do i = 2, num_pairs
+                  stats_buffer(num_stats) = stats_buffer(num_stats) + &
+                                            stats_buffer(num_stats)[i]
+              end do
+              write (*, '(I20,I20,I20,F17.3, " MB/s")') &
+                     MAX_COUNT, stride, nrep, stats_buffer(num_stats)/num_pairs
+          end if
+
+          num_stats = num_stats + 1
+          stride = stride * 2
+        end do
+    end subroutine run_strided_get_bw_test
+
+
     subroutine run_strided_put_bidir_bw_test(strided)
         implicit none
 
@@ -836,7 +848,7 @@ module caf_microbenchmarks
             strided_label(2) = "Origin Strided"
             strided_label(3) = "Both Strided"
 
-            write (*,'(//,"2-Way ",A0," Put Bandwith: (",I0," pairs)")') &
+            write (*,'(//,"2-Way ",A," Put Bandwith: (",I0," pairs)")') &
                 strided_label(strided), num_pairs
             write (*,'(A20, A20, A20, A20)') "count", "stride", "nrep", "bandwidth"
         end if
@@ -927,7 +939,7 @@ module caf_microbenchmarks
             strided_label(2) = "Origin Strided"
             strided_label(3) = "Both Strided"
 
-            write (*,'(//,"2-Way ",A0, " Get Bandwith: (",I0," pairs)")') &
+            write (*,'(//,"2-Way ",A, " Get Bandwith: (",I0," pairs)")') &
                 strided_label(strided), num_pairs
             write (*,'(A20, A20, A20, A20)') "count", "stride", "nrep", "bandwidth"
         end if
@@ -993,6 +1005,7 @@ module caf_microbenchmarks
         end do
     end subroutine run_strided_get_bidir_bw_test
 
+#ifndef NO_LOCK_SUPPORT
     subroutine run_rand_strided_put_bw_test(strided)
         implicit none
 
@@ -1020,7 +1033,7 @@ module caf_microbenchmarks
             strided_label(2) = "Origin Strided"
             strided_label(3) = "Both Strided"
 
-            write (*,'(//,A0," Random Put Bandwith")') &
+            write (*,'(//,A," Random Put Bandwith")') &
                 strided_label(strided)
             write (*,'(A20, A20, A20, A20)') "count", "stride", "nrep", "bandwidth"
         end if
@@ -1131,7 +1144,7 @@ module caf_microbenchmarks
             strided_label(2) = "Origin Strided"
             strided_label(3) = "Both Strided"
 
-            write (*,'(//,A0, " Random Get Bandwith ")') &
+            write (*,'(//,A, " Random Get Bandwith ")') &
                 strided_label(strided)
             write (*,'(A20, A20, A20, A20)') "count", "stride", "nrep", "bandwidth"
         end if
@@ -1202,7 +1215,11 @@ module caf_microbenchmarks
           stride = stride * 2
         end do
     end subroutine run_rand_strided_get_bw_test
+#endif
 
+#endif
+
+#ifdef REDUCE_TESTS
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     !                   REDUCTION TESTS
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1267,6 +1284,8 @@ module caf_microbenchmarks
         end do
 
     end subroutine run_reduce_test
+#endif
+
 end module caf_microbenchmarks
 
 program main
@@ -1327,8 +1346,10 @@ program main
     call run_get_bw_test()
     call run_put_bw_bidir_test()
     call run_get_bw_bidir_test()
+#ifndef NO_LOCK_SUPPORT
     call run_rand_put_bw_test()
     call run_rand_get_bw_test()
+#endif
 #endif
 
 #ifdef STRIDED_BW_TESTS
@@ -1348,6 +1369,7 @@ program main
     call run_strided_get_bidir_bw_test(ORIGIN_STRIDED)
     call run_strided_get_bidir_bw_test(BOTH_STRIDED)
 
+#ifndef NO_LOCK_SUPPORT
     call run_rand_strided_put_bw_test(TARGET_STRIDED)
     call run_rand_strided_put_bw_test(ORIGIN_STRIDED)
     call run_rand_strided_put_bw_test(BOTH_STRIDED)
@@ -1355,6 +1377,7 @@ program main
     call run_rand_strided_get_bw_test(TARGET_STRIDED)
     call run_rand_strided_get_bw_test(ORIGIN_STRIDED)
     call run_rand_strided_get_bw_test(BOTH_STRIDED)
+#endif
 #endif
 
 #ifdef REDUCE_TESTS
