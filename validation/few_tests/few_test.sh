@@ -57,7 +57,7 @@ do
 
         if [ "$type" == "crosschecked_feature" ]; then
 
-            cd ../; $MAKE_CMD crosschecked_feature-header; cd few_tests;
+            #cd ../; $MAKE_CMD crosschecked_feature-header; cd few_tests;
             print_file_descriptor $file $LOGFILE
             if [ -f ../crosschecked_feature_tests/$file ]; then
                 cp crosschecked_feature_tests/$file .
@@ -69,7 +69,7 @@ do
 
         elif [ "$type" == "feature" ]; then
 
-            cd ../; $MAKE_CMD feature-header; cd few_tests;
+            #cd ../; $MAKE_CMD feature-header; cd few_tests;
             print_file_descriptor $file $LOGFILE
             if [ -f ../feature_tests/$file ]; then
                 cp ../feature_tests/$file .
@@ -93,7 +93,7 @@ do
 
         elif [ "$type" == "non-conformance" ]; then
 
-            cd ../; $MAKE_CMD non-conformance-header
+            #cd ../; $MAKE_CMD non-conformance-header
             print_file_descriptor $file $LOGFILE
             echo "Not supported"
 

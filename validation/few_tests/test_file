@@ -1,5 +1,8 @@
 FEATURE-TESTS
 
+character_test.f90
+item_4.8.a.f90
+
 CROSSCHECKED-FEATURE-TESTS
 
 STATUS-TESTS
