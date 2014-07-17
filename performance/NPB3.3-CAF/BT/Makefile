@@ -23,7 +23,7 @@ include ../sys/make.common
 # explicit in all the lines below (even though dependence is indirect).
 
 # header.h: npbparams.h
-.SUFFIXES: .f .F .o .h .mod .f90
+.SUFFIXES: .f .F .o .h .mod .f90 .F90
 
 ${PROGRAM}: config
 	@if [ x$(VERSION) = xvec ] ; then	\
@@ -69,6 +69,9 @@ bt-epio: ${OBJS} epio.o btio_common.o
 .f90.o:
 	${FCOMPILE} $<
 
+.F90.o:
+	${FCOMPILE} $<
+
 
 bt.o:             bt.f  header.h npbparams.h custom_coreduce.mod
 make_set.o:       make_set.f  header.h npbparams.h
@@ -93,7 +96,7 @@ btio_common.o:    btio_common.f header.h npbparams.h
 fortran_io.o:     fortran_io.f header.h npbparams.h
 epio.o:           epio.f header.h npbparams.h
 custom_coreduce.mod:   coreduce.o
-coreduce.o:     coreduce.f90
+coreduce.o:     coreduce.F90
 header.h:         npbcaf.mod
 npbcaf.mod:	  npbcaf.o
 npbcaf.o:	  npbcaf.f npbparams.h

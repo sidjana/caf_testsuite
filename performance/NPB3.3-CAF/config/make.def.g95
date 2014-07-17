@@ -46,7 +46,7 @@ FMPI_INC =
 #---------------------------------------------------------------------------
 # Global *compile time* flags for Fortran programs
 #---------------------------------------------------------------------------
-FFLAGS	= -O3
+FFLAGS	= -O3 -DIS_CONTIGUOUS_NOTAVAIL
 
 #---------------------------------------------------------------------------
 # Global *link time* flags. Flags for increasing maximum executable 

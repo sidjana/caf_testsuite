@@ -15,8 +15,8 @@ ${PROGRAM}: config ${OBJS}
 cg.o:		cg.f  cafnpb.h npbparams.h
 	${FCOMPILE} cg.f
 
-coreduce.o:		coreduce.f90
-	${FCOMPILE} coreduce.f90
+coreduce.o:		coreduce.F90
+	${FCOMPILE} coreduce.F90
 
 clean:
 	- rm -f *.o *.mod *~

@@ -187,7 +187,11 @@
                     ! reduce to result on given image
                     !------------------------------------------------------
 
+#ifndef IS_CONTIGUOUS_NOTAVAIL
                     if (is_contiguous(result)) then
+#else
+                    if (.false.) then
+#endif
                         result(:) = source(:)
                         if (size(source) > WORK_BUF_SIZE) then
                             call coreduce_i4_to_image(op, result, &
@@ -227,7 +231,11 @@
                     ! reduce to source on given image
                     !------------------------------------------------------
 
+#ifndef IS_CONTIGUOUS_NOTAVAIL
                     if (is_contiguous(source)) then
+#else
+                    if (.false.) then
+#endif
                         if (size(source) > WORK_BUF_SIZE) then
                             call coreduce_i4_to_image(op, source,    &
                                                      result_image,  &
@@ -265,7 +273,11 @@
                     !------------------------------------------------------
 
 
+#ifndef IS_CONTIGUOUS_NOTAVAIL
                     if (is_contiguous(result)) then
+#else
+                    if (.false.) then
+#endif
                         result(:) = source(:)
                         if (size(source) > WORK_BUF_SIZE) then
                             call coreduce_i4_to_all(op, result,    &
@@ -297,7 +309,11 @@
                     ! reduce to source on all images
                     !------------------------------------------------------
 
+#ifndef IS_CONTIGUOUS_NOTAVAIL
                     if (is_contiguous(source)) then
+#else
+                    if (.false.) then
+#endif
                         if (size(source) > WORK_BUF_SIZE) then
                             call coreduce_i4_to_all(op, source,      &
                                                    alt_work_buf,    &
@@ -506,7 +522,11 @@
                     ! reduce to result on given image
                     !------------------------------------------------------
 
+#ifndef IS_CONTIGUOUS_NOTAVAIL
                     if (is_contiguous(result)) then
+#else
+                    if (.false.) then
+#endif
                         result(:) = source(:)
                         if (size(source) > WORK_BUF_SIZE) then
                             call coreduce_i8_to_image(op, result, &
@@ -546,7 +566,11 @@
                     ! reduce to source on given image
                     !------------------------------------------------------
 
+#ifndef IS_CONTIGUOUS_NOTAVAIL
                     if (is_contiguous(source)) then
+#else
+                    if (.false.) then
+#endif
                         if (size(source) > WORK_BUF_SIZE) then
                             call coreduce_i8_to_image(op, source,    &
                                                      result_image,  &
@@ -584,7 +608,11 @@
                     !------------------------------------------------------
 
 
+#ifndef IS_CONTIGUOUS_NOTAVAIL
                     if (is_contiguous(result)) then
+#else
+                    if (.false.) then
+#endif
                         result(:) = source(:)
                         if (size(source) > WORK_BUF_SIZE) then
                             call coreduce_i8_to_all(op, result,    &
@@ -616,7 +644,11 @@
                     ! reduce to source on all images
                     !------------------------------------------------------
 
+#ifndef IS_CONTIGUOUS_NOTAVAIL
                     if (is_contiguous(source)) then
+#else
+                    if (.false.) then
+#endif
                         if (size(source) > WORK_BUF_SIZE) then
                             call coreduce_i8_to_all(op, source,      &
                                                    alt_work_buf,    &
@@ -824,7 +856,11 @@
                     ! reduce to result on given image
                     !------------------------------------------------------
 
+#ifndef IS_CONTIGUOUS_NOTAVAIL
                     if (is_contiguous(result)) then
+#else
+                    if (.false.) then
+#endif
                         result(:) = source(:)
                         if (size(source) > WORK_BUF_SIZE) then
                             call coreduce_r4_to_image(op, result, &
@@ -864,7 +900,11 @@
                     ! reduce to source on given image
                     !------------------------------------------------------
 
+#ifndef IS_CONTIGUOUS_NOTAVAIL
                     if (is_contiguous(source)) then
+#else
+                    if (.false.) then
+#endif
                         if (size(source) > WORK_BUF_SIZE) then
                             call coreduce_r4_to_image(op, source,    &
                                                      result_image,  &
@@ -902,7 +942,11 @@
                     !------------------------------------------------------
 
 
+#ifndef IS_CONTIGUOUS_NOTAVAIL
                     if (is_contiguous(result)) then
+#else
+                    if (.false.) then
+#endif
                         result(:) = source(:)
                         if (size(source) > WORK_BUF_SIZE) then
                             call coreduce_r4_to_all(op, result,    &
@@ -934,7 +978,11 @@
                     ! reduce to source on all images
                     !------------------------------------------------------
 
+#ifndef IS_CONTIGUOUS_NOTAVAIL
                     if (is_contiguous(source)) then
+#else
+                    if (.false.) then
+#endif
                         if (size(source) > WORK_BUF_SIZE) then
                             call coreduce_r4_to_all(op, source,      &
                                                    alt_work_buf,    &
@@ -1142,7 +1190,11 @@
                     ! reduce to result on given image
                     !------------------------------------------------------
 
+#ifndef IS_CONTIGUOUS_NOTAVAIL
                     if (is_contiguous(result)) then
+#else
+                    if (.false.) then
+#endif
                         result(:) = source(:)
                         if (size(source) > WORK_BUF_SIZE) then
                             call coreduce_r8_to_image(op, result, &
@@ -1182,7 +1234,11 @@
                     ! reduce to source on given image
                     !------------------------------------------------------
 
+#ifndef IS_CONTIGUOUS_NOTAVAIL
                     if (is_contiguous(source)) then
+#else
+                    if (.false.) then
+#endif
                         if (size(source) > WORK_BUF_SIZE) then
                             call coreduce_r8_to_image(op, source,    &
                                                      result_image,  &
@@ -1220,7 +1276,11 @@
                     !------------------------------------------------------
 
 
+#ifndef IS_CONTIGUOUS_NOTAVAIL
                     if (is_contiguous(result)) then
+#else
+                    if (.false.) then
+#endif
                         result(:) = source(:)
                         if (size(source) > WORK_BUF_SIZE) then
                             call coreduce_r8_to_all(op, result,    &
@@ -1252,7 +1312,11 @@
                     ! reduce to source on all images
                     !------------------------------------------------------
 
+#ifndef IS_CONTIGUOUS_NOTAVAIL
                     if (is_contiguous(source)) then
+#else
+                    if (.false.) then
+#endif
                         if (size(source) > WORK_BUF_SIZE) then
                             call coreduce_r8_to_all(op, source,      &
                                                    alt_work_buf,    &

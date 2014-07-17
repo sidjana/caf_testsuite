@@ -15,8 +15,8 @@ ${PROGRAM}: config ${OBJS}
 ep.o:		ep.f  cafnpb.h npbparams.h
 	${FCOMPILE} ep.f
 
-coreduce.o:		coreduce.f90
-	${FCOMPILE} coreduce.f90
+coreduce.o:		coreduce.F90
+	${FCOMPILE} coreduce.F90
 
 clean:
 	- rm -f *.o *.mod *~ 

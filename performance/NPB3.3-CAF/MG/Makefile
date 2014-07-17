@@ -18,8 +18,8 @@ mg.o:		mg.f  globals.h cafnpb.h npbparams.h
 coarray_globals.o:		coarray_globals.f90
 	${FCOMPILE} coarray_globals.f90
 
-coreduce.o:		coreduce.f90
-	${FCOMPILE} coreduce.f90
+coreduce.o:		coreduce.F90
+	${FCOMPILE} coreduce.F90
 
 clean:
 	- rm -f *.o *~ *.mod

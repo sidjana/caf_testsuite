@@ -58,7 +58,7 @@ fi
 rm -rf $COMP_OUT_DIR $EXEC_OUT_DIR $BIN_DIR
 mkdir -p $COMP_OUT_DIR $EXEC_OUT_DIR  $HISTORY_OUT_DIR $BIN_DIR $LOG_DIR
 
-printf '%8s %8s %8s %15s %15s %15s %25s \n' "<NAME>" "<CLASS>" "<NPROCS>" "<COMPILATION>" "<EXECUTION>" "<RESULT>" "<TIME(secs)>" | tee -a $LOG_DIR/$logfile
+printf '\n%8s %8s %8s %15s %15s %15s %25s \n' "<NAME>" "<CLASS>" "<NPROCS>" "<COMPILATION>" "<EXECUTION>" "<RESULT>" "<TIME(secs)>" | tee -a $LOG_DIR/$logfile
 
 for BM in $BENCHMARKS
 do
@@ -78,60 +78,71 @@ do
 			VERIFICATION="N/A"
 			TIME="N/A"
 
-			#source ${BENCH_PATH}/../../config/CONFIG-compiler.$compiler
-			cp ./config/make.def.$compiler ./config/make.def
+            # for launcher/execution settings
+            if [ -f ./../../config/CONFIG-compiler.$compiler ]; then
+                source ./../../config/CONFIG-compiler.$compiler
+            else
+                echo "CONFIG-compiler.$compiler is missing. Choose a different compiler"
+            fi
+
+
   		    opfile=$BM.$CLASS.$NP
-			printf '%8s %8s %8s ' "$BM" "$CLASS" "$NP"  | tee -a $LOG_DIR/$logfile
-  		     	if [ "$COMPILE_TESTS" -eq "1" -o "$BOTH" -eq "1" ]; then
+            printf '%8s %8s %8s ' "$BM" "$CLASS" "$NP"  | tee -a $LOG_DIR/$logfile
 
-			 	make clean &>/dev/null
-  		     	 	COMPILE_OUT=`make $BM NPROCS=$NP CLASS=$CLASS COMPILER=$compiler >>$COMP_OUT_DIR/$opfile.compile 2>&1 && echo 1 || echo -1`
-  		     	 	if [ "$COMPILE_OUT" == "1" ]; then
-  		     	 		 COMPILE_STATUS="PASS"
-  		     	 	else
-  		     	 	  	 COMPILE_STATUS="FAIL"
-  		     	 	fi
-  		     	fi
-			printf '%15s ' "$COMPILE_STATUS"  | tee -a $LOG_DIR/$logfile
-  		     	if [ "$EXECUTE_TESTS" -eq "1" -o "$BOTH" -eq "1" ]; then           #execution enabled
-			      VERIFICATION="N/A"
-			      TIME="--"
-  		     	      if [ -f  $BIN_DIR/$opfile ]; then  #compilation passed
+            if [ "$COMPILE_TESTS" -eq "1" -o "$BOTH" -eq "1" ]; then
 
-				 # While using the Intel compiler, the number of images
-				 # to be launched for an executable is determined by:
-				 # (a) passing -coarray-num-images=<img-cnt> to ifort
-				 # (b) setting FOR_COARRAY_NUM_IMAGES=<img-cnt> in the env. [overrides flag above]
-				 # The following construct dynamically sets the number of images to override
-				 # any settings at CONFIG-ifort
-				 if [ "$compiler" == "ifort" ]; then
-					export FOR_COARRAY_NUM_IMAGES=$NP
-				 fi
+                make clean &>/dev/null
+                COMPILE_OUT=`make $BM NPROCS=$NP CLASS=$CLASS COMPILER=$compiler >>$COMP_OUT_DIR/$opfile.compile 2>&1 && echo 1 || echo -1`
+                if [ "$COMPILE_OUT" == "1" ]; then
+                    COMPILE_STATUS="PASS"
+                else
+                    COMPILE_STATUS="FAIL"
+                fi
+            fi
 
-  		     	         EXEC_OUT=` perl ./../../support/timedexec.pl $TIMEOUT "$LAUNCHER $BIN_DIR/$opfile $EXEC_OPTIONS " &> $EXEC_OUT_DIR/$opfile.exec && echo 1||echo -1`
-				         ./../../support/kill_orphan_procs.sh $opfile
+            printf '%15s ' "$COMPILE_STATUS"  | tee -a $LOG_DIR/$logfile
 
-  		     	         if [ "$EXEC_OUT" == "-1" ]; then                         #runtime error
-  		     	             EXEC_STATUS="RUNTIME ERROR"
-				     FAILED_COUNT=$(($FAILED_COUNT+1))
-  		     	         else                                                      #execution completed cleanly
-				     EXEC_STATUS="PASS"
-				     PASSED_COUNT=$(($PASSED_COUNT+1))
-				     VERIFICATION=`grep "Verification"  $EXEC_OUT_DIR/$opfile.exec | grep -oh "\w*SUCCESSFUL"  `
-				     TIME=`grep "seconds"  $EXEC_OUT_DIR/$opfile.exec | sed 's/.*=//g' |sed 's/\s\+//g' `
-  		     	         fi
-  		     	     else
-  		     	         EXEC_STATUS="NO BINARY"                                   #compilation failed
-  		     	     fi
-  		     	fi
-  		     	printf '%15s %18s %15s\n' "${EXEC_STATUS}" "${VERIFICATION}" "${TIME}" | tee -a $LOG_DIR/$logfile
+            if [ "$EXECUTE_TESTS" -eq "1" -o "$BOTH" -eq "1" ]; then           #execution enabled
+                VERIFICATION="N/A"
+                TIME="--"
+                if [ -f  $BIN_DIR/$opfile ]; then  #compilation passed
+
+                    # While using the Intel compiler, the number of images
+                    # to be launched for an executable is determined by:
+                    # (a) passing -coarray-num-images=<img-cnt> to ifort
+                    # (b) setting FOR_COARRAY_NUM_IMAGES=<img-cnt> in the env. [overrides flag above]
+                    # The following construct dynamically sets the number of images to override
+                    # any settings at CONFIG-ifort
+                    if [ "$compiler" == "ifort" ]; then
+                        export FOR_COARRAY_NUM_IMAGES=$NP
+                    fi
+
+                    #echo "$LAUNCHER $BIN_DIR/$opfile $EXEC_OPTIONS "
+                    #$LAUNCHER $BIN_DIR/$opfile $EXEC_OPTIONS
+                    EXEC_OUT=` perl ./../../support/timedexec.pl $TIMEOUT "$LAUNCHER $BIN_DIR/$opfile -v $EXEC_OPTIONS " &> $EXEC_OUT_DIR/$opfile.exec && echo 1||echo -1`
+                    ./../../support/kill_orphan_procs.sh $opfile
+
+                    if [ "$EXEC_OUT" == "-1" ]; then                         #runtime error
+                        EXEC_STATUS="RUNTIME ERROR"
+                        FAILED_COUNT=$(($FAILED_COUNT+1))
+                    else                                                      #execution completed cleanly
+                        EXEC_STATUS="PASS"
+                        PASSED_COUNT=$(($PASSED_COUNT+1))
+                        VERIFICATION=`grep "Verification"  $EXEC_OUT_DIR/$opfile.exec | grep -oh "\w*SUCCESSFUL"  `
+                        TIME=`grep "Time in seconds ="  $EXEC_OUT_DIR/$opfile.exec | sed 's/.*=//g' |sed 's/\s\+//g' `
+                    fi
+                else
+                    EXEC_STATUS="NO BINARY"                                   #compilation failed
+                fi
+            fi
+            printf '%15s %18s %15s\n' "${EXEC_STATUS}" "${VERIFICATION}" "${TIME}" | tee -a $LOG_DIR/$logfile
   		  done
 	done
 done
 
-echo "============================= EXECUTION STATISTICS (not compilation) =========================" | tee -a $LOG_DIR/$logfile
+echo "\n============================= EXECUTION STATISTICS =========================\n" | tee -a $LOG_DIR/$logfile
 echo "TOTAL PASSED = $PASSED_COUNT TOTAL FAILED = $FAILED_COUNT"  | tee -a $LOG_DIR/$logfile
-echo "Results of this performance run can be found in: $LOG_DIR/$logfile"
+echo "Results of this performance run can be found in: $LOG_DIR/$logfile\n"
 
 # backing up results to HISTORY folder
 cp -r  $COMP_OUT_DIR  $HISTORY_OUT_DIR/compile_$DATE

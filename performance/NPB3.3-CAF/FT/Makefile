@@ -14,8 +14,8 @@ ${PROGRAM}: config ${OBJS}
 ft.o:             ft.f global.h npbparams.h
 	${FCOMPILE} ft.f
 
-coreduce.o:		coreduce.f90
-	${FCOMPILE} coreduce.f90
+coreduce.o:		coreduce.F90
+	${FCOMPILE} coreduce.F90
 
 clean:
 	- rm -f *.o *.mod *~ mputil*

@@ -2,7 +2,7 @@
 DATE=`date +"%m-%d-%y-%T"`
 TIMEOUT=180
 logfile=${DATE}.log
-LOG_DIR=./logs/                # directory for the output of the regression
+LOG_DIR=${PWD}/logs/                # directory for the output of the regression
 OUTPUT_DIR=${LOG_DIR}/test_output/   # directory for the output of the compiler/execution
 BIN_DIR=./bin/                # directory for the binaries
 EXEC_OUT_DIR=${OUTPUT_DIR}/latest_execute
@@ -16,3 +16,6 @@ BENCHMARKS="ep cg mg lu ft sp bt"
 CLASSES="S W A B C"
 NPROCS_LST1="1 2 4 8 16"
 NPROCS_LST2="1 4 9 16"
+CLASSES="A"
+NPROCS_LST1="8"
+NPROCS_LST2="4"

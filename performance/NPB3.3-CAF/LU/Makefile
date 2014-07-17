@@ -24,7 +24,7 @@ include ../sys/make.common
 # explicit in all the lines below (even though dependence is indirect). 
 
 # applu.incl: npbparams.h
-.SUFFIXES: .f .o .h .mod .F .f90
+.SUFFIXES: .f .o .h .mod .F .f90 .F90
 
 ${PROGRAM}: config
 	@if [ x$(VERSION) = xvec ] ; then	\
@@ -42,6 +42,9 @@ exec: $(OBJS)
 	${FCOMPILE} $<
 
 .f90.o :
+	${FCOMPILE} $<
+
+.F90.o :
 	${FCOMPILE} $<
 
 lu.o:		lu.f applu.incl npbparams.h
@@ -76,7 +79,7 @@ verify.o:	verify.f applu.incl npbparams.h
 coarray_globals.mod : coarray_globals.o npbparams.h
 coarray_globals.o : coarray_globals.f
 custom_coreduce.mod : coreduce.o
-coreduce.o : coreduce.f90
+coreduce.o : coreduce.F90
 
 
 clean:

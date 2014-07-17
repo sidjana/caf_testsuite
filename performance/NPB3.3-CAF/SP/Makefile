@@ -23,7 +23,7 @@ include ../sys/make.common
 # explicit in all the lines below (even though dependence is indirect). 
 
 # header.h: npbparams.h
-.SUFFIXES: .f .o .h .mod .F .f90
+.SUFFIXES: .f .o .h .mod .F .f90 .F90
 
 ${PROGRAM}: config ${OBJS}
 	${FLINK} ${FLINKFLAGS} -o ${PROGRAM} ${OBJS}
@@ -35,6 +35,9 @@ ${PROGRAM}: config ${OBJS}
 	${FCOMPILE} $< # -DUSE_BARRIER
 
 .f90.o:
+	${FCOMPILE} $<
+
+.F90.o:
 	${FCOMPILE} $<
 
 sp.o:             sp.f  header.h npbparams.h custom_coreduce.mod
@@ -62,7 +65,7 @@ error.o:          error.f  header.h npbparams.h custom_coreduce.mod
 verify.o:         verify.f  header.h npbparams.h
 setup_caf.o:      setup_caf.f npbparams.h npbcaf.mod
 custom_coreduce.mod: coreduce.o
-coreduce.o:       coreduce.f90
+coreduce.o:       coreduce.F90
 header.h:         npbcaf.mod
 npbcaf.mod:	  npbcaf.o
 npbcaf.o:	  npbcaf.f npbparams.h
