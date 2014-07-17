@@ -7,6 +7,5 @@ FC="g95"
 FFLAGS="-cpp -fno-second-underscore "
 LAUNCHER=""
 EXEC_OPTIONS=" --g95 images=${NPROCS}"
-FFLAGS_CROSS=" $FFLAGS "
 
 COMPILE_CMD="${FC} ${FFLAGS} ${FFLAGS_BENCH_DEFS} "

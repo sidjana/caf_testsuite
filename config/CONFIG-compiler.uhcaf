@@ -8,4 +8,4 @@ FFLAGS="-ftpp "
 LAUNCHER="cafrun -n ${NPROCS} --image-heap=100M"
 EXEC_OPTIONS=""
 
-COMPILE_CMD="${FC} ${FFLAGS} "
+COMPILE_CMD="${FC} ${FFLAGS} ${FFLAGS_BENCH_DEFS}"

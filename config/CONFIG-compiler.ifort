@@ -7,7 +7,5 @@ FC="ifort"
 FFLAGS="-coarray -coarray-num-images=${NPROCS} -fpp "
 LAUNCHER=""
 EXEC_OPTIONS=""
-FFLAGS_CROSS=" $FFLAGS "
 
 COMPILE_CMD="${FC} ${FFLAGS} ${FFLAGS_BENCH_DEFS}"
-EXEC_CMD="${LAUNCHER} ${EXEC_OPTIONS} "
