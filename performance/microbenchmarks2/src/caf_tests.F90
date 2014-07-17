@@ -1224,6 +1224,7 @@ module caf_microbenchmarks
     !                   REDUCTION TESTS
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+#ifdef CO_REDUCTIONS_SUPPORT
     subroutine run_reduce_test(separate_target)
         implicit none
         logical :: separate_target
@@ -1284,6 +1285,8 @@ module caf_microbenchmarks
         end do
 
     end subroutine run_reduce_test
+#endif
+
 #endif
 
 end module caf_microbenchmarks
@@ -1381,7 +1384,9 @@ program main
 #endif
 
 #ifdef REDUCE_TESTS
+#ifdef CO_REDUCTIONS_SUPPORT
     call run_reduce_test(.false.)
     call run_reduce_test(.true.)
+#endif
 #endif
 end program
