@@ -11,9 +11,10 @@ DATE:=$(shell echo "`date +"%m-%d-%y-%T"`")
 LOG_NAME:=$(DATE).log
 LOGFILE:=$(LOG_NAME)
 SCRIPTS = crosschecked_feature_test.sh feature_test.sh status_test.sh
+CROSS_TEST_HELPER_SRC = ../cross_test_helper.f90
 
 
-all: clean_output clean_exec test_file  testmodule.o description $(SCRIPTS) header
+all: clean_output clean_exec test_file  cross_test_helper.o description $(SCRIPTS) header
 	   @source few_test.sh $(LOGFILE) $(COMPILER)
 	   @cp $(LOGFILE) ./HISTORY/
 	   @mv $(LOGFILE) ./latest_results.log
@@ -33,8 +34,8 @@ header:
 			            "Evaluating $(COMPILER)" | tee -a $(LOGFILE)
 	   @printf '%-20s\t%-70s\t%s\t%s\n\n' "SPEC_IDX" "DESCRIPTION" "COMPILATION" "EXECUTION"
 
-testmodule.o: ../testmodule.f90
-	   @$(FC) $(FFLAGS) $(FFLAGS_VALIDATION_DEFS) -c  ../testmodule.f90
+cross_test_helper.o: $(CROSS_TEST_HELPER_SRC)
+	   @$(FC) $(FFLAGS) -c $(CROSS_TEST_HELPER_SRC)
 
 
 description:

@@ -18,7 +18,7 @@ total_cnt:=0
 
 .PHONY: all header
 
-all:  clean_output clean_exec header testmodule.o  $(EXES)
+all:  clean_output clean_exec header cross_test_helper.o  $(EXES)
 	   @cp $(LOGFILE) ./HISTORY/
 	   @mv $(LOGFILE) ./latest_results.log
 
@@ -41,11 +41,11 @@ header:
 	   $(eval total_cnt=$(shell echo $(total_cnt)\+1 | bc))
 
 
-testmodule.o: ../testmodule.f90
-	@ $(FC) $(FFLAGS) $(FFLAGS_VALIDATION_DEFS) -c  ../testmodule.f90  2>/dev/null;\
+cross_test_helper.o: ../cross_test_helper.f90
+	@ $(FC) $(FFLAGS) $(FFLAGS_VALIDATION_DEFS) -c  ../cross_test_helper.f90  2>/dev/null;\
 	  if [ "$$?" -ne "0" ]; then \
-	        echo "$(FC) $(FFLAGS) $(FFLAGS_VALIDATION_DEFS) -c  ../testmodule.f90  2>/dev/null;" \
-	  	echo "NOTE***Error while compiling testmodule.f90" ;\
+	        echo "$(FC) $(FFLAGS) $(FFLAGS_VALIDATION_DEFS) -c  ../cross_test_helper.f90  2>/dev/null;" \
+	  	echo "NOTE***Error while compiling cross_test_helper.f90" ;\
 	  fi
 
 
@@ -62,7 +62,7 @@ clean_history:
 
 
 cleanall:  clean_output clean_exec clean_history
-	    @rm -rf uhcaf.keep ./*.log  testmodule.o ./*.mod ./tmp
+	    @rm -rf uhcaf.keep ./*.log  cross_test_helper.o ./*.mod ./tmp
 
 
 clean:

@@ -13,7 +13,7 @@ source $config_file
 config_file="../../config/CONFIG-compiler.${COMPILER}"
 source $config_file
 
-$FC $FFLAGS $FFLAGS_VALIDATION_DEFS -o  ../bin/$TEST testmodule.o $SOURCE &> $COMPILE_OUTPUT/$SOURCE.out
+$FC $FFLAGS $FFLAGS_VALIDATION_DEFS -o  ../bin/$TEST cross_test_helper.o $SOURCE &> $COMPILE_OUTPUT/$SOURCE.out
 ANS="$?"
 if [ "$ANS" == "0" ]; then
    # feature test passed compilation
@@ -28,11 +28,11 @@ if [ "$ANS" == "0" ]; then
        printf '%-15s\t' "PASS"  | tee -a $LOGFILE
 
        # compile the cross test
-       $FC $FFLAGS $FFLAGS_CROSSVALIDATION_DEFS  -o  ../bin/$TEST.cross testmodule.o $2 &>/dev/null
+       $FC $FFLAGS $FFLAGS_VALIDATION_DEFS -DCROSS_  -o  ../bin/$TEST.cross cross_test_helper.o $SOURCE &>/dev/null
 
        #rm -rf ./tmp ./conf.temp
        # run the cross test
-       perl ../../support/timedexec.pl $TIMEOUT $LAUNCHER ../bin//$TEST.cross $EXEC_OPTIONS &>./tmp
+       perl ../../support/timedexec.pl $TIMEOUT $LAUNCHER ../bin/$TEST.cross $EXEC_OPTIONS &>./tmp
        ../../support/kill_orphan_procs.sh $TEST.cross
        RETURN="$?"
        touch ./tmp ./conf.temp
