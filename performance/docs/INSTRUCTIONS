@@ -1,6 +1,6 @@
 CAF Performance Test Suite Instructions
 
-Last modified: 12th July, 2014
+Last modified: 16th July, 2014
 HPCTools Group, University of Houston
 
 This document describes the method for using the performance test suite and
@@ -38,7 +38,7 @@ parameters can be divided into two types:
 
 1. Generic parameters: These are testsuite specific parameters which can be
 used to specify the location of the compilation and execution result dumps.
-These are located in $PERFORMANCE PATH/support/CONFIG (default values
+These are located in $PERFORMANCE_PATH/../config/CONFIG (default values
 pre-set).
 
 The list of parameters are:
@@ -81,7 +81,7 @@ NITER           | Number of iterations for microbenchmark tests that perform
 
 2. Compiler-specific: These are compiler dependent parameters and can be used
 to adjust the compiler/execution commands, flags and launcher options.
-These are located in $PEFORMANCE PATH/support/CONFIG-compiler.<compiler>.
+These are located in $PEFORMANCE_PATH/../config/CONFIG-compiler.<compiler>.
 
 The  name of the parameters are:
 
@@ -134,7 +134,7 @@ Where OPTIONS can be one of:
 |_ clean<suite>:         cleans up the logs, executables and all previous
                          history of the regression runs
 
-( Note: <suite>: [kernels | microbenchmarks | npb | all] )
+Note: <suite> = kernels|microbenchmarks|npb|all
 
 ===============================================================================
 
@@ -142,8 +142,8 @@ II. CAF Benchmarks
 
 There are three main categories of tests in the test suite. Each category is
 located in a different subdirectory within $PEFORMANCE PATH, and all the tests
-within the same category can be executed using either the single Make- file in
-$PEFORMANCE PATH or individual Maefiles within the corresponding
+within the same category can be executed using either the single Makefile in
+$PEFORMANCE PATH or individual makefiles within the corresponding
 subdirectories.
 
 -------------------------------------------------------------------------------
@@ -188,11 +188,12 @@ II.b NAS Parallel Benchmarks
 
 These include the CAF versions of the NAS 3.3.1.
 
-The currently supported tests include EP, CG, SP, BT, and FT. The EP and CG
-have been developed at the University of Houston. The SP and BT have been
-developed by the NAS team (thanks are due to Haoqiang Jin, NASA).
+The currently supported tests include EP, CG, LU, MG, SP, BT, and FT. The EP,
+CG, MG, LU, and FT benchmarks have been developed at the University of
+Houston. The SP and BT have been developed by the NAS team (thanks are due to
+Haoqiang Jin, NASA).
 
-These are located under: $SUITE_ROOT/performance/npb
+These are located under: $SUITE_ROOT/performance/NPB3.3-CAF
 
 -------------------------------------------------------------------------------
 
@@ -202,30 +203,28 @@ These includes some standalone CAF kernels.
 
 The current list includes:
 - Buffon Laplace
-- CG (2D)
+- CG Forward Wavefield Update
 - Image Smoothing
 - Insertion sort
 - Insertion sort (using derived types)
-- Matrix Multiplication (naive)
+- Matrix Multiplication
 - CAF Distributred Hash Table
 - Synchronization Benchmarks
 
 These are located under: $SUITE_ROOT/kernels
 
 In order to compile and execute a specific kernel:
-1. cd $SUITE_ROOT/kernels
-2. Usage: make [KERNEL|run_KERNEL|runtests|clean] [COMPILER=uhcaf(default)|ifort|g95]
-Where KERNEL is one of:
-	 buffon_laplace cg_2d image_smoothing insertion_sort insertion_sort_dtype jacobi mm
-run_KERNEL : compiles and executes KERNEL
-runtests   : compiles and executes all the kernels
-Just make  : compiles all the kernels and terminates
+1. cd kernels
+2. Usage: make [runtests(default)|<KERNEL>|run_<KERNEL>|clean] [COMPILER=uhcaf(default)|ifort|g95]
+runtests     : compiles and executes all the kernels
+run_<KERNEL> : compiles and executes KERNEL
+
+where <KERNEL> =
+  buffon_laplace|cg_2d|image_smoothing|insertion_sort|insertion_sort_dtype|jacobi|mm|
+  cafhash|syncbench
 
 
 Please ensure:
-- In order the set the number of images to launch while executing a kernel,
-  modify the make.def within the corresponding directory -
-  $SUITE_ROOT/kernels/src/$KERNEL
 - Other test_suite specific parameters are set in ../../config/CONFIG
 - The compiler specific parameters are set in ../../config/CONFIG-compiler.<compiler>
 - The number of images to be used for a specific kernel is set in KERNEL.def
