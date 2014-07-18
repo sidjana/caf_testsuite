@@ -29,7 +29,7 @@ validation:
 
 
 clean cleanall: performance-clean validation-clean
-	@rm -rf config/make-compiler.* config/make.def config/make-validation.def
+	@rm -rf config/make-compiler.* config/make.def config/make-validation.def config/make-npb.def
 
 
 performance-clean:

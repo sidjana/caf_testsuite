@@ -117,8 +117,6 @@ do
                         export FOR_COARRAY_NUM_IMAGES=$NP
                     fi
 
-                    #echo "$LAUNCHER $BIN_DIR/$opfile $EXEC_OPTIONS "
-                    #$LAUNCHER $BIN_DIR/$opfile $EXEC_OPTIONS
                     EXEC_OUT=` perl ./../../support/timedexec.pl $TIMEOUT "$LAUNCHER $BIN_DIR/$opfile -v $EXEC_OPTIONS " &> $EXEC_OUT_DIR/$opfile.exec && echo 1||echo -1`
                     ./../../support/kill_orphan_procs.sh $opfile
 
@@ -129,7 +127,13 @@ do
                         EXEC_STATUS="PASS"
                         PASSED_COUNT=$(($PASSED_COUNT+1))
                         VERIFICATION=`grep "Verification"  $EXEC_OUT_DIR/$opfile.exec | grep -oh "\w*SUCCESSFUL"  `
-                        TIME=`grep "Time in seconds ="  $EXEC_OUT_DIR/$opfile.exec | sed 's/.*=//g' |sed 's/\s\+//g' `
+			if [ "$VERIFICATION" == "" ]; then
+                        	EXEC_STATUS="FAIL"
+				VERIFICATION="CHECK-LOG"
+				TIME="--"
+			else
+                                TIME=`grep "Time in seconds ="  $EXEC_OUT_DIR/$opfile.exec | sed 's/.*=//g' |sed 's/\s\+//g' `
+			fi
                     fi
                 else
                     EXEC_STATUS="NO BINARY"                                   #compilation failed

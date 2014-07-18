@@ -59,7 +59,7 @@ complete_npb:
 
 # CLEAN-UP
 
-.PHONY: clean clean_kernels clean_microbenchmarks clean_npb
+.PHONY: clean cleanall clean_kernels clean_microbenchmarks clean_npb
 
 
 cleanperformance: cleankernels cleanmicrobenchmarks cleannpb
@@ -74,4 +74,4 @@ cleanmicrobenchmarks:
 cleannpb:
 	$(MAKE) -C $(NPB_PATH) clean
 
-clean: cleanperformance
+clean cleanall: cleanperformance

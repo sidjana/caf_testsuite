@@ -45,13 +45,14 @@ eval {
     }        
     alarm 0;
 };
-die if $@ && $@ ne "alarm";
-if ($@) {
+#die if $@ && $@ ne "alarm"; 
+#if ($@ eq "alarm") {
+if ($@ =~ /alarm/) {
     print STDERR "timedexec Alarm Clock";
 #    $child_pgrp = getpgrp($child_pid);
 #    $self_pgrp = getpgrp($$);
     kill (-9, $child_pid);
-    exit(222);
+    exit(4);
 } else {
     exit($cmdStatus);
 }
