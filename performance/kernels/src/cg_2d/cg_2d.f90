@@ -7,137 +7,6 @@
       contains
 
          !========================================================================
-         subroutine cg_fwd_2d(                                          &
-                              lx,lz,                                    &
-                              xmin,xmax,zmin,zmax,                      &
-                              hdx_2,hdz_2,                              &
-                              coefx,coefz,                              &
-                              u,v,roc2,phi,eta,                         &
-                              x1,x2,x3,x4,x5,x6,z1,z2,z3,z4,z5          &
-                             )
-
-           implicit none
-
-           integer,intent(in) :: lx,lz
-           integer,intent(in) :: x1,x2,x3,x4,x5,x6,z1,z2,z3,z4,z5
-           integer,intent(in) :: xmin,xmax,zmin,zmax
-           real,intent(in)    :: hdx_2,hdz_2
-           real,intent(in)    :: coefx(0:lx)
-           real,intent(in)    :: coefz(0:lz)
-           real,intent(inout) :: phi(xmin:xmax,1,zmin:zmax)
-           real,intent(inout) :: u(xmin-lx:xmax+lx,1,zmin-lz:zmax+lz)
-           real,intent(in)    :: v(xmin-lx:xmax+lx,1,zmin-lz:zmax+lz)
-           real,intent(in)    :: roc2(xmin:xmax,1,zmin:zmax)
-           real,intent(in)    :: eta(xmin-1:xmax+1,1,zmin-1:zmax+1)
-
-           integer            :: i,k
-           real               :: lap,coef0
-           coef0=coefx(0)+coefz(0)
-           do k=zmin,zmax
-               if ((k>=z3).and.(k<=z4)) then
-                  do i=x1,x2
-                     !! DAMPING LEFT.
-                     lap=coef0*v(i,1,k)                                 &
-                          +coefx(1)*(v(i+1,1,k)+v(i-1,1,k))             &
-                          +coefz(1)*(v(i,1,k+1)+v(i,1,k-1))             &
-                          +coefx(2)*(v(i+2,1,k)+v(i-2,1,k))             &
-                          +coefz(2)*(v(i,1,k+2)+v(i,1,k-2))             &
-                          +coefx(3)*(v(i+3,1,k)+v(i-3,1,k))             &
-                          +coefz(3)*(v(i,1,k+3)+v(i,1,k-3))             &
-                          +coefx(4)*(v(i+4,1,k)+v(i-4,1,k))             &
-                          +coefz(4)*(v(i,1,k+4)+v(i,1,k-4))
-
-                     !! Update the wavefield.
-                     u(i,1,k)=((2.-eta(i,1,k)*eta(i,1,k)                &
-                          +2.*eta(i,1,k))*v(i,1,k)                      &
-                          -u(i,1,k)                                     &
-                          +roc2(i,1,k)*(lap                             &
-                          +phi(i,1,k)))/(1.+2.*eta(i,1,k))
-
-                     !! Update the PML function.
-                     phi(i,1,k)=(phi(i,1,k)-                            &
-                          ((eta(i+1,1,k)-eta(i-1,1,k))                  &
-                          *(v(i+1,1,k)-v(i-1,1,k))*hdx_2                &
-                          +(eta(i,1,k+1)-eta(i,1,k-1))                  &
-                          *(v(i,1,k+1)-v(i,1,k-1))*hdz_2                &
-                          ))/(1.+eta(i,1,k))
-                  enddo
-                  do i=x3,x4
-                     !! BASIC.
-                     lap=coef0*v(i,1,k)                                 &
-                          +coefx(1)*(v(i+1,1,k)+v(i-1,1,k))             &
-                          +coefz(1)*(v(i,1,k+1)+v(i,1,k-1))             &
-                          +coefx(2)*(v(i+2,1,k)+v(i-2,1,k))             &
-                          +coefz(2)*(v(i,1,k+2)+v(i,1,k-2))             &
-                          +coefx(3)*(v(i+3,1,k)+v(i-3,1,k))             &
-                          +coefz(3)*(v(i,1,k+3)+v(i,1,k-3))             &
-                          +coefx(4)*(v(i+4,1,k)+v(i-4,1,k))             &
-                          +coefz(4)*(v(i,1,k+4)+v(i,1,k-4))
-
-                     !! Update the wavefield.
-                     u(i,1,k)=2.*v(i,1,k)-u(i,1,k)+roc2(i,1,k)*lap
-                  enddo
-                  do i=x5,x6
-                     !! DAMPING RIGHT.
-                     lap=coef0*v(i,1,k)                                 &
-                          +coefx(1)*(v(i+1,1,k)+v(i-1,1,k))             &
-                          +coefz(1)*(v(i,1,k+1)+v(i,1,k-1))             &
-                          +coefx(2)*(v(i+2,1,k)+v(i-2,1,k))             &
-                          +coefz(2)*(v(i,1,k+2)+v(i,1,k-2))             &
-                          +coefx(3)*(v(i+3,1,k)+v(i-3,1,k))             &
-                          +coefz(3)*(v(i,1,k+3)+v(i,1,k-3))             &
-                          +coefx(4)*(v(i+4,1,k)+v(i-4,1,k))             &
-                          +coefz(4)*(v(i,1,k+4)+v(i,1,k-4))
-
-                     !! Update the wavefield.
-                     u(i,1,k)=((2.-eta(i,1,k)*eta(i,1,k)                &
-                          +2.*eta(i,1,k))*v(i,1,k)                      &
-                          -u(i,1,k)                                     &
-                          +roc2(i,1,k)*(lap                             &
-                          +phi(i,1,k)))/(1.+2.*eta(i,1,k))
-
-                     !! Update the PML function.
-                     phi(i,1,k)=(phi(i,1,k)-                            &
-                          ((eta(i+1,1,k)-eta(i-1,1,k))                  &
-                          *(v(i+1,1,k)-v(i-1,1,k))*hdx_2                &
-                          +(eta(i,1,k+1)-eta(i,1,k-1))                  &
-                          *(v(i,1,k+1)-v(i,1,k-1))*hdz_2                &
-                          ))/(1.+eta(i,1,k))
-                  enddo
-               else
-                  do i=xmin,xmax
-                     !! DAMPING TOP and BOTTOM.
-                     lap=coef0*v(i,1,k)                                 &
-                          +coefx(1)*(v(i+1,1,k)+v(i-1,1,k))             &
-                          +coefz(1)*(v(i,1,k+1)+v(i,1,k-1))             &
-                          +coefx(2)*(v(i+2,1,k)+v(i-2,1,k))             &
-                          +coefz(2)*(v(i,1,k+2)+v(i,1,k-2))             &
-                          +coefx(3)*(v(i+3,1,k)+v(i-3,1,k))             &
-                          +coefz(3)*(v(i,1,k+3)+v(i,1,k-3))             &
-                          +coefx(4)*(v(i+4,1,k)+v(i-4,1,k))             &
-                          +coefz(4)*(v(i,1,k+4)+v(i,1,k-4))
-
-                     !! Update the wavefield.
-                     u(i,1,k)=((2.-eta(i,1,k)*eta(i,1,k)                &
-                          +2.*eta(i,1,k))*v(i,1,k)                      &
-                          -u(i,1,k)                                     &
-                          +roc2(i,1,k)*(lap                             &
-                          +phi(i,1,k)))/(1.+2.*eta(i,1,k))
-
-                     !! Update the PML function.
-                     phi(i,1,k)=(phi(i,1,k)-                            &
-                          ((eta(i+1,1,k)-eta(i-1,1,k))                  &
-                          *(v(i+1,1,k)-v(i-1,1,k))*hdx_2                &
-                          +(eta(i,1,k+1)-eta(i,1,k-1))                  &
-                          *(v(i,1,k+1)-v(i,1,k-1))*hdz_2                &
-                          ))/(1.+eta(i,1,k))
-                  enddo
-               endif
-           enddo
-           return
-         end subroutine cg_fwd_2d
-
-         !========================================================================
          subroutine cg_fwd_inner_2d(                                    &
                                      im,ip,km,kp,                       &
                                      lx,lz,                             &
@@ -214,15 +83,9 @@
       character(len=16) :: char
       real              :: rmax, rmin
       real, allocatable :: roc2(:,:)
-#ifndef INNER
-      real, allocatable :: phi(:,:,:)
-#endif
       real, allocatable :: u(:,:)[:,:,:]
       real, allocatable :: v(:,:)[:,:,:]
       real              :: max_u[*], min_u[*]
-#ifndef INNER
-      real, allocatable :: eta(:,:)[:,:,:]
-#endif
 
       integer           :: nargs, args(4)[*]
       integer           :: P, Q, N, M
@@ -284,10 +147,6 @@
       allocate (roc2(xmin:xmax, zmin:zmax))
       allocate (u(xmin-lx:xmax+lx, zmin-lz:zmax+lz)[npx,1,*])
       allocate (v(xmin-lx:xmax+lx, zmin-lz:zmax+lz)[npx,1,*])
-#ifndef INNER
-      allocate (phi(xmin:xmax, 1, zmin:zmax))
-      allocate (eta(xmin-1:xmax+1,zmin-1:zmax+1)[npx,1,*])
-#endif
 
       npz = num_images() / npx
 
@@ -350,7 +209,6 @@
 
       call csource(nt,fmax,dt,source)
 
-#ifdef INNER
       im = xmin
       ip = xmax
       km = zmin
@@ -362,7 +220,6 @@
       ub = ucobound(v, 3)
 
       if (pz == ub ) kp = zmax-lz
-#endif
 
 
       sync all
@@ -391,16 +248,6 @@
             u(xsource, zsource) = u(xsource, zsource) + source(it)
         end if
 
-#ifndef INNER
-        call cg_fwd_2d(                                                 &
-                        lx,lz,                                          &
-                        xmin,xmax,zmin,zmax,                            &
-                        hdx_2,hdz_2,                                    &
-                        coefx,coefz,                                    &
-                        u,v,roc2,phi,eta,                               &
-                        x1,x2,x3,x4,x5,x6,z1,z2,z3,z4,z5                &
-                      )
-#else
         call cg_fwd_inner_2d(                                           &
                             im,ip,km,kp,                                &
                             lx,lz,                                      &
@@ -408,7 +255,6 @@
                             coefx,coefz,                                &
                             u,v,roc2                                    &
                             )
-#endif
 
         sync all
 
@@ -416,27 +262,18 @@
         if( px>1) then
             u(xmin-lx:xmin-1,zmin:zmax) =                               &
                       u(xmax-lx+1:xmax,zmin:zmax)[px-1,1,pz]
-#ifndef INNER
-            eta(xmin-1,zmin:zmax) = eta(xmax,zmin:zmax)[px-1,1,pz]
-#endif
         end if
 
         ! get data from bottom neighbor
         if (px<npx) then
             u(xmax+1:xmax+lx,zmin:zmax) =                               &
                       u(xmin:xmin+lx-1,zmin:zmax)[px+1,1,pz]
-#ifndef INNER
-            eta(xmax+1,zmin:zmax) = eta(xmin,zmin:zmax)[px+1,1,pz]
-#endif
         endif
 
         ! get data from left neighbor
         if (pz > 1) then
             u(xmin:xmax,zmin-lz:zmin-1) =                               &
                       u(xmin:xmax,zmax-lz+1:zmax)[px,1,pz-1]
-#ifndef INNER
-            eta(xmin:xmax,zmin-1) = eta(xmin:xmax,zmax)[px,1,pz-1]
-#endif
         end if
 
         ! get data from right neighbor
@@ -444,9 +281,6 @@
         if (pz< ub) then
             u(xmin:xmax,zmax+1:zmax+lz) =                               &
                       u(xmin:xmax,zmin:zmin+lz-1)[px,1,pz+1]
-#ifndef INNER
-            eta(xmin:xmax,zmax+1) = eta(xmin:xmax,zmin)[px,1,pz+1]
-#endif
         end if
 
         sync all
@@ -456,16 +290,6 @@
             v(xsource, zsource) = v(xsource, zsource) + source(it+1)
         end if
 
-#ifndef INNER
-        call cg_fwd_2d(                                                 &
-                       lx,lz,                                           &
-                       xmin,xmax,zmin,zmax,                             &
-                       hdx_2,hdz_2,                                     &
-                       coefx,coefz,                                     &
-                       v,u,roc2,phi,eta,                                &
-                       x1,x2,x3,x4,x5,x6,z1,z2,z3,z4,z5                 &
-                      )
-#else
         call cg_fwd_inner_2d(                                           &
                             im,ip,km,kp,                                &
                             lx,lz,                                      &
@@ -473,7 +297,6 @@
                             coefx,coefz,                                &
                             v,u,roc2                                    &
                             )
-#endif
 
         sync all
 
@@ -481,27 +304,18 @@
         if( px>1) then
             v(xmin-lx:xmin-1,zmin:zmax) =                               &
                       v(xmax-lx+1:xmax,zmin:zmax)[px-1,1,pz]
-#ifndef INNER
-            eta(xmin-1,zmin:zmax) = eta(xmax,zmin:zmax)[px-1,1,pz]
-#endif
         end if
 
         ! get data from bottom neighbor
         if (px<npx) then
             v(xmax+1:xmax+lx,zmin:zmax) =                               &
                       v(xmin:xmin+lx-1,zmin:zmax)[px+1,1,pz]
-#ifndef INNER
-            eta(xmax+1,zmin:zmax) = eta(xmin,zmin:zmax)[px+1,1,pz]
-#endif
         endif
 
         ! get data from left neighbor
         if (pz > 1) then
             v(xmin:xmax,zmin-lz:zmin-1) =                               &
                       v(xmin:xmax,zmax-lz+1:zmax)[px,1,pz-1]
-#ifndef INNER
-            eta(xmin:xmax,zmin-1) = eta(xmin:xmax,zmax)[px,1,pz-1]
-#endif
         end if
 
         ! get data from right neighbor
@@ -509,9 +323,6 @@
         if (pz< ub) then
             v(xmin:xmax,zmax+1:zmax+lz) =                               &
                       v(xmin:xmax,zmin:zmin+lz-1)[px,1,pz+1]
-#ifndef INNER
-            eta(xmin:xmax,zmax+1) = eta(xmin:xmax,zmin)[px,1,pz+1]
-#endif
         end if
 
       enddo
